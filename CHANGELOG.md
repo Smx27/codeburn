@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added (CLI)
+- **Mistral Vibe provider.** CodeBurn now reads Mistral Vibe session folders
+  from `$VIBE_HOME/logs/session/` or `~/.vibe/logs/session/`, using
+  `meta.json` for cumulative prompt/completion tokens, model pricing, and
+  timestamps, and `messages.jsonl` for user prompts and tool calls. Subagent
+  sessions under a parent session's `agents/` folder are tracked separately.
+  Closes #283.
+
 ## 0.9.8 - 2026-05-10
 
 ### Added (CLI)
