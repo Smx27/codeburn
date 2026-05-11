@@ -39,6 +39,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private var forceRefreshTask: Task<Void, Never>?
     private var forceRefreshStartedAt: Date?
     private var forceRefreshGeneration: UInt64 = 0
+    private var manualRefreshTask: Task<Void, Never>?
+    private var manualRefreshGeneration: UInt64 = 0
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         // Set accessory policy before the app's focus chain forms. On macOS Tahoe
@@ -95,6 +97,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
                 self?.forceRefreshTask = nil
                 self?.forceRefreshStartedAt = nil
                 self?.forceRefreshGeneration &+= 1
+                self?.manualRefreshTask?.cancel()
+                self?.manualRefreshTask = nil
+                self?.manualRefreshGeneration &+= 1
                 self?.store.resetLoadingState()
                 self?.refreshLoopTask?.cancel()
                 self?.refreshLoopTask = nil
@@ -349,17 +354,44 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
 
     @MainActor
     func refreshSubscriptionNow() {
-        Task { [weak self] in
+        manualRefreshTask?.cancel()
+        manualRefreshGeneration &+= 1
+        let generation = manualRefreshGeneration
+        forceRefreshTask?.cancel()
+        forceRefreshTask = nil
+        forceRefreshStartedAt = nil
+        forceRefreshGeneration &+= 1
+        pendingRefreshWork?.cancel()
+        pendingRefreshWork = nil
+        refreshLoopTask?.cancel()
+        refreshLoopTask = nil
+        store.resetRefreshState(clearCache: true)
+        lastRefreshTime = .distantPast
+        refreshStatusButton()
+
+        manualRefreshTask = Task { [weak self] in
             guard let self else { return }
             // "Refresh Now" should refresh the menubar payload AND every
-            // connected provider's live quota — the user's intent is "make
+            // connected provider's live quota. The user's intent is "make
             // this match reality right now."
+            let needsTodayTotal = self.store.selectedPeriod != .today || self.store.selectedProvider != .all
             async let payload: Void = self.store.refresh(includeOptimize: false, force: true, showLoading: true)
             async let claude: Bool = self.store.refreshSubscriptionReportingSuccess()
             async let codex:  Bool = self.store.refreshCodexReportingSuccess()
+            if needsTodayTotal {
+                await self.store.refreshQuietly(period: .today)
+            }
             _ = await payload
+            guard self.manualRefreshGeneration == generation, !Task.isCancelled else { return }
+            self.lastRefreshTime = Date()
+            self.refreshStatusButton()
             if await claude { self.lastSubscriptionRefreshAt = Date() }
             if await codex  { self.lastCodexRefreshAt = Date() }
+            guard self.manualRefreshGeneration == generation, !Task.isCancelled else { return }
+            self.manualRefreshTask = nil
+            if self.refreshLoopTask == nil {
+                self.startRefreshLoop()
+            }
         }
     }
 
