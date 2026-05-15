@@ -65,6 +65,10 @@ final class AppStore {
         return Date().timeIntervalSince(last)
     }
 
+    private var todayAllKey: PayloadCacheKey {
+        PayloadCacheKey(period: .today, provider: .all)
+    }
+
     private var currentKey: PayloadCacheKey {
         PayloadCacheKey(period: selectedPeriod, provider: selectedProvider)
     }
@@ -76,7 +80,16 @@ final class AppStore {
     /// Today (across all providers) is pinned for the always-visible menubar icon, independent of
     /// the popover's selected period or provider.
     var todayPayload: MenubarPayload? {
-        cache[PayloadCacheKey(period: .today, provider: .all)]?.payload
+        cache[todayAllKey]?.payload
+    }
+
+    var todayPayloadAgeSeconds: Int? {
+        guard let cached = cache[todayAllKey] else { return nil }
+        return Int(Date().timeIntervalSince(cached.fetchedAt))
+    }
+
+    var needsStatusPayloadRefresh: Bool {
+        cache[todayAllKey]?.isFresh != true
     }
 
     /// All-provider payload for the selected period. Used by the tab strip to show
@@ -111,7 +124,7 @@ final class AppStore {
     var staleInteractivePayloadAgeSeconds: Int? {
         let keys = Set([
             currentKey,
-            PayloadCacheKey(period: .today, provider: .all),
+            todayAllKey,
             PayloadCacheKey(period: selectedPeriod, provider: .all),
         ])
         let staleAges = keys.compactMap { key -> TimeInterval? in
@@ -123,10 +136,9 @@ final class AppStore {
     }
 
     var needsInteractivePayloadRefresh: Bool {
-        let todayKey = PayloadCacheKey(period: .today, provider: .all)
         let periodAllKey = PayloadCacheKey(period: selectedPeriod, provider: .all)
         return cache[currentKey]?.isFresh != true ||
-            cache[todayKey]?.isFresh != true ||
+            cache[todayAllKey]?.isFresh != true ||
             cache[periodAllKey]?.isFresh != true ||
             hasStaleLoading
     }
@@ -269,7 +281,7 @@ final class AppStore {
         let cacheDateAtStart = cacheDate
         let generationAtStart = payloadRefreshGeneration
         if !force, cache[key]?.isFresh == true { return }
-        if !force, inFlightKeys.contains(key) { return }
+        if inFlightKeys.contains(key) { return }
         inFlightKeys.insert(key)
         attemptedKeys.insert(key)
         lastErrorByKey[key] = nil
@@ -349,10 +361,21 @@ final class AppStore {
     /// Background refresh for a period other than the visible one (e.g. keeping today fresh for the menubar badge).
     /// Does not toggle isLoading, so the popover's loading overlay is unaffected.
     /// Always uses the .all provider since the menubar badge shows total spend.
-    func refreshQuietly(period: Period) async {
+    func refreshQuietly(period: Period, force: Bool = false) async {
         invalidateStaleDayCache()
+        let key = PayloadCacheKey(period: period, provider: .all)
+        if !force, cache[key]?.isFresh == true { return }
+        if inFlightKeys.contains(key) { return }
+        inFlightKeys.insert(key)
+        attemptedKeys.insert(key)
         let cacheDateAtStart = cacheDate
         let generationAtStart = payloadRefreshGeneration
+        if period == .today, let age = todayPayloadAgeSeconds, age > 120 {
+            NSLog("CodeBurn: refreshing stale today status payload after %ds", age)
+        }
+        defer {
+            inFlightKeys.remove(key)
+        }
         do {
             let fresh = try await DataClient.fetch(period: period, provider: .all, includeOptimize: false)
             if generationAtStart != payloadRefreshGeneration {
@@ -362,7 +385,6 @@ final class AppStore {
             // Same day-rollover guard as refresh(): drop yesterday's payload if
             // the calendar rolled over during the fetch.
             if cacheDate != cacheDateAtStart { return }
-            let key = PayloadCacheKey(period: period, provider: .all)
             cache[key] = CachedPayload(payload: fresh, fetchedAt: Date())
             lastSuccessByKey[key] = Date()
             lastErrorByKey[key] = nil
