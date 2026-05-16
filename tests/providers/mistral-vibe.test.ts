@@ -273,6 +273,27 @@ describe('mistral-vibe provider - parsing', () => {
     expect(calls).toEqual([])
   })
 
+  it('skips sessions with malformed meta.json', async () => {
+    const sessionDir = join(tmpDir, 'session_20260511_100000_bad')
+    await mkdir(sessionDir, { recursive: true })
+    await writeFile(join(sessionDir, 'meta.json'), '{{not json')
+    await writeFile(join(sessionDir, 'messages.jsonl'), JSON.stringify(userMessage()) + '\n')
+
+    const provider = createMistralVibeProvider(tmpDir)
+    const sessions = await provider.discoverSessions()
+    expect(sessions).toHaveLength(0)
+  })
+
+  it('returns empty calls when messages.jsonl is malformed', async () => {
+    const sessionDir = await writeSession('session_20260511_100000_badjsonl', metadata())
+    await writeFile(join(sessionDir, 'messages.jsonl'), '{{not json\n{{also bad\n')
+
+    const calls = await collect(sessionDir, createMistralVibeProvider(tmpDir))
+    expect(calls).toHaveLength(1)
+    expect(calls[0]!.tools).toEqual([])
+    expect(calls[0]!.bashCommands).toEqual([])
+  })
+
   it('formats model and tool display names', () => {
     const provider = createMistralVibeProvider(tmpDir)
 
