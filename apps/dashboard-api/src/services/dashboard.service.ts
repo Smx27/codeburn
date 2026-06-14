@@ -1,6 +1,8 @@
 import * as dashboardRepo from '../repositories/dashboard.repository.js';
 import { signToken } from '../middlewares/auth.middleware.js';
 import { query, queryOne } from '../database/pool.js';
+import { getMailProvider } from './mail/index.js';
+import * as templates from './mail/templates/index.js';
 import argon2 from 'argon2';
 import crypto from 'crypto';
 
@@ -137,6 +139,27 @@ export async function register(email: string, password: string, name: string | n
 
   const refreshToken = await generateRefreshToken(user.id);
 
+  try {
+    await generateEmailVerification(user.id);
+  } catch {
+    // Don't fail registration if email sending fails
+  }
+
+  try {
+    const mail = await getMailProvider();
+    const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+    await mail.send({
+      to: email,
+      ...templates.welcome({
+        userName: name || email,
+        organizationName,
+        dashboardUrl: `${baseUrl}/dashboard`,
+      }),
+    });
+  } catch {
+    // Don't fail registration if welcome email fails
+  }
+
   return {
     token,
     refreshToken,
@@ -266,10 +289,34 @@ export async function createInvitation(orgId: string, email: string, role: strin
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
-  return queryOne<{ id: string; email: string; token: string; expires_at: string }>(
+  const invitation = await queryOne<{ id: string; email: string; token: string; expires_at: string }>(
     `INSERT INTO organization_invitations (organization_id, email, role, token, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, token, expires_at`,
     [orgId, email, role, token, expiresAt]
   );
+
+  if (invitation) {
+    try {
+      const org = await dashboardRepo.getOrganizationById(orgId);
+      if (org) {
+        const mail = await getMailProvider();
+        const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+        await mail.send({
+          to: email,
+          ...templates.invite({
+            inviterName: 'Your team',
+            organizationName: org.name,
+            role,
+            invitationUrl: `${baseUrl}/login?invitation=${token}`,
+            expiresIn: '7 days',
+          }),
+        });
+      }
+    } catch {
+      // Don't fail invitation creation if email fails
+    }
+  }
+
+  return invitation;
 }
 
 export async function listInvitations(orgId: string) {
@@ -405,12 +452,37 @@ export async function registerAgent(enrollmentKey: string, hostname: string, os?
     [keyRecord.organization_id, user.id, hostname, os, architecture, agentVersion, keyRecord.id]
   );
 
+  try {
+    const org = await dashboardRepo.getOrganizationById(keyRecord.organization_id);
+    if (org) {
+      const adminUser = await queryOne<{ email: string }>(
+        `SELECT email FROM users WHERE organization_id = $1 AND role = 'owner' LIMIT 1`,
+        [keyRecord.organization_id]
+      );
+      if (adminUser) {
+        const mail = await getMailProvider();
+        await mail.send({
+          to: adminUser.email,
+          ...templates.agentConnected({
+            machineName: hostname,
+            os: os || null,
+            organizationName: org.name,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      }
+    }
+  } catch {
+    // Don't fail agent registration if email fails
+  }
+
   const agentToken = signToken({
     id: user.id,
     email: '',
     name: null,
     organizationId: keyRecord.organization_id,
     role: 'agent',
+    machineId: machine!.id,
   });
 
   return {
@@ -449,4 +521,213 @@ export async function getAgent(orgId: string, machineId: string) {
     `SELECT id, hostname, os, architecture, agent_version, first_seen, last_seen, status FROM machines WHERE organization_id = $1 AND id = $2`,
     [orgId, machineId]
   );
+}
+
+// --- Agent Config & Enhanced Registration ---
+
+export async function getAgentConfig(machineId: string): Promise<{
+  apiUrl: string;
+  organizationId: string;
+  machineId: string;
+  syncInterval: number;
+  environment: string;
+} | null> {
+  const machine = await dashboardRepo.getMachineWithOrg(machineId);
+  if (!machine) return null;
+
+  return {
+    apiUrl: process.env.API_URL || 'http://localhost:3002',
+    organizationId: machine.organization_id,
+    machineId: machine.id,
+    syncInterval: 300,
+    environment: process.env.NODE_ENV || 'development',
+  };
+}
+
+export async function generateAgentToken(machineId: string): Promise<string> {
+  const rawToken = crypto.randomBytes(40).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 90);
+
+  await dashboardRepo.createAgentToken(machineId, tokenHash, expiresAt);
+  return rawToken;
+}
+
+export async function validateAgentToken(token: string): Promise<{ machineId: string; organizationId: string } | null> {
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const record = await dashboardRepo.getAgentTokenByHash(tokenHash);
+
+  if (!record) return null;
+
+  if (record.expires_at && new Date(record.expires_at) < new Date()) return null;
+
+  await dashboardRepo.updateAgentTokenLastUsed(record.id);
+
+  const machine = await dashboardRepo.getMachineWithOrg(record.machine_id);
+  if (!machine) return null;
+
+  return {
+    machineId: machine.id,
+    organizationId: machine.organization_id,
+  };
+}
+
+export async function registerAgentEnhanced(
+  enrollmentKey: string,
+  hostname: string,
+  os: string,
+  architecture: string,
+  agentVersion?: string
+): Promise<{
+  machineId: string;
+  organizationId: string;
+  agentToken: string;
+  syncInterval: number;
+} | null> {
+  const result = await registerAgent(enrollmentKey, hostname, os, architecture, agentVersion);
+  if (!result) return null;
+
+  const agentToken = await generateAgentToken(result.machineId);
+
+  return {
+    machineId: result.machineId,
+    organizationId: result.organizationId,
+    agentToken,
+    syncInterval: result.syncInterval,
+  };
+}
+
+// --- Email Verification ---
+
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+export async function generateEmailVerification(userId: string): Promise<void> {
+  const user = await dashboardRepo.getUserById(userId);
+  if (!user) return;
+
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 24);
+
+  await dashboardRepo.createEmailVerification(userId, token, expiresAt);
+
+  const verificationUrl = `${FRONTEND_URL}/verify-email?token=${token}`;
+  const template = templates.verifyEmail({
+    userName: user.name || user.email,
+    verificationUrl,
+    expiresIn: '24 hours',
+  });
+
+  const mail = await getMailProvider();
+  await mail.send({
+    to: user.email,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  });
+}
+
+export async function verifyEmail(token: string): Promise<{ success: boolean; error?: string }> {
+  const record = await dashboardRepo.getEmailVerificationByToken(token);
+  if (!record) {
+    return { success: false, error: 'Invalid or already used verification token' };
+  }
+
+  if (new Date(record.expires_at) < new Date()) {
+    return { success: false, error: 'Verification token has expired' };
+  }
+
+  await dashboardRepo.markEmailVerified(record.user_id);
+  await dashboardRepo.deleteEmailVerificationsForUser(record.user_id);
+
+  return { success: true };
+}
+
+export async function resendVerification(email: string): Promise<void> {
+  const user = await dashboardRepo.getUserByEmail(email);
+  if (!user) return;
+
+  await dashboardRepo.deleteEmailVerificationsForUser(user.id);
+  await generateEmailVerification(user.id);
+}
+
+// --- Password Reset ---
+
+export async function generatePasswordReset(email: string): Promise<void> {
+  const user = await dashboardRepo.getUserByEmail(email);
+  if (!user) return;
+
+  await dashboardRepo.deletePasswordResetsForUser(user.id);
+
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 1);
+
+  await dashboardRepo.createPasswordReset(user.id, tokenHash, expiresAt);
+
+  const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
+  const template = templates.passwordReset({
+    userName: user.name || user.email,
+    resetUrl,
+    expiresIn: '1 hour',
+  });
+
+  const mail = await getMailProvider();
+  await mail.send({
+    to: user.email,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  });
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  if (newPassword.length < 8) {
+    return { success: false, error: 'Password must be at least 8 characters' };
+  }
+
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const record = await dashboardRepo.getPasswordResetByTokenHash(tokenHash);
+
+  if (!record) {
+    return { success: false, error: 'Invalid or already used reset token' };
+  }
+
+  if (new Date(record.expires_at) < new Date()) {
+    return { success: false, error: 'Reset token has expired' };
+  }
+
+  const passwordHash = await argon2.hash(newPassword);
+  await dashboardRepo.updateUserPassword(record.user_id, passwordHash);
+  await dashboardRepo.markPasswordResetUsed(record.id);
+  await dashboardRepo.deleteRefreshTokensForUser(record.user_id);
+
+  return { success: true };
+}
+
+export async function changePassword(userId: string, currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  if (newPassword.length < 8) {
+    return { success: false, error: 'Password must be at least 8 characters' };
+  }
+
+  const user = await dashboardRepo.getUserWithPasswordByEmail(
+    (await dashboardRepo.getUserById(userId))?.email ?? ''
+  );
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
+
+  const passwordValid = await argon2.verify(user.password_hash, currentPassword);
+  if (!passwordValid) {
+    return { success: false, error: 'Current password is incorrect' };
+  }
+
+  const passwordHash = await argon2.hash(newPassword);
+  await dashboardRepo.updateUserPassword(userId, passwordHash);
+  await dashboardRepo.deleteRefreshTokensForUser(userId);
+
+  return { success: true };
 }

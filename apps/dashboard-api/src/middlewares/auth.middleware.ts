@@ -11,6 +11,7 @@ export interface AuthUser {
   name: string | null;
   organizationId: string;
   role: string;
+  machineId?: string;
 }
 
 declare global {
@@ -22,7 +23,7 @@ declare global {
   }
 }
 
-export function signToken(user: { id: string; email: string; name: string | null; organizationId: string; role: string }): string {
+export function signToken(user: { id: string; email: string; name: string | null; organizationId: string; role: string; machineId?: string }): string {
   return jwt.sign(
     {
       sub: user.id,
@@ -30,6 +31,7 @@ export function signToken(user: { id: string; email: string; name: string | null
       name: user.name,
       orgId: user.organizationId,
       role: user.role,
+      machineId: user.machineId,
     },
     JWT_SECRET,
     { expiresIn: '24h' }
@@ -121,6 +123,7 @@ async function handleJwtAuth(token: string, req: Request, res: Response, next: N
       name: user.name,
       organizationId: user.organization_id,
       role: user.role,
+      machineId: payload.machineId as string | undefined,
     };
     req.authMethod = 'jwt';
 

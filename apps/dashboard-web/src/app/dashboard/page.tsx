@@ -30,7 +30,7 @@ function LoadingSkeleton() {
   );
 }
 
-export default function Home() {
+export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
 

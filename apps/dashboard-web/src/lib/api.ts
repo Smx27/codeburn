@@ -1,4 +1,4 @@
-import type { DashboardOverview, ProviderAnalytics, ModelAnalytics, UserAnalytics, ProjectAnalytics, TrendsResponse, LoginRequest, LoginResponse, Period } from '@/types/dashboard';
+import type { DashboardOverview, ProviderAnalytics, ModelAnalytics, UserAnalytics, ProjectAnalytics, TrendsResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Period, EnrollmentKey, GenerateEnrollmentKeyRequest, GenerateEnrollmentKeyResponse, Agent, OnboardingProgress } from '@/types/dashboard';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -14,21 +14,42 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  let response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,
   });
 
-  if (!response.ok) {
-    if (response.status === 401) {
-      if (typeof window !== 'undefined') {
+  if (response.status === 401 && token && typeof window !== 'undefined') {
+    const refreshToken = localStorage.getItem('aiinsight_refresh_token');
+    if (refreshToken) {
+      const refreshResponse = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+      });
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        localStorage.setItem('aiinsight_token', data.token);
+        localStorage.setItem('aiinsight_refresh_token', data.refreshToken);
+        headers['Authorization'] = `Bearer ${data.token}`;
+        response = await fetch(`${API_BASE}${endpoint}`, {
+          ...options,
+          headers,
+        });
+      } else {
         localStorage.removeItem('aiinsight_token');
+        localStorage.removeItem('aiinsight_refresh_token');
         window.location.href = '/login';
       }
-      throw new Error('Unauthorized');
+    } else {
+      localStorage.removeItem('aiinsight_token');
+      window.location.href = '/login';
     }
+  }
+
+  if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || 'Request failed');
+    throw new Error(error.error || `HTTP ${response.status}`);
   }
 
   return response.json();
@@ -36,6 +57,13 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
 
 export async function login(data: LoginRequest): Promise<LoginResponse> {
   return fetchApi<LoginResponse>('/api/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function register(data: RegisterRequest): Promise<RegisterResponse> {
+  return fetchApi<RegisterResponse>('/api/v1/auth/register', {
     method: 'POST',
     body: JSON.stringify(data),
   });
@@ -69,4 +97,41 @@ export async function getProjects(period: Period, limit?: number): Promise<Proje
 
 export async function getTrends(period: Period, granularity: 'daily' | 'weekly' | 'monthly'): Promise<TrendsResponse> {
   return fetchApi<TrendsResponse>(`/api/v1/dashboard/trends?period=${period}&granularity=${granularity}`);
+}
+
+// ── Enrollment Keys ──────────────────────────────────────
+
+export async function listEnrollmentKeys(): Promise<EnrollmentKey[]> {
+  return fetchApi<EnrollmentKey[]>('/api/v1/enrollment-keys/');
+}
+
+export async function generateEnrollmentKey(data: GenerateEnrollmentKeyRequest): Promise<GenerateEnrollmentKeyResponse> {
+  return fetchApi<GenerateEnrollmentKeyResponse>('/api/v1/enrollment-keys/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function revokeEnrollmentKey(id: string): Promise<{ success: boolean }> {
+  return fetchApi<{ success: boolean }>(`/api/v1/enrollment-keys/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function rotateEnrollmentKey(id: string): Promise<GenerateEnrollmentKeyResponse> {
+  return fetchApi<GenerateEnrollmentKeyResponse>(`/api/v1/enrollment-keys/${id}/rotate`, {
+    method: 'POST',
+  });
+}
+
+// ── Agents ───────────────────────────────────────────────
+
+export async function listAgents(): Promise<Agent[]> {
+  return fetchApi<Agent[]>('/api/v1/agents/');
+}
+
+// ── Onboarding ───────────────────────────────────────────
+
+export async function getOnboardingProgress(): Promise<OnboardingProgress> {
+  return fetchApi<OnboardingProgress>('/api/v1/onboarding/progress');
 }

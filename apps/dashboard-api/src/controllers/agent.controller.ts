@@ -10,13 +10,33 @@ export async function registerAgent(req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const result = await dashboardService.registerAgent(enrollmentKey, hostname, os, architecture, agentVersion);
+    const result = await dashboardService.registerAgentEnhanced(enrollmentKey, hostname, os, architecture, agentVersion);
     if (!result) {
       res.status(401).json({ error: 'Invalid or expired enrollment key' });
       return;
     }
 
     res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getAgentConfig(req: Request, res: Response): Promise<void> {
+  try {
+    const machineId = req.user?.machineId;
+    if (!machineId) {
+      res.status(400).json({ error: 'Machine ID not found in token' });
+      return;
+    }
+
+    const config = await dashboardService.getAgentConfig(machineId);
+    if (!config) {
+      res.status(404).json({ error: 'Machine not found' });
+      return;
+    }
+
+    res.json(config);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

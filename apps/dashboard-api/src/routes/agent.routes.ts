@@ -6,6 +6,7 @@ const router = Router();
 
 router.post('/register', agentController.registerAgent);
 router.post('/heartbeat', agentController.heartbeat);
+router.get('/config', authMiddleware, agentController.getAgentConfig);
 router.get('/', authMiddleware, agentController.listAgents);
 router.get('/:id', authMiddleware, agentController.getAgent);
 

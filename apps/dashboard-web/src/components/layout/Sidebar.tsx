@@ -33,7 +33,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
   {
     title: 'OVERVIEW',
     items: [
-      { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+      { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     ],
   },
   {
@@ -50,6 +50,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
     title: 'SETTINGS',
     items: [
       { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'Agents', href: '/settings/agents', icon: Cpu },
     ],
   },
 ];

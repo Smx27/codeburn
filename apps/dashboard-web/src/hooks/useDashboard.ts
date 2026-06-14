@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getOverview, getProviders, getModels, getUsers, getProjects, getTrends } from '@/lib/api';
+import { getOverview, getProviders, getModels, getUsers, getProjects, getTrends, getOnboardingProgress, listAgents } from '@/lib/api';
 import type { Period } from '@/types/dashboard';
 
 export function useOverview(period: Period) {
@@ -41,5 +41,21 @@ export function useTrends(period: Period, granularity: 'daily' | 'weekly' | 'mon
   return useQuery({
     queryKey: ['trends', period, granularity],
     queryFn: () => getTrends(period, granularity),
+  });
+}
+
+export function useOnboardingProgress() {
+  return useQuery({
+    queryKey: ['onboarding-progress'],
+    queryFn: () => getOnboardingProgress(),
+    staleTime: 60_000,
+  });
+}
+
+export function useAgents() {
+  return useQuery({
+    queryKey: ['agents'],
+    queryFn: () => listAgents(),
+    staleTime: 30_000,
   });
 }

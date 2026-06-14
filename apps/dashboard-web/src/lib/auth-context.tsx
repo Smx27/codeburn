@@ -30,6 +30,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'aiinsight_token' && !e.newValue) {
+        setUser(null);
+        setToken(null);
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     const result = await apiLogin({ email, password });
     localStorage.setItem('aiinsight_token', result.token);

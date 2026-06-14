@@ -2,202 +2,131 @@
 
 A map of the codebase. Read this once before opening a non-trivial PR.
 
-## Three Surfaces
+## System Overview
 
-AiInsight is one Node.js CLI plus two GUI clients that shell out to it.
+AiInsight is a comprehensive AI coding cost management platform with 6 components:
+
+1. **CLI** - Command-line interface for local usage analysis
+2. **Sync Engine** - Client-side library for cloud synchronization
+3. **Ingestion API** - Multi-tenant REST API for event storage
+4. **Analytics Engine** - Core aggregation library for usage summaries
+5. **Dashboard API** - REST API for analytics data
+6. **Dashboard Web** - Next.js frontend for visualization
+
+The project is organized as a monorepo with npm workspaces:
 
 ```
-+----------------------+      +-----------------+
-| mac/  (Swift)        | ---> |                 |
-+----------------------+      |  src/cli.ts     |
-| gnome/ (JavaScript)  | ---> |  (the CLI)      |
-+----------------------+      |                 |
-                              |  status         |
-                              |  --format       |
-                              |  menubar-json   |
-                              +-----------------+
-                                       |
-                                       v
-                          +----------------------------+
-                          | session files on disk      |
-                          | (JSONL, SQLite, protobuf)  |
-                          +----------------------------+
+aiinsight/
+├── src/                          # CLI source (OSS)
+├── packages/
+│   ├── sync-engine/              # Client-side sync library
+│   └── analytics-engine/         # Core aggregation library
+├── apps/
+│   ├── ingestion-api/            # Event ingestion REST API
+│   ├── dashboard-api/            # Analytics REST API
+│   └── dashboard-web/            # Next.js frontend
+├── mac/                          # macOS menubar app (Swift)
+├── gnome/                        # GNOME extension (JavaScript)
+└── docs/                         # Documentation
 ```
 
-The macOS menubar (`mac/`) and the GNOME extension (`gnome/`) both invoke `aiinsight status --format menubar-json --period <p>` and parse the JSON. They do not share code with the CLI; they only depend on its output contract.
+## Architecture Diagram
 
-## CLI (`src/`)
+```mermaid
+graph TB
+    subgraph "User's Machine"
+        CLI[CLI<br/>Commander.js + Ink]
+        SE[Sync Engine<br/>@aiinsight/sync-engine]
+        CLI --> SE
+    end
 
-`src/cli.ts` is the Commander.js entry point. The bin field in `package.json` points at `dist/cli.js`. Twelve commands are registered:
+    subgraph "Cloud"
+        IA[Ingestion API<br/>Express.js :3001]
+        DB[(PostgreSQL)]
+        AE[Analytics Engine<br/>@aiinsight/analytics-engine]
+        DA[Dashboard API<br/>Express.js :3002]
+        DW[Dashboard Web<br/>Next.js 15 :3000]
+        
+        IA --> DB
+        AE --> DB
+        DA --> DB
+        DW --> DA
+    end
 
-| Command | Line | Purpose |
-|---|---|---|
-| `report` | 274 | Default. Interactive Ink TUI dashboard. |
-| `status` | 358 | Compact text status, plus `--format menubar-json` for clients. |
-| `today` | 524 | Today-only view of `report`. |
-| `month` | 542 | Month-only view of `report`. |
-| `export` | 560 | CSV or JSON dump of usage data. |
-| `menubar` | 621 | Downloads and launches the macOS menubar bundle. |
-| `currency` | 636 | Sets display currency. |
-| `model-alias` | 687 | Maps an unknown model name to a known one for pricing. |
-| `plan` | 737 | Configures a subscription plan for overage tracking. |
-| `optimize` | 857 | Runs all 14 waste detectors. |
-| `compare` | 870 | Compares two models side by side. |
-| `yield` | 882 | Tracks which sessions shipped to main vs. were reverted (experimental). |
+    subgraph "External"
+        Agent[Agent<br/>CLI Instance]
+    end
 
-### Pipeline
+    SE -->|batch upload| IA
+    Agent -->|enrollment key| DA
+    Agent -->|agent token| DA
+
+    style CLI fill:#e1f5fe
+    style SE fill:#e1f5fe
+    style IA fill:#f3e5f5
+    style DB fill:#fff3e0
+    style AE fill:#f3e5f5
+    style DA fill:#f3e5f5
+    style DW fill:#e8f5e9
+    style Agent fill:#fce4ec
+```
+
+## Component Details
+
+### CLI (`src/`)
+
+Commander.js + Ink (React for terminals) command-line interface.
+
+**Commands:**
+
+| Command | Purpose |
+|---------|---------|
+| `report` | Default. Interactive Ink TUI dashboard |
+| `today` | Today-only view of report |
+| `month` | Month-only view of report |
+| `export` | CSV or JSON dump of usage data |
+| `status` | Compact text status, `--format menubar-json` for clients |
+| `optimize` | Runs all 14 waste detectors |
+| `compare` | Compares two models side by side |
+| `yield` | Tracks sessions shipped vs reverted (experimental) |
+| `menubar` | Downloads and launches macOS menubar bundle |
+| `currency` | Sets display currency |
+| `model-alias` | Maps unknown model names for pricing |
+| `plan` | Configures subscription plan for overage tracking |
+
+**31 Provider Adapters:**
+
+| Tier | Providers |
+|------|-----------|
+| **Core** (19) | claude, cline, codebuff, codex, copilot, devin, droid, gemini, ibm-bob, kilo-code, kiro, kimi, mistral-vibe, mux, openclaw, pi/omp, qwen, roo-code |
+| **Lazy** (12) | antigravity, cursor, cursor-agent, crush, forge, goose, opencode, vercel-gateway, warp |
+
+**Pipeline:**
 
 ```
 provider.discoverSessions()
-        |
-        v
+        ↓
 provider.createSessionParser(source, seenKeys)
-        |
-        v   yields ParsedProviderCall (see src/providers/types.ts)
-        |
-        v
+        ↓
 src/parser.ts: parseAllSessions()
-        |
-        v   aggregates into ProjectSummary[]
-        |
-        v
+        ↓
 src/daily-cache.ts: aggregate per day, persist
-        |
-        v
+        ↓
 output formatter (Ink TUI, JSON, or menubar-json)
 ```
-
-`src/parser.ts` is the central aggregator. Public exports: `parseAllSessions`, `filterProjectsByName`, `extractMcpInventory`. It owns the dedup `Set` (`seenKeys`) that is passed into every provider parser so a turn that surfaces in two providers (Claude logs vs. Cursor mirror, for instance) is counted once.
-
-### Cache Layers
-
-Three caches under `~/.cache/aiinsight/` (override with `AIINSIGHT_CACHE_DIR`):
-
-| File | Owner | Invalidation |
-|---|---|---|
-| `codex-results.json` | `src/codex-cache.ts` | `mtimeMs + sizeBytes` per Codex `.jsonl`. |
-| `cursor-results.json` | `src/cursor-cache.ts` | `mtimeMs + sizeBytes` of the Cursor SQLite db. |
-| `daily-cache.json` | `src/daily-cache.ts` | Tracks `lastComputedDate`; new days are backfilled, old days are reused. |
-
-All three use atomic write (temp file + `rename`) and write with mode `0o600`. All three carry a numeric `version` field; bumping it forces a recompute next run.
-
-### Optimize Detectors
-
-`src/optimize.ts` exports 14 detectors. Each returns a `WasteFinding | null`. They are composed by `runOptimize()` which collects findings, ranks them by impact, and returns them with `WasteAction` objects (paste-to-CLAUDE.md, paste-to-session-opener, prompt-now, edit shell config).
-
-| Detector | Line | What it catches |
-|---|---|---|
-| `detectJunkReads` | 428 | Reads into `node_modules`, `.git`, `dist`, etc. |
-| `detectDuplicateReads` | 477 | Re-reads of the same file in a session. |
-| `detectMcpToolCoverage` | 795 | MCP servers with many tools but low usage. |
-| `detectUnusedMcp` | 855 | MCP servers configured but never invoked. |
-| `detectBloatedClaudeMd` | 944 | `CLAUDE.md` files past a healthy size. |
-| `detectLowReadEditRatio` | 987 | Edit-heavy sessions with too few prior reads. |
-| `detectCacheBloat` | 1048 | High `cache_creation_input_tokens`. |
-| `detectGhostAgents` | 1124 | Defined but never-invoked Claude agents. |
-| `detectGhostSkills` | 1154 | Defined but never-invoked skills. |
-| `detectGhostCommands` | 1184 | Defined but never-invoked slash commands. |
-| `detectBashBloat` | 1228 | Shell output limit set above the recommended 15K chars. |
-| `detectLowWorthSessions` | 1405 | Sessions with cost but no edits or git delivery. |
-| `detectContextBloat` | 1512 | Input:output token ratio above 25:1. |
-| `detectSessionOutliers` | 1558 | Sessions costing more than 2x the project average. |
-
-### Output Formats
-
-| Command | `--format` choices | Default |
-|---|---|---|
-| `report`, `today`, `month` | `tui`, `json` | `tui` |
-| `status` | `terminal`, `menubar-json`, `json` | `terminal` |
-| `export` | `csv`, `json` | `csv` |
-| `plan` | `text`, `json` | `text` |
-
-The macOS menubar and GNOME extension consume `menubar-json`. `src/menubar-json.ts` defines the contract; `tests/menubar-json.test.ts` pins it.
-
-## Providers (`src/providers/`)
-
-Every provider implements the `Provider` interface in `src/providers/types.ts`:
-
-```ts
-type Provider = {
-  name: string
-  displayName: string
-  modelDisplayName(model: string): string
-  toolDisplayName(rawTool: string): string
-  discoverSessions(): Promise<SessionSource[]>
-  createSessionParser(source: SessionSource, seenKeys: Set<string>): SessionParser
-}
-```
-
-`src/providers/index.ts` registers twenty-one providers across two tiers:
-
-- **Eager**: `claude`, `cline`, `codex`, `copilot`, `droid`, `gemini`, `ibm-bob`, `kilo-code`, `kiro`, `kimi`, `openclaw`, `pi`, `omp`, `qwen`, `roo-code`. Imported at module load.
-- **Lazy**: `antigravity`, `goose`, `cursor`, `opencode`, `cursor-agent`, `crush`. Imported via dynamic `import()` so the heavy dependencies (SQLite, protobuf) do not touch users who do not have those tools installed.
-
-Both lists hit the same `getAllProviders()` aggregator. A failed lazy import is silent and excludes that provider from the run.
-
-`src/providers/vscode-cline-parser.ts` is a shared helper consumed by `cline`, `ibm-bob`, `kilo-code`, and `roo-code`. It is not registered as a provider on its own.
-
-For the per-provider data location, storage format, parser quirks, and test coverage, see `docs/providers/`.
-
-## macOS Menubar (`mac/`)
-
-Swift package (`mac/Package.swift`), targets macOS 14, strict concurrency on. Layout under `mac/Sources/AiInsightMenubar/`:
-
-- `AiInsightApp.swift` boots the SwiftUI `App` and the `NSStatusItem`.
-- `AppStore.swift` is the single source of truth for UI state.
-- `Data/` holds models, the CLI client, credential stores, and subscription services.
-  - `DataClient.swift` spawns the CLI and decodes `MenubarPayload`. See file-level comment for why we never route through `/bin/zsh -c`.
-  - `MenubarPayload.swift` mirrors the JSON the CLI emits; keep it in sync with `src/menubar-json.ts`.
-- `Security/AiInsightCLI.swift` resolves the CLI binary (env override `AIINSIGHT_BIN`, fallback `aiinsight`), validates each argv entry against an allowlist regex, and augments PATH for Homebrew and npm-global installs. The Process is launched via `/usr/bin/env`, never via a shell.
-- `Theme/` holds color and typography constants and the dark/light state.
-- `Views/` are the SwiftUI components rendered inside `NSPopover`.
-
-Tests live in `mac/Tests/AiInsightMenubarTests/` (currently `CapacityEstimatorTests.swift`).
-
-The build artifact is a zipped `.app` bundle produced by `mac/Scripts/package-app.sh`. See `RELEASING.md` for how the GitHub Actions workflow uses it.
-
-## GNOME Extension (`gnome/`)
-
-Plain JavaScript, no bundler. Targets GNOME Shell 45-50 (`metadata.json`).
-
-- `extension.js` is the entry point. On `enable()` it constructs a `AiInsightIndicator` and adds it to the panel.
-- `indicator.js` is the popover. It owns the period selector, the insight tabs, and the provider filter.
-- `dataClient.js` wraps `Gio.Subprocess` to call the CLI. It validates argv against the same allowlist pattern as the macOS client and augments PATH with `~/.local/bin`, `~/.npm-global/bin`, `~/.volta/bin`, `~/.bun/bin`, `~/.cargo/bin`, `~/.asdf/shims`, and a few others. Results are cached for 300 seconds.
-- `prefs.js` is the settings dialog backed by `schemas/org.gnome.shell.extensions.aiinsight.gschema.xml`.
-- `install.sh` copies the extension into `~/.local/share/gnome-shell/extensions/`.
-
-## Build (`scripts/`, `tsup.config.ts`)
-
-`npm run build` is two steps:
-
-1. `node scripts/bundle-litellm.mjs` fetches the latest litellm pricing JSON and writes `src/data/litellm-snapshot.json`. The bundle script keeps a manual override for MiniMax variants. Direct (un-prefixed) entries win over prefixed ones. The result is checked in so the build is reproducible.
-2. `tsup` reads `tsup.config.ts` and emits a single ESM bundle at `dist/cli.js` with a Node shebang banner. No source maps in publish builds; sourcemaps on for development.
-
-The `prepublishOnly` hook in `package.json` runs `npm run build` so `npm publish` always ships fresh code.
-
-## Tests
-
-`npm test` runs vitest. Forty-two test files live under `tests/`:
-
-- `tests/` root (27 files) covers CLI, parser, optimize, cache, format, models, plans.
-- `tests/security/` (1 file) covers prototype-pollution guards.
-- `tests/providers/` (15 files) covers per-provider parsing.
-- `tests/fixtures/` holds redacted real-world session data.
-
-Five providers ship without dedicated test files today: `antigravity`, `claude`, `gemini`, `goose`, `qwen`. Closing this gap is a standing good-first-issue.
-
-CI runs Semgrep against `.semgrep/rules/no-bracket-assign-hot-paths.yml` over `src/providers/` and `src/parser.ts` (`.github/workflows/ci.yml`). It does not run vitest in CI today; tests run locally before publish.
-
----
-
-## Cloud Packages
-
-AiInsight Cloud extends the OSS CLI with team collaboration and analytics. Three new packages were added in Phase 1 and Phase 2.
 
 ### Sync Engine (`packages/sync-engine/`)
 
 Client-side library that discovers, parses, and uploads provider session data to the cloud ingestion API.
 
+**Features:**
+- Discovers sessions from provider directories
+- Batches events for upload with queue persistence
+- Exponential backoff retry logic
+- Historical + incremental sync loop
+- File-based state tracking
+
+**Structure:**
 ```
 packages/sync-engine/src/
 ├── index.ts                    # SyncEngine class, exports
@@ -205,7 +134,6 @@ packages/sync-engine/src/
 │   └── ingestion.client.ts     # HTTP client for API calls
 ├── providers/
 │   ├── index.ts                # Adapter registry
-│   ├── oss-types.ts            # Types copied from OSS parsers
 │   ├── claude.sync.ts          # Claude adapter
 │   ├── codex.sync.ts           # Codex adapter
 │   ├── cursor.sync.ts          # Cursor adapter
@@ -227,6 +155,19 @@ packages/sync-engine/src/
 
 Multi-tenant REST API that receives, validates, deduplicates, and stores usage events in PostgreSQL.
 
+**Features:**
+- Express.js, port 3001
+- Zod validation for request schemas
+- Multi-tenant via organization_id
+- OpenAPI/Swagger documentation at `/api/docs`
+- Agent authentication middleware
+
+**Endpoints:**
+- `POST /api/v1/ingest/batch` - Batch event ingestion
+- `POST /api/v1/ingest/sessions` - Session ingestion
+- `POST /api/v1/ingest/events` - Event ingestion
+
+**Structure:**
 ```
 apps/ingestion-api/src/
 ├── index.ts                    # Express app setup
@@ -246,6 +187,8 @@ apps/ingestion-api/src/
 │       ├── 008_daily_user_usage.sql
 │       ├── 009_daily_project_usage.sql
 │       └── 010_auth.sql
+├── middlewares/
+│   └── auth.middleware.ts      # Agent auth
 ├── repositories/
 │   ├── event.repository.ts
 │   ├── machine.repository.ts
@@ -267,6 +210,20 @@ apps/ingestion-api/src/
 
 Core aggregation library that computes daily usage summaries from raw events.
 
+**5 Aggregation Jobs:**
+1. `daily_usage` - Org-level daily summary
+2. `daily_provider_usage` - Per-provider daily summary
+3. `daily_model_usage` - Per-model daily summary
+4. `daily_user_usage` - Per-user daily summary
+5. `daily_project_usage` - Per-project daily summary
+
+**Features:**
+- Hourly incremental updates (yesterday's data)
+- Historical backfill on demand
+- Idempotent upserts (ON CONFLICT DO UPDATE)
+- Resume capability via aggregation_runs table
+
+**Structure:**
 ```
 packages/analytics-engine/src/
 ├── index.ts                         # Public exports
@@ -293,6 +250,23 @@ packages/analytics-engine/src/
 
 Express REST API serving pre-aggregated analytics data with JWT and API key authentication.
 
+**Features:**
+- Express.js, port 3002
+- JWT + API key dual authentication
+- Multi-tenant data isolation
+- Comprehensive route coverage
+
+**Routes:**
+- `/api/v1/auth` - Login, refresh, register
+- `/api/v1/organizations` - Organization management
+- `/api/v1/teams` - Team management
+- `/api/v1/invitations` - Invitation system
+- `/api/v1/enrollment-keys` - Agent enrollment keys
+- `/api/v1/agents` - Agent management
+- `/api/v1/onboarding` - Onboarding progress
+- `/api/v1/dashboard` - Analytics data
+
+**Structure:**
 ```
 apps/dashboard-api/src/
 ├── index.ts                         # Express app setup
@@ -309,6 +283,12 @@ apps/dashboard-api/src/
 ├── routes/
 │   ├── dashboard.routes.ts          # Dashboard endpoints
 │   ├── auth.routes.ts               # Login/refresh endpoints
+│   ├── organization.routes.ts       # Organization management
+│   ├── team.routes.ts               # Team management
+│   ├── invitation.routes.ts         # Invitation system
+│   ├── enrollment.routes.ts         # Enrollment keys
+│   ├── agent.routes.ts              # Agent management
+│   ├── onboarding.routes.ts         # Onboarding progress
 │   └── health.route.ts              # Health check
 ├── services/
 │   └── dashboard.service.ts         # Business logic
@@ -320,27 +300,55 @@ apps/dashboard-api/src/
 
 Next.js 15 frontend for analytics visualization.
 
+**Features:**
+- Next.js 15 (App Router)
+- React 19
+- Tailwind CSS
+- TanStack Query for data fetching
+- Recharts for visualization
+
+**Pages:**
+- `/` - Landing page (marketing)
+- `/login` - Login
+- `/register` - Registration
+- `/forgot-password` - Password reset request
+- `/reset-password` - Password reset
+- `/getting-started` - Onboarding wizard
+- `/dashboard` - Overview dashboard
+- `/providers` - Provider analytics
+- `/models` - Model analytics
+- `/users` - User analytics
+- `/projects` - Project analytics
+- `/trends` - Usage trends
+- `/settings` - Organization settings
+- `/settings/agents` - Agent setup and management
+
+**Structure:**
 ```
 apps/dashboard-web/src/
 ├── app/
 │   ├── layout.tsx                   # Root layout with providers
-│   ├── page.tsx                     # Home (Overview)
+│   ├── page.tsx                     # Landing page
 │   ├── globals.css                  # Tailwind CSS
 │   ├── login/page.tsx               # Login page
+│   ├── register/page.tsx            # Registration page
+│   ├── forgot-password/page.tsx     # Password reset request
+│   ├── reset-password/page.tsx      # Password reset
+│   ├── getting-started/page.tsx     # Onboarding wizard
+│   ├── dashboard/page.tsx           # Overview dashboard
 │   ├── providers/page.tsx           # Provider analytics
 │   ├── models/page.tsx              # Model analytics
 │   ├── users/page.tsx               # User analytics
 │   ├── projects/page.tsx            # Project analytics
-│   └── trends/page.tsx              # Usage trends
+│   ├── trends/page.tsx              # Usage trends
+│   ├── settings/page.tsx            # Organization settings
+│   └── settings/agents/page.tsx     # Agent setup
 ├── components/
 │   ├── DashboardShell.tsx           # Layout with nav
 │   ├── PeriodSelector.tsx           # Period dropdown
 │   ├── pages/                       # Page components
 │   ├── ui/                          # Card, Select primitives
 │   └── charts/                      # Recharts components
-│       ├── BarChart.tsx
-│       ├── ProviderChart.tsx
-│       └── TrendChart.tsx
 ├── hooks/
 │   └── useDashboard.ts             # TanStack Query hooks
 ├── lib/
@@ -351,59 +359,183 @@ apps/dashboard-web/src/
     └── dashboard.ts                 # TypeScript interfaces
 ```
 
-### Cloud Data Flow
+### PostgreSQL
 
+20+ tables across 13 migrations with multi-tenant isolation.
+
+**Key Tables:**
+- `organizations` - Tenant organizations
+- `users` - User accounts
+- `machines` - Registered machines/agents
+- `sessions` - Usage sessions
+- `events` - Raw usage events
+- `daily_usage` - Precomputed daily summaries
+- `daily_provider_usage` - Per-provider summaries
+- `daily_model_usage` - Per-model summaries
+- `daily_user_usage` - Per-user summaries
+- `daily_project_usage` - Per-project summaries
+- `enrollment_keys` - Agent enrollment keys
+- `invitations` - User invitations
+- `teams` - Team management
+- `api_keys` - API key authentication
+
+**Design:**
+- Multi-tenant via organization_id foreign keys
+- Precomputed aggregate tables for fast queries
+- Idempotent upserts for safe reprocessing
+
+## Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant DW as Dashboard Web
+    participant DA as Dashboard API
+    participant DB as PostgreSQL
+
+    Note over U,DB: Registration Flow
+    U->>DW: Register (email, password)
+    DW->>DA: POST /api/v1/auth/register
+    DA->>DB: Create user
+    DA->>DW: Send verification email
+    U->>DW: Click verification link
+    DW->>DA: POST /api/v1/auth/verify
+    DA->>DB: Mark verified
+
+    Note over U,DB: Login Flow
+    U->>DW: Login (email, password)
+    DW->>DA: POST /api/v1/auth/login
+    DA->>DB: Validate credentials
+    DA->>DW: JWT (24h) + Refresh Token (30d)
+    DW->>DW: Store in context
+
+    Note over U,DB: Agent Enrollment Flow
+    U->>DW: Create enrollment key
+    DW->>DA: POST /api/v1/enrollment-keys
+    DA->>DB: Store key hash
+    DA->>DW: Return enrollment key
+    
+    Agent->>DA: POST /api/v1/agents/enroll (enrollment key)
+    DA->>DB: Create agent, generate token
+    DA->>Agent: Agent token (JWT)
+    Agent->>DA: Sync events (agent token)
+    DA->>DB: Store events
 ```
-Raw Events (Phase 1)
-    │
-    ▼
-Analytics Engine Aggregators
-    │
-    ▼
-Pre-aggregated Summary Tables
-    │
-    ▼
-Dashboard API (reads from summary tables)
-    │
-    ▼
-Dashboard Web (fetches via REST, renders charts/tables)
+
+## Data Flow
+
+```mermaid
+sequenceDiagram
+    participant CLI as CLI
+    participant SE as Sync Engine
+    participant IA as Ingestion API
+    participant DB as PostgreSQL
+    participant AE as Analytics Engine
+    participant DA as Dashboard API
+    participant DW as Dashboard Web
+
+    Note over CLI,DW: Data Ingestion
+    CLI->>SE: Discover sessions
+    SE->>SE: Parse provider data
+    SE->>SE: Batch events
+    SE->>IA: POST /api/v1/ingest/batch
+    IA->>IA: Validate (Zod)
+    IA->>DB: Store raw events
+
+    Note over CLI,DW: Analytics Aggregation
+    loop Hourly
+        AE->>DB: Query unaggregated events
+        AE->>DB: Upsert aggregate tables
+    end
+
+    Note over CLI,DW: Dashboard Display
+    DW->>DA: GET /api/v1/dashboard/overview
+    DA->>DB: Query aggregate tables
+    DA->>DW: Pre-aggregated data
+    DW->>DW: Render charts (Recharts)
 ```
 
-### Cloud Authentication
+## Deployment
 
-| Method | Use Case | Header |
-|--------|----------|--------|
-| JWT Token | Web dashboard users | `Authorization: Bearer <jwt>` |
-| API Key | Machine-to-machine | `Authorization: Bearer cb_<key>` or `X-API-Key cb_<key>` |
+### Docker Compose
 
-### Cloud Roles
+```yaml
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-| Role | Permissions |
-|------|-------------|
-| `user` | View dashboard, query analytics |
-| `org_admin` | All user permissions + trigger backfill, manage API keys |
+  ingestion-api:
+    build: apps/ingestion-api
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-### Containerization (Docker)
+  dashboard-api:
+    build: apps/dashboard-api
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-The cloud stack is fully containerized via `docker-compose.yml` at the project root. Each service has a multi-stage `Dockerfile` that builds from the monorepo root (to resolve workspace dependencies) and produces a minimal runtime image.
-
+  dashboard-web:
+    build: apps/dashboard-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dashboard-api
 ```
-docker-compose.yml
-├── postgres          (postgres:16-alpine, port 5432)
-├── ingestion-api     (apps/ingestion-api/Dockerfile, port 3001)
-├── dashboard-api     (apps/dashboard-api/Dockerfile, port 3002)
-└── dashboard-web     (apps/dashboard-web/Dockerfile, port 3000)
-```
 
-**Build strategy:** Each Dockerfile has two stages — `base` (install + compile TypeScript) and `runtime` (copy only dist + production deps). The `analytics-engine` package is built inside the `dashboard-api` image since it is a workspace dependency.
+### Environment Variables
 
-**Database:** PostgreSQL 16 Alpine with a named volume (`postgres_data`). Health checks ensure APIs wait for the database to be ready before starting.
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | - |
+| `JWT_SECRET` | Secret for JWT signing | - |
+| `JWT_REFRESH_SECRET` | Secret for refresh tokens | - |
+| `RESEND_API_KEY` | Resend email API key | - |
+| `SMTP_HOST` | SMTP server host | - |
+| `SMTP_PORT` | SMTP server port | 587 |
+| `SMTP_USER` | SMTP username | - |
+| `SMTP_PASS` | SMTP password | - |
+| `PORT` | API port (per service) | 3001/3002 |
 
-**Migrations:** Run manually after first deploy:
-```bash
-docker compose exec ingestion-api node dist/database/migrate.js
-```
+### Port Mapping
 
-The local CLI, sync engine, macOS menubar, and GNOME extension are not containerized — they run on developer machines and sync to the hosted ingestion API.
+| Service | Port | URL |
+|---------|------|-----|
+| Dashboard Web | 3000 | http://localhost:3000 |
+| Ingestion API | 3001 | http://localhost:3001 |
+| Dashboard API | 3002 | http://localhost:3002 |
+| PostgreSQL | 5432 | localhost:5432 |
 
-For detailed cloud architecture, see `docs/phases/phase-01-cloud-foundation.md` and `docs/phases/phase-02-analytics-dashboard.md`.
+## Architectural Decisions
+
+| ADR | Decision | Rationale |
+|-----|----------|-----------|
+| ADR-001 | Separate analytics bounded context | Clear separation of concerns, independent scaling |
+| ADR-002 | Precomputed aggregate tables | Sub-500ms dashboard response times |
+| ADR-003 | JWT + API key dual authentication | Supports web users and machine-to-machine |
+| ADR-004 | Next.js 15 + TanStack Query | Modern patterns, automatic caching |
+| ADR-005 | Idempotent aggregation jobs | Safe reruns, graceful failure handling |
+| ADR-006 | Hourly incremental + historical backfill | Fresh data + backfill capability |
+
+## Related Documentation
+
+- [Roadmap](roadmap.md) - Phase timeline and milestones
+- [ADR-001](adr/ADR-001-separate-analytics-bounded-context.md) - Analytics bounded context
+- [ADR-002](adr/ADR-002-precomputed-aggregate-tables.md) - Aggregate tables
+- [ADR-003](adr/ADR-003-jwt-api-key-dual-authentication.md) - Authentication
+- [ADR-004](adr/ADR-004-nextjs-15-tanstack-query.md) - Frontend stack
+- [ADR-005](adr/ADR-005-idempotent-aggregation-jobs.md) - Idempotent jobs
+- [ADR-006](adr/ADR-006-hourly-incremental-historical-backfill.md) - Aggregation pattern
+- Phase 01: [Cloud Foundation](phases/phase-01-cloud-foundation.md)
+- Phase 02: [Analytics Dashboard](phases/phase-02-analytics-dashboard.md)
+- Phase 03: [Organization Onboarding](phases/phase-03-org-onboarding.md)
+- Phase 3.5: [Activation & Onboarding](phases/phase-3.5-activation-onboarding.md)

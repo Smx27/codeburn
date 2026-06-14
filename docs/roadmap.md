@@ -11,6 +11,7 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 | 01 | Cloud Foundation | ✅ Complete | [phase-01-cloud-foundation.md](phases/phase-01-cloud-foundation.md) |
 | 02 | Analytics & Dashboard | ✅ Complete | [phase-02-analytics-dashboard.md](phases/phase-02-analytics-dashboard.md) |
 | 03 | Organization Onboarding & Tenant Management | ✅ Complete | [phase-03-org-onboarding.md](phases/phase-03-org-onboarding.md) |
+| 3.5 | Activation & Onboarding | ✅ Complete | [phase-3.5-activation-onboarding.md](phases/phase-3.5-activation-onboarding.md) |
 | 04 | ClickHouse & Real-time | 📋 Planned | - |
 | 05 | Billing & Alerts | 📋 Planned | - |
 | 06 | Mobile & Integrations | 📋 Planned | - |
@@ -66,6 +67,27 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 **Duration:** 2 weeks
 **Dependencies:** Phase 02
 
+### Phase 3.5: Activation & Onboarding ✅
+
+**Goal:** Enable new organizations to self-serve from signup to first analytics dashboard.
+
+**Deliverables:**
+- Modern SaaS landing page with marketing sections
+- Email verification and password reset flows
+- Mail service abstraction (Resend + SMTP)
+- 6 email templates (welcome, verify, reset, invite, agent-connected, sync-completed)
+- Registration page with password strength indicator
+- Getting Started wizard (6 steps)
+- Onboarding progress widget
+- Empty state dashboard experience
+- Agent setup page with enrollment keys and machine management
+- Agent configuration endpoint and token system
+- Comprehensive documentation (6 guides)
+- Expanded seed script with 100K events
+
+**Duration:** 2 weeks
+**Dependencies:** Phase 03
+
 ### Phase 04: ClickHouse & Real-time (Planned)
 
 **Goal:** Enable high-scale analytics and real-time updates.
@@ -80,13 +102,13 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 - Token refresh rotation
 
 **Duration:** 3 weeks
-**Dependencies:** Phase 02
+**Dependencies:** Phase 03
 
 **Key Decisions:**
 - [ADR-007] ClickHouse for high-scale analytics
 - [ADR-008] WebSocket for real-time updates
 
-### Phase 04: Billing & Alerts (Planned)
+### Phase 05: Billing & Alerts (Planned)
 
 **Goal:** Enable billing integration and cost alerts.
 
@@ -98,13 +120,13 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 - Row-level security (RLS) policies
 
 **Duration:** 3 weeks
-**Dependencies:** Phase 03
+**Dependencies:** Phase 04
 
 **Key Decisions:**
 - [ADR-009] Billing integration approach
 - [ADR-010] Alerting system design
 
-### Phase 05: Mobile & Integrations (Planned)
+### Phase 06: Mobile & Integrations (Planned)
 
 **Goal:** Enable mobile access and team integrations.
 
@@ -115,7 +137,7 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 - Advanced analytics (ML-powered insights)
 
 **Duration:** 4 weeks
-**Dependencies:** Phase 04
+**Dependencies:** Phase 05
 
 **Key Decisions:**
 - [ADR-011] Mobile app framework
@@ -126,26 +148,28 @@ AiInsight Cloud is being built in phases to enable team collaboration, centraliz
 ```mermaid
 graph TD
     P01[Phase 01: Cloud Foundation] --> P02[Phase 02: Analytics & Dashboard]
-    P02 --> P03[Phase 03: ClickHouse & Real-time]
-    P03 --> P04[Phase 04: Billing & Alerts]
-    P04 --> P05[Phase 05: Mobile & Integrations]
+    P02 --> P03[Phase 03: Organization Onboarding]
+    P03 --> P35[Phase 3.5: Activation & Onboarding]
+    P35 --> P04[Phase 04: ClickHouse & Real-time]
+    P04 --> P05[Phase 05: Billing & Alerts]
+    P05 --> P06[Phase 06: Mobile & Integrations]
 ```
 
 ## Milestones
 
-### Milestone 1: Data Ingestion (Phase 01)
+### Milestone 1: Data Ingestion (Phase 01) ✅
 - [x] Sync engine discovers and parses provider sessions
 - [x] Ingestion API receives and stores events
 - [x] Multi-tenant isolation implemented
 - [x] Provider adapters for Claude, Codex, Cursor, Gemini
 
-### Milestone 2: Analytics Dashboard (Phase 02)
+### Milestone 2: Analytics Dashboard (Phase 02) ✅
 - [x] Analytics engine aggregates daily usage
 - [x] Dashboard API serves pre-aggregated data
 - [x] Web dashboard with charts and tables
 - [x] JWT + API key authentication
 
-### Milestone 3: Organization Onboarding (Phase 03)
+### Milestone 3: Organization Onboarding (Phase 03) ✅
 - [x] User registration and login with JWT
 - [x] Organization management with settings
 - [x] Team management with roles
@@ -156,37 +180,51 @@ graph TD
 - [x] Ingestion API auth middleware
 - [x] Seed data system
 
-### Milestone 4: High-Scale Analytics (Phase 04)
+### Milestone 4: Activation & Onboarding (Phase 3.5) ✅
+- [x] Modern SaaS landing page
+- [x] Email verification and password reset
+- [x] Mail service abstraction (Resend + SMTP)
+- [x] 6 email templates
+- [x] Registration with password strength indicator
+- [x] Getting Started wizard (6 steps)
+- [x] Onboarding progress widget
+- [x] Empty state dashboard
+- [x] Agent setup page
+- [x] Agent token system
+- [x] Documentation (6 guides)
+- [x] Expanded seed script (100K events)
+
+### Milestone 5: High-Scale Analytics (Phase 04)
 - [ ] ClickHouse integration for fast queries
 - [ ] Real-time WebSocket updates
 - [ ] Data export API
 - [ ] Rate limiting and API key rotation
 
-### Milestone 5: Billing Integration (Phase 05)
+### Milestone 6: Billing Integration (Phase 05)
 - [ ] Usage-based billing
 - [ ] Cost threshold alerts
 - [ ] Invoice generation
 - [ ] Audit logging
 
-### Milestone 6: Mobile & Integrations (Phase 06)
+### Milestone 7: Mobile & Integrations (Phase 06)
 - [ ] Mobile app (iOS/Android)
 - [ ] Slack/Teams integration
 - [ ] Multi-region deployment
 
 ## Success Criteria
 
-### Phase 01 Success
+### Phase 01 Success ✅
 - Sync engine successfully uploads sessions from local machines
 - Ingestion API stores events with < 1% data loss
 - Multi-tenant isolation prevents cross-org data access
 
-### Phase 02 Success
+### Phase 02 Success ✅
 - Dashboard loads in < 500ms
 - Overview queries return in < 250ms
 - Authentication works for both JWT and API keys
 - Historical backfill completes for 90 days of data
 
-### Phase 03 Success
+### Phase 03 Success ✅
 - User can register and login without manual database operations
 - Organization creation creates default team and settings
 - Enrollment keys can be generated, listed, revoked, and rotated
@@ -196,18 +234,28 @@ graph TD
 - Seed script creates complete test environment
 - All API endpoints return correct data with proper auth
 
+### Phase 3.5 Success ✅
+- New user can sign up and reach dashboard without assistance
+- Email verification completes within 5 minutes
+- Password reset flow works end-to-end
+- Getting Started wizard guides user through 6 steps
+- Empty state dashboard provides clear next actions
+- Agent setup completes in < 5 minutes
+- All 6 email templates render correctly
+- Seed script generates 100K events across 12 months
+
 ### Phase 04 Success
 - ClickHouse queries return in < 100ms
 - Real-time updates propagate within 5 seconds
 - Data export generates CSV/JSON without timeout
 - Rate limiting prevents abuse
 
-### Phase 04 Success
+### Phase 05 Success
 - Billing integration calculates usage costs accurately
 - Alerts trigger within 1 minute of threshold breach
 - Invoices generated correctly for all billing periods
 
-### Phase 05 Success
+### Phase 06 Success
 - Mobile app available on iOS and Android
 - Slack/Teams integration posts daily summaries
 - Multi-region deployment achieves 99.9% uptime
@@ -217,9 +265,9 @@ graph TD
 ### High Risk
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| ClickHouse complexity | Phase 03 delay | Start with PostgreSQL, migrate later |
-| Mobile app development | Phase 05 delay | Use React Native for code reuse |
-| Billing integration | Phase 04 delay | Partner with billing provider early |
+| ClickHouse complexity | Phase 04 delay | Start with PostgreSQL, migrate later |
+| Mobile app development | Phase 06 delay | Use React Native for code reuse |
+| Billing integration | Phase 05 delay | Partner with billing provider early |
 
 ### Medium Risk
 | Risk | Impact | Mitigation |
@@ -237,17 +285,17 @@ graph TD
 
 ## Resource Requirements
 
-### Phase 03
+### Phase 04
 - 1 backend engineer (ClickHouse integration)
 - 1 frontend engineer (real-time updates)
 - DevOps support for ClickHouse deployment
 
-### Phase 04
+### Phase 05
 - 1 backend engineer (billing integration)
 - 1 frontend engineer (billing dashboard)
 - Legal review for billing terms
 
-### Phase 05
+### Phase 06
 - 1 mobile engineer (iOS/Android)
 - 1 backend engineer (integrations)
 - DevOps support for multi-region
@@ -258,23 +306,25 @@ graph TD
 |-------|-------|-----|----------|
 | 01 | 2026-06-01 | 2026-06-14 | 2 weeks |
 | 02 | 2026-06-15 | 2026-06-28 | 2 weeks |
-| 03 | 2026-07-01 | 2026-07-21 | 3 weeks |
-| 04 | 2026-07-22 | 2026-08-11 | 3 weeks |
-| 05 | 2026-08-12 | 2026-09-08 | 4 weeks |
+| 03 | 2026-06-29 | 2026-07-12 | 2 weeks |
+| 3.5 | 2026-07-13 | 2026-07-26 | 2 weeks |
+| 04 | 2026-07-27 | 2026-08-16 | 3 weeks |
+| 05 | 2026-08-17 | 2026-09-06 | 3 weeks |
+| 06 | 2026-09-07 | 2026-10-04 | 4 weeks |
 
 ## Next Steps
 
-1. **Immediate (Phase 03):**
+1. **Immediate (Phase 04):**
    - Evaluate ClickHouse vs PostgreSQL for analytics
    - Design WebSocket protocol for real-time updates
    - Plan data export API
 
-2. **Short-term (Phase 04):**
+2. **Short-term (Phase 05):**
    - Research billing providers (Stripe, Paddle)
    - Design alerting system
    - Plan audit logging schema
 
-3. **Long-term (Phase 05):**
+3. **Long-term (Phase 06):**
    - Evaluate mobile frameworks (React Native, Flutter)
    - Design integration architecture
    - Plan multi-region deployment
@@ -282,4 +332,4 @@ graph TD
 ---
 
 *Document generated: 2026-06-12*
-*Last updated: 2026-06-12*
+*Last updated: 2026-06-14*

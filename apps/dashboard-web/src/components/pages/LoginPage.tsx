@@ -30,7 +30,7 @@ export function LoginPage() {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
-      router.push('/');
+      router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {

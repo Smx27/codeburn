@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import {
   Coins,
   DollarSign,
@@ -18,6 +19,9 @@ import {
   Zap,
   Clock,
   ArrowUpRight,
+  BookOpen,
+  KeyRound,
+  Monitor,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PeriodSelector } from '@/components/PeriodSelector';
@@ -34,6 +38,8 @@ import {
   useModels,
   useUsers,
   useProjects,
+  useOnboardingProgress,
+  useAgents,
 } from '@/hooks/useDashboard';
 import {
   formatCurrency,
@@ -43,6 +49,7 @@ import {
   getInitials,
   formatPercent,
 } from '@/lib/utils';
+import { OnboardingProgress } from '@/components/onboarding/OnboardingProgress';
 import type { Period, ProviderAnalytics, UserAnalytics } from '@/types/dashboard';
 
 // ── Metric Card ──────────────────────────────────────────
@@ -226,6 +233,7 @@ export function OverviewPage() {
   const { data: models, isLoading: modelsLoading } = useModels(period, 10);
   const { data: users, isLoading: usersLoading } = useUsers(period, 50);
   const { data: projects, isLoading: projectsLoading } = useProjects(period, 20);
+  const { data: agents, isLoading: agentsLoading } = useAgents();
 
   // ── Derived data ─────────────────────────────────────
 
@@ -352,6 +360,8 @@ export function OverviewPage() {
   }, [users, providers, topProject]);
 
   const isAnyLoading = overviewLoading || providersLoading || trendsLoading;
+  const hasAgents = !agentsLoading && (agents?.length ?? 0) > 0;
+  const hasData = !overviewLoading && (overview?.totalSessions ?? 0) > 0;
 
   // ── Render ───────────────────────────────────────────
 
@@ -368,7 +378,75 @@ export function OverviewPage() {
         <PeriodSelector value={period} onChange={setPeriod} />
       </div>
 
+      {/* Onboarding Progress Widget */}
+      <OnboardingProgress />
+
+      {/* Empty State - No Agents */}
+      {!agentsLoading && !hasAgents && (
+        <Card className="animate-fade-in-up">
+          <CardContent className="py-12">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 rounded-full bg-primary/10 p-4">
+                <Rocket className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold tracking-tight">
+                Welcome to AIInsight
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                Set up your first agent to start tracking AI usage across your
+                organization.
+              </p>
+              <div className="mt-8 grid w-full max-w-lg gap-4 sm:grid-cols-3">
+                <Link
+                  href="/settings/agents"
+                  className="card-interactive flex flex-col items-center gap-3 p-5 text-center"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/10">
+                    <KeyRound className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Generate Enrollment Key</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Create a key to register agents
+                    </p>
+                  </div>
+                </Link>
+                <Link
+                  href="/getting-started"
+                  className="card-interactive flex flex-col items-center gap-3 p-5 text-center"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+                    <Monitor className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Install Agent</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Connect your first machine
+                    </p>
+                  </div>
+                </Link>
+                <Link
+                  href="/getting-started"
+                  className="card-interactive flex flex-col items-center gap-3 p-5 text-center"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
+                    <BookOpen className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">View Setup Guide</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Follow step-by-step setup
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Hero Metrics Row */}
+      {hasAgents && (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {isAnyLoading ? (
           <>
@@ -429,6 +507,7 @@ export function OverviewPage() {
           </>
         )}
       </div>
+      )}
 
       {/* Charts Section - 2x2 Grid */}
       <div className="grid gap-6 md:grid-cols-2">

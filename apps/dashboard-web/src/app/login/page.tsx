@@ -33,7 +33,7 @@ export default function LoginRoute() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [user, authLoading, router]);
 
@@ -52,7 +52,7 @@ export default function LoginRoute() {
     setIsSubmitting(true);
     try {
       await login(data.email, data.password);
-      router.push('/');
+      router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid email or password');
     } finally {

@@ -458,6 +458,160 @@ export async function updateOrganizationSettings(orgId: string, settings: { time
   );
 }
 
+// --- Email Verification ---
+
+export async function createEmailVerification(userId: string, token: string, expiresAt: Date): Promise<void> {
+  await query(
+    `INSERT INTO email_verifications (user_id, token, expires_at) VALUES ($1, $2, $3)`,
+    [userId, token, expiresAt]
+  );
+}
+
+export async function getEmailVerificationByToken(token: string): Promise<{ id: string; user_id: string; expires_at: string } | null> {
+  return queryOne<{ id: string; user_id: string; expires_at: string }>(
+    `SELECT id, user_id, expires_at FROM email_verifications WHERE token = $1 AND verified_at IS NULL`,
+    [token]
+  );
+}
+
+export async function markEmailVerified(userId: string): Promise<void> {
+  await query(`UPDATE users SET email_verified = TRUE WHERE id = $1`, [userId]);
+  await query(`UPDATE email_verifications SET verified_at = NOW() WHERE user_id = $1 AND verified_at IS NULL`, [userId]);
+}
+
+export async function deleteEmailVerificationsForUser(userId: string): Promise<void> {
+  await query(`DELETE FROM email_verifications WHERE user_id = $1 AND verified_at IS NULL`, [userId]);
+}
+
+// --- Password Reset ---
+
+export async function createPasswordReset(userId: string, tokenHash: string, expiresAt: Date): Promise<void> {
+  await query(
+    `INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
+    [userId, tokenHash, expiresAt]
+  );
+}
+
+export async function getPasswordResetByTokenHash(tokenHash: string): Promise<{ id: string; user_id: string; expires_at: string } | null> {
+  return queryOne<{ id: string; user_id: string; expires_at: string }>(
+    `SELECT id, user_id, expires_at FROM password_resets WHERE token_hash = $1 AND used_at IS NULL`,
+    [tokenHash]
+  );
+}
+
+export async function markPasswordResetUsed(id: string): Promise<void> {
+  await query(`UPDATE password_resets SET used_at = NOW() WHERE id = $1`, [id]);
+}
+
+export async function deletePasswordResetsForUser(userId: string): Promise<void> {
+  await query(`DELETE FROM password_resets WHERE user_id = $1`, [userId]);
+}
+
+// --- User Updates ---
+
+export async function updateUserPassword(userId: string, passwordHash: string): Promise<void> {
+  await query(`UPDATE users SET password_hash = $1 WHERE id = $2`, [passwordHash, userId]);
+}
+
+export async function updateUserEmailVerified(userId: string, verified: boolean): Promise<void> {
+  await query(`UPDATE users SET email_verified = $1 WHERE id = $2`, [verified, userId]);
+}
+
+// --- Agent Tokens ---
+
+export async function createAgentToken(machineId: string, tokenHash: string, expiresAt: Date | null): Promise<void> {
+  await query(
+    `INSERT INTO agent_tokens (machine_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
+    [machineId, tokenHash, expiresAt]
+  );
+}
+
+export async function getAgentTokenByHash(tokenHash: string): Promise<{ id: string; machine_id: string; expires_at: string | null; last_used_at: string | null } | null> {
+  return queryOne<{ id: string; machine_id: string; expires_at: string | null; last_used_at: string | null }>(
+    `SELECT id, machine_id, expires_at, last_used_at FROM agent_tokens WHERE token_hash = $1`,
+    [tokenHash]
+  );
+}
+
+export async function updateAgentTokenLastUsed(id: string): Promise<void> {
+  await query(`UPDATE agent_tokens SET last_used_at = NOW() WHERE id = $1`, [id]);
+}
+
+export async function deleteAgentTokensForMachine(machineId: string): Promise<void> {
+  await query(`DELETE FROM agent_tokens WHERE machine_id = $1`, [machineId]);
+}
+
+export async function getAgentTokensForMachine(machineId: string): Promise<{ id: string; created_at: string; expires_at: string | null; last_used_at: string | null }[]> {
+  return query<{ id: string; created_at: string; expires_at: string | null; last_used_at: string | null }>(
+    `SELECT id, created_at, expires_at, last_used_at FROM agent_tokens WHERE machine_id = $1 ORDER BY created_at DESC`,
+    [machineId]
+  );
+}
+
+// --- Agent Config ---
+
+export async function getMachineWithOrg(machineId: string): Promise<{ id: string; organization_id: string; hostname: string; org_name: string } | null> {
+  return queryOne<{ id: string; organization_id: string; hostname: string; org_name: string }>(
+    `SELECT m.id, m.organization_id, m.hostname, o.name as org_name
+     FROM machines m
+     JOIN organizations o ON m.organization_id = o.id
+     WHERE m.id = $1`,
+    [machineId]
+  );
+}
+
+// --- Onboarding Progress ---
+
+export async function getOnboardingProgress(orgId: string): Promise<{
+  organizationCreated: boolean;
+  enrollmentKeyGenerated: boolean;
+  agentInstalled: boolean;
+  syncRunning: boolean;
+  syncComplete: boolean;
+  teamInvited: boolean;
+}> {
+  const orgRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM organizations WHERE id = $1`,
+    [orgId]
+  );
+
+  const keyRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM organization_enrollment_keys WHERE organization_id = $1`,
+    [orgId]
+  );
+
+  const machineRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM machines WHERE organization_id = $1`,
+    [orgId]
+  );
+
+  const syncRunningRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM sync_jobs WHERE machine_id IN (SELECT id FROM machines WHERE organization_id = $1) AND status = 'running'`,
+    [orgId]
+  );
+
+  const syncCompleteRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM sync_jobs WHERE machine_id IN (SELECT id FROM machines WHERE organization_id = $1) AND status = 'completed'`,
+    [orgId]
+  );
+
+  const invitedRow = await queryOne<{ cnt: string }>(
+    `SELECT COUNT(*) as cnt FROM organization_invitations WHERE organization_id = $1 AND accepted_at IS NULL`,
+    [orgId]
+  );
+
+  return {
+    organizationCreated: parseInt(orgRow?.cnt ?? '0', 10) > 0,
+    enrollmentKeyGenerated: parseInt(keyRow?.cnt ?? '0', 10) > 0,
+    agentInstalled: parseInt(machineRow?.cnt ?? '0', 10) > 0,
+    syncRunning: parseInt(syncRunningRow?.cnt ?? '0', 10) > 0,
+    syncComplete: parseInt(syncCompleteRow?.cnt ?? '0', 10) > 0,
+    teamInvited: parseInt(invitedRow?.cnt ?? '0', 10) > 0,
+  };
+}
+
+// --- Organization Counts ---
+
 export async function getOrganizationCounts(orgId: string): Promise<{ users: number; teams: number; machines: number; providers: number; sessions: number; events: number }> {
   const result = await queryOne<{ users: string; teams: string; machines: string; providers: string; sessions: string; events: string }>(
     `SELECT

@@ -9,6 +9,7 @@ import teamRoutes from './routes/team.routes.js';
 import invitationRoutes from './routes/invitation.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
 import agentRoutes from './routes/agent.routes.js';
+import onboardingRoutes from './routes/onboarding.routes.js';
 import healthRoutes from './routes/health.route.js';
 import { closePool } from './database/pool.js';
 import dotenv from 'dotenv';
@@ -29,6 +30,7 @@ app.use('/api/v1/teams', teamRoutes);
 app.use('/api/v1/invitations', invitationRoutes);
 app.use('/api/v1/enrollment-keys', enrollmentRoutes);
 app.use('/api/v1/agents', agentRoutes);
+app.use('/api/v1/onboarding', onboardingRoutes);
 app.use('/api/v1', healthRoutes);
 
 app.get('/', (req, res) => {

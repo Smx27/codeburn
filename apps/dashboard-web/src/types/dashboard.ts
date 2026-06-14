@@ -80,6 +80,58 @@ export interface AuthUser {
   role: string;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  organizationName: string;
+}
+
+export interface RegisterResponse {
+  token: string;
+  user: AuthUser;
+}
+
+// ── Enrollment Key Types ─────────────────────────────────
+
+export interface EnrollmentKey {
+  id: string;
+  name: string;
+  keyPrefix: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  expiresAt: string | null;
+  active: boolean;
+}
+
+export interface GenerateEnrollmentKeyRequest {
+  name: string;
+  expiresAt?: string;
+}
+
+export interface GenerateEnrollmentKeyResponse {
+  id: string;
+  name: string;
+  key: string;
+  keyPrefix: string;
+  createdAt: string;
+}
+
+// ── Agent Types ──────────────────────────────────────────
+
+export type AgentStatus = 'ONLINE' | 'OFFLINE';
+
+export interface Agent {
+  id: string;
+  hostname: string;
+  os: string;
+  architecture: string;
+  agentVersion: string;
+  status: AgentStatus;
+  lastSeenAt: string;
+  registeredAt: string;
+}
+
 // ── New Dashboard Types ──────────────────────────────────
 
 export type InsightType = "anomaly" | "trend" | "milestone" | "recommendation";
@@ -176,4 +228,20 @@ export interface ActivitySummary {
   topActionCount: number;
   eventsByHour: number[];
   eventsByDay: number[];
+}
+
+// ── Onboarding Types ─────────────────────────────────────
+
+export interface OnboardingSteps {
+  organizationCreated: boolean;
+  enrollmentKeyGenerated: boolean;
+  agentInstalled: boolean;
+  syncRunning: boolean;
+  syncComplete: boolean;
+  teamInvited: boolean;
+}
+
+export interface OnboardingProgress {
+  steps: OnboardingSteps;
+  completionPercentage: number;
 }
