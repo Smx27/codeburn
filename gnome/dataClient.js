@@ -22,16 +22,16 @@ function buildAdditionalPaths() {
 export class DataClient {
   _cache = new Map();
   _inFlight = null;
-  _codeburnPath;
+  _aiinsightPath;
   _augmentedPath;
 
-  constructor(codeburnPath) {
-    this._codeburnPath = codeburnPath || '';
+  constructor(aiinsightPath) {
+    this._aiinsightPath = aiinsightPath || '';
     this._augmentedPath = this._buildAugmentedPath();
   }
 
-  setCodeburnPath(path) {
-    this._codeburnPath = path || '';
+  setAiInsightPath(path) {
+    this._aiinsightPath = path || '';
   }
 
   cancelInFlight() {
@@ -65,10 +65,10 @@ export class DataClient {
 
   _buildArgv(period, provider) {
     let base;
-    if (this._codeburnPath && SAFE_ARG_RE.test(this._codeburnPath)) {
-      base = this._codeburnPath.split(' ').filter(s => s.length > 0);
+    if (this._aiinsightPath && SAFE_ARG_RE.test(this._aiinsightPath)) {
+      base = this._aiinsightPath.split(' ').filter(s => s.length > 0);
     } else {
-      base = ['codeburn'];
+      base = ['aiinsight'];
     }
 
     const args = [

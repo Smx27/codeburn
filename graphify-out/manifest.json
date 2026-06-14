@@ -1,0 +1,1692 @@
+{
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/package.json": {
+    "mtime": 1781185157.151388,
+    "ast_hash": "051f9e51cc176e9f504cf4d0bc2d6ec6",
+    "semantic_hash": "051f9e51cc176e9f504cf4d0bc2d6ec6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/controllers/ingestion.controller.ts": {
+    "mtime": 1781182547.4839098,
+    "ast_hash": "bf86fdb9836c1fa766f7f0139895a3a4",
+    "semantic_hash": "bf86fdb9836c1fa766f7f0139895a3a4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrate.ts": {
+    "mtime": 1781181858.9506295,
+    "ast_hash": "6206cf03fb88eab4e7150918e599cc5c",
+    "semantic_hash": "6206cf03fb88eab4e7150918e599cc5c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/001_initial_schema.sql": {
+    "mtime": 1781181642.8768277,
+    "ast_hash": "a5cdfb017c5009f487269e2c73a3ee54",
+    "semantic_hash": "a5cdfb017c5009f487269e2c73a3ee54"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/002_sessions_events.sql": {
+    "mtime": 1781181749.3731995,
+    "ast_hash": "7ba9e9b979bebb3358c911aa6c13a850",
+    "semantic_hash": "7ba9e9b979bebb3358c911aa6c13a850"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/003_sync_tracking.sql": {
+    "mtime": 1781181805.1789277,
+    "ast_hash": "89059b707c68c72174be4006372eb91f",
+    "semantic_hash": "89059b707c68c72174be4006372eb91f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/pool.ts": {
+    "mtime": 1781185123.0549092,
+    "ast_hash": "7c85a09fa9d3a96cdbdf7accffe16450",
+    "semantic_hash": "7c85a09fa9d3a96cdbdf7accffe16450"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/index.ts": {
+    "mtime": 1781182744.7094498,
+    "ast_hash": "36e2feef81d332949e36d3c9f9bf1aa0",
+    "semantic_hash": "36e2feef81d332949e36d3c9f9bf1aa0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/event.repository.ts": {
+    "mtime": 1781185673.7646387,
+    "ast_hash": "4a14213159a098d809b92536d30f5821",
+    "semantic_hash": "4a14213159a098d809b92536d30f5821"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/machine.repository.ts": {
+    "mtime": 1781182066.5033386,
+    "ast_hash": "9fd2738176d4dcdab9e12741c957f649",
+    "semantic_hash": "9fd2738176d4dcdab9e12741c957f649"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/organization.repository.ts": {
+    "mtime": 1781181907.5792644,
+    "ast_hash": "ec5d414d095275a60af187893c77d715",
+    "semantic_hash": "ec5d414d095275a60af187893c77d715"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/provider.repository.ts": {
+    "mtime": 1781182406.3750925,
+    "ast_hash": "a3df30a9db3c7881bd62dc795a207def",
+    "semantic_hash": "a3df30a9db3c7881bd62dc795a207def"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/session.repository.ts": {
+    "mtime": 1781182146.603384,
+    "ast_hash": "76e58757370755ee04be0f7e2670e430",
+    "semantic_hash": "76e58757370755ee04be0f7e2670e430"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/syncSource.repository.ts": {
+    "mtime": 1781182303.770998,
+    "ast_hash": "2f6d76689108285940ccf2b42fe9a581",
+    "semantic_hash": "2f6d76689108285940ccf2b42fe9a581"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/syncState.repository.ts": {
+    "mtime": 1781182379.549747,
+    "ast_hash": "720c9dce3489d3683dbb73c7a412bcc4",
+    "semantic_hash": "720c9dce3489d3683dbb73c7a412bcc4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/user.repository.ts": {
+    "mtime": 1781181962.3629794,
+    "ast_hash": "c7c00b60f20ad7bee4499709e334bca8",
+    "semantic_hash": "c7c00b60f20ad7bee4499709e334bca8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/routes/health.route.ts": {
+    "mtime": 1781182619.3668356,
+    "ast_hash": "0ccbd8806ba263536a04b6ac2b68b82c",
+    "semantic_hash": "0ccbd8806ba263536a04b6ac2b68b82c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/routes/ingestion.routes.ts": {
+    "mtime": 1781182583.3183713,
+    "ast_hash": "04d81e0b6805233e4e5f981f2448943f",
+    "semantic_hash": "04d81e0b6805233e4e5f981f2448943f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/routes/openapi.route.ts": {
+    "mtime": 1781185965.925739,
+    "ast_hash": "0e681ed602190f856a569c78a17a6f19",
+    "semantic_hash": "0e681ed602190f856a569c78a17a6f19"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/validators/ingestion.validator.ts": {
+    "mtime": 1781182485.3221092,
+    "ast_hash": "3e4fd1997eba9b5e26a910a4904efed9",
+    "semantic_hash": "3e4fd1997eba9b5e26a910a4904efed9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/tsconfig.json": {
+    "mtime": 1781181452.7154012,
+    "ast_hash": "e0fa880d85c502c260e7173213b8e808",
+    "semantic_hash": "e0fa880d85c502c260e7173213b8e808"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/dataClient.js": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "e8e3781d7c3217035a93aa3a944b5523",
+    "semantic_hash": "e8e3781d7c3217035a93aa3a944b5523"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/extension.js": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "ef30b97059f66b54b63876193fc1e7f5",
+    "semantic_hash": "ef30b97059f66b54b63876193fc1e7f5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/indicator.js": {
+    "mtime": 1781178184.6279714,
+    "ast_hash": "57ecc7565c458de1b3dfe9aac007096c",
+    "semantic_hash": "57ecc7565c458de1b3dfe9aac007096c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/install.sh": {
+    "mtime": 1781030265.220307,
+    "ast_hash": "5ca5e7e39b07666ac3b93d2e2754fb21",
+    "semantic_hash": "5ca5e7e39b07666ac3b93d2e2754fb21"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/metadata.json": {
+    "mtime": 1781030265.220307,
+    "ast_hash": "7904c2f328de6b0d7f938e295fc9f86f",
+    "semantic_hash": "7904c2f328de6b0d7f938e295fc9f86f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/prefs.js": {
+    "mtime": 1781178184.6280644,
+    "ast_hash": "65c4ba7b21bd1017f2b8be87d045de36",
+    "semantic_hash": "65c4ba7b21bd1017f2b8be87d045de36"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Package.swift": {
+    "mtime": 1781030265.220307,
+    "ast_hash": "49f24320d63366016b3f9534e8ebb4c9",
+    "semantic_hash": "49f24320d63366016b3f9534e8ebb4c9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Scripts/package-app.sh": {
+    "mtime": 1781030265.220307,
+    "ast_hash": "e9b5726b0a822b013f7e4c23daea40ec",
+    "semantic_hash": "e9b5726b0a822b013f7e4c23daea40ec"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/AppStore.swift": {
+    "mtime": 1781178184.6283247,
+    "ast_hash": "a326c75d9b3d0c235f5348031f4fb9df",
+    "semantic_hash": "a326c75d9b3d0c235f5348031f4fb9df"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/AppVersion.swift": {
+    "mtime": 1781024857.3091319,
+    "ast_hash": "e7621f3269ec7afaf1834ee512426511",
+    "semantic_hash": "e7621f3269ec7afaf1834ee512426511"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/CodeBurnApp.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "e90339ed91ff008381aafae7c6ae6f16",
+    "semantic_hash": "e90339ed91ff008381aafae7c6ae6f16"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/CurrencyState.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "275c741bfe68b5b3384e7c3f3697a491",
+    "semantic_hash": "275c741bfe68b5b3384e7c3f3697a491"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CLIClaudeConfig.swift": {
+    "mtime": 1781030265.2223072,
+    "ast_hash": "aee3ce2a7476bc5157b249696f205af6",
+    "semantic_hash": "aee3ce2a7476bc5157b249696f205af6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CapacityEstimator.swift": {
+    "mtime": 1781024857.3096185,
+    "ast_hash": "6a0e10b49ba46fa75c6345c95efc9695",
+    "semantic_hash": "6a0e10b49ba46fa75c6345c95efc9695"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/ClaudeCredentialStore.swift": {
+    "mtime": 1781030265.2223072,
+    "ast_hash": "d4d63f74062026c9447a3305a41d051e",
+    "semantic_hash": "d4d63f74062026c9447a3305a41d051e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/ClaudeSubscriptionService.swift": {
+    "mtime": 1781030265.2223072,
+    "ast_hash": "35c89c2ef9e11f0482fefc402d8258ba",
+    "semantic_hash": "35c89c2ef9e11f0482fefc402d8258ba"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexCredentialStore.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "d901c9ddc4bef3a8338b97d0619cd4ea",
+    "semantic_hash": "d901c9ddc4bef3a8338b97d0619cd4ea"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexSubscriptionService.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "3662729fdca54e161ba2573489f5b124",
+    "semantic_hash": "3662729fdca54e161ba2573489f5b124"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexUsage.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "be73807ad9bc6aeeaa611bb80d6ae986",
+    "semantic_hash": "be73807ad9bc6aeeaa611bb80d6ae986"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/DataClient.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "ea2aab2cf7ce627f270debc32078fa7f",
+    "semantic_hash": "ea2aab2cf7ce627f270debc32078fa7f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/MenubarPayload.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "79acb9ee600eb854ab085a88fe55c2e8",
+    "semantic_hash": "79acb9ee600eb854ab085a88fe55c2e8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/MenubarStatusCache.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "f2cd8427bdea521c57dbd8c9fbc6dc24",
+    "semantic_hash": "f2cd8427bdea521c57dbd8c9fbc6dc24"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/QuotaSummary.swift": {
+    "mtime": 1781024857.3096185,
+    "ast_hash": "fa721d5349acb2c03c513abf70cb9771",
+    "semantic_hash": "fa721d5349acb2c03c513abf70cb9771"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionRefreshCadence.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "b6c511cbd045d881150f6df20a9aa828",
+    "semantic_hash": "b6c511cbd045d881150f6df20a9aa828"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionSnapshotStore.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "5564ec9912618074e9ab7173af4cd16e",
+    "semantic_hash": "5564ec9912618074e9ab7173af4cd16e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionUsage.swift": {
+    "mtime": 1781024857.3096185,
+    "ast_hash": "ecdd79c13fd30b5baf643a6138f34690",
+    "semantic_hash": "ecdd79c13fd30b5baf643a6138f34690"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/UpdateChecker.swift": {
+    "mtime": 1781030265.2233071,
+    "ast_hash": "129b72f2b5b0c3f755fbb1224a61aac8",
+    "semantic_hash": "129b72f2b5b0c3f755fbb1224a61aac8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/CodeburnCLI.swift": {
+    "mtime": 1781030265.2243073,
+    "ast_hash": "11063bc62551d03e8ec7c982c6e6e2fa",
+    "semantic_hash": "11063bc62551d03e8ec7c982c6e6e2fa"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/SafeFile.swift": {
+    "mtime": 1781030265.2243073,
+    "ast_hash": "f796759d81bdb8d628c6b7316953ef80",
+    "semantic_hash": "f796759d81bdb8d628c6b7316953ef80"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/TerminalLauncher.swift": {
+    "mtime": 1781030265.2243073,
+    "ast_hash": "af547c1c5f4f2c79773e534ec5259bd2",
+    "semantic_hash": "af547c1c5f4f2c79773e534ec5259bd2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Theme/Theme.swift": {
+    "mtime": 1781024857.310566,
+    "ast_hash": "90f08248a780536b13aa9db119e6f6bb",
+    "semantic_hash": "90f08248a780536b13aa9db119e6f6bb"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Theme/ThemeState.swift": {
+    "mtime": 1781030265.2243073,
+    "ast_hash": "35a298736f6c46df22f1f5343f539959",
+    "semantic_hash": "35a298736f6c46df22f1f5343f539959"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ActivitySection.swift": {
+    "mtime": 1781024857.3107135,
+    "ast_hash": "6ccc8227d9957dc21b59eccc467fd0d4",
+    "semantic_hash": "6ccc8227d9957dc21b59eccc467fd0d4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/AgentTabStrip.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "8b9fb088093ea729d5fee3267ffc7c25",
+    "semantic_hash": "8b9fb088093ea729d5fee3267ffc7c25"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/FindingsSection.swift": {
+    "mtime": 1781024857.3107984,
+    "ast_hash": "957c4df9393010e6bf745620a753be1d",
+    "semantic_hash": "957c4df9393010e6bf745620a753be1d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/HeatmapSection.swift": {
+    "mtime": 1781030265.2243073,
+    "ast_hash": "64ddf0f66333c627572830e1418200ce",
+    "semantic_hash": "64ddf0f66333c627572830e1418200ce"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/HeroSection.swift": {
+    "mtime": 1781030265.2253072,
+    "ast_hash": "c1d65999456cc0ed73b18241166e1df5",
+    "semantic_hash": "c1d65999456cc0ed73b18241166e1df5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/MenuBarContent.swift": {
+    "mtime": 1781030265.2253072,
+    "ast_hash": "eca26b660c6ed0312db0b1b2d533766e",
+    "semantic_hash": "eca26b660c6ed0312db0b1b2d533766e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ModelsSection.swift": {
+    "mtime": 1781024857.3109484,
+    "ast_hash": "b353a5183326a374c93bddb36b985cf4",
+    "semantic_hash": "b353a5183326a374c93bddb36b985cf4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/PeriodSegmentedControl.swift": {
+    "mtime": 1781024857.3109484,
+    "ast_hash": "92a8a109b3703f04d1cb52bf7aee8b60",
+    "semantic_hash": "92a8a109b3703f04d1cb52bf7aee8b60"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SectionCaption.swift": {
+    "mtime": 1781024857.3109484,
+    "ast_hash": "c319de01f140e527cf6db0190a857e82",
+    "semantic_hash": "c319de01f140e527cf6db0190a857e82"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SettingsView.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "ba3da4dba967173a8b43d4decb923896",
+    "semantic_hash": "ba3da4dba967173a8b43d4decb923896"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SparklineView.swift": {
+    "mtime": 1781024857.3109484,
+    "ast_hash": "7ee8205969ecfa364fd47ddc2ab89388",
+    "semantic_hash": "7ee8205969ecfa364fd47ddc2ab89388"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ToolingSection.swift": {
+    "mtime": 1781024857.3109484,
+    "ast_hash": "04b84dec4bc69d25d52a577adb83dabd",
+    "semantic_hash": "04b84dec4bc69d25d52a577adb83dabd"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/AppStoreRefreshRecoveryTests.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "970e32b2412a7384f8989e33938ab22e",
+    "semantic_hash": "970e32b2412a7384f8989e33938ab22e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/AppVersionTests.swift": {
+    "mtime": 1781030265.2253072,
+    "ast_hash": "e02b012feb7c07d9e02ae5a90c9d4da3",
+    "semantic_hash": "e02b012feb7c07d9e02ae5a90c9d4da3"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CLIDevinConfigTests.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "3806a78afca1e678212458d8652f3f9a",
+    "semantic_hash": "3806a78afca1e678212458d8652f3f9a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CapacityEstimatorTests.swift": {
+    "mtime": 1781030265.2253072,
+    "ast_hash": "e0c5d4a1f9186d162a308cf177791e61",
+    "semantic_hash": "e0c5d4a1f9186d162a308cf177791e61"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CodexTerminalFailureTests.swift": {
+    "mtime": 1781030265.2253072,
+    "ast_hash": "fc4556c94a385ca46daf9e2e985a76e0",
+    "semantic_hash": "fc4556c94a385ca46daf9e2e985a76e0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/ContributionHeatmapTests.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "86d18ddc901f39ac709efb7f7a77d3a0",
+    "semantic_hash": "86d18ddc901f39ac709efb7f7a77d3a0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/DataClientProcessTests.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "e3722ac505513826d02351d18bb614e9",
+    "semantic_hash": "e3722ac505513826d02351d18bb614e9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/MenubarPeriodSettingsTests.swift": {
+    "mtime": 1781030265.2263072,
+    "ast_hash": "d886810f1b779c06edc6a44332c99bb1",
+    "semantic_hash": "d886810f1b779c06edc6a44332c99bb1"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/MenubarStatusCacheTests.swift": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "75862a00bbfd847238020ae0f96c3dde",
+    "semantic_hash": "75862a00bbfd847238020ae0f96c3dde"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/UpdateCheckerTests.swift": {
+    "mtime": 1781030265.2263072,
+    "ast_hash": "29108a1aadea67665f2f12565b31ab6a",
+    "semantic_hash": "29108a1aadea67665f2f12565b31ab6a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/package.json": {
+    "mtime": 1781181565.2688375,
+    "ast_hash": "749e7bec7ade439f5cedb4bc32c044f2",
+    "semantic_hash": "749e7bec7ade439f5cedb4bc32c044f2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/package.json": {
+    "mtime": 1781181345.3000305,
+    "ast_hash": "902dae74b8f11ccfe611b4e1131b9367",
+    "semantic_hash": "902dae74b8f11ccfe611b4e1131b9367"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/api-client/ingestion.client.ts": {
+    "mtime": 1781183669.8884444,
+    "ast_hash": "8da1bcd0ece368cc0295acc10f0e4678",
+    "semantic_hash": "8da1bcd0ece368cc0295acc10f0e4678"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/index.ts": {
+    "mtime": 1781184894.700722,
+    "ast_hash": "7b0add984f596dfb8a9283359d8283e2",
+    "semantic_hash": "7b0add984f596dfb8a9283359d8283e2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/logging/sync.logger.ts": {
+    "mtime": 1781182915.710652,
+    "ast_hash": "66d58037b6779342f8526c3aa8720184",
+    "semantic_hash": "66d58037b6779342f8526c3aa8720184"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/claude.sync.ts": {
+    "mtime": 1781184221.9277031,
+    "ast_hash": "9dcb2aa76dae0deba0dd2fd9148d6a7e",
+    "semantic_hash": "9dcb2aa76dae0deba0dd2fd9148d6a7e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/codex.sync.ts": {
+    "mtime": 1781184233.8188596,
+    "ast_hash": "a84237904230e46714c523fce9e0aed2",
+    "semantic_hash": "a84237904230e46714c523fce9e0aed2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/cursor.sync.ts": {
+    "mtime": 1781184252.343103,
+    "ast_hash": "378af0702c742add9f26ee0c0f3dd3c4",
+    "semantic_hash": "378af0702c742add9f26ee0c0f3dd3c4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/gemini.sync.ts": {
+    "mtime": 1781184278.1534424,
+    "ast_hash": "586bc73892bcfad910834b33e0e6a15f",
+    "semantic_hash": "586bc73892bcfad910834b33e0e6a15f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/index.ts": {
+    "mtime": 1781184295.2486672,
+    "ast_hash": "ef463515fe001c5eec17f040230365e0",
+    "semantic_hash": "ef463515fe001c5eec17f040230365e0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/oss-types.ts": {
+    "mtime": 1781184181.4851713,
+    "ast_hash": "3fd535a199feca46417f9e02594de95b",
+    "semantic_hash": "3fd535a199feca46417f9e02594de95b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/scheduler/syncLoop.ts": {
+    "mtime": 1781184765.5159776,
+    "ast_hash": "b63f340c42478e5dd19eb0794a1bdef0",
+    "semantic_hash": "b63f340c42478e5dd19eb0794a1bdef0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/services/historicalSync.service.ts": {
+    "mtime": 1781184558.6041837,
+    "ast_hash": "d1ff8aaee827996142bbb1c3a2491d7e",
+    "semantic_hash": "d1ff8aaee827996142bbb1c3a2491d7e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/services/incrementalSync.service.ts": {
+    "mtime": 1781184657.872524,
+    "ast_hash": "b428d518acabc0891114a860af178645",
+    "semantic_hash": "b428d518acabc0891114a860af178645"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/state/syncState.repository.ts": {
+    "mtime": 1781185018.6014433,
+    "ast_hash": "d60e5ad8dcce0b2b194357590beb461c",
+    "semantic_hash": "d60e5ad8dcce0b2b194357590beb461c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/types/sync.types.ts": {
+    "mtime": 1781184201.2424312,
+    "ast_hash": "9a932960ed611c51578ba25015365d1f",
+    "semantic_hash": "9a932960ed611c51578ba25015365d1f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/uploader/batchUploader.ts": {
+    "mtime": 1781183276.6803007,
+    "ast_hash": "38bf995ec1f1af46c72fd4708c8dad16",
+    "semantic_hash": "38bf995ec1f1af46c72fd4708c8dad16"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/tsconfig.json": {
+    "mtime": 1781181400.593736,
+    "ast_hash": "e0fa880d85c502c260e7173213b8e808",
+    "semantic_hash": "e0fa880d85c502c260e7173213b8e808"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/scripts/bundle-litellm.mjs": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "8fb4a2743a54967388329cca271e3b1c",
+    "semantic_hash": "8fb4a2743a54967388329cca271e3b1c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/antigravity-statusline.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "a979466c29b81a77b91dfc5eb04a48f0",
+    "semantic_hash": "a979466c29b81a77b91dfc5eb04a48f0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/bash-utils.ts": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "82f9e605af0573ba669c80ee7218a18c",
+    "semantic_hash": "82f9e605af0573ba669c80ee7218a18c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/classifier.ts": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "b4addd2d05ed90be4b046bbd74104aaa",
+    "semantic_hash": "b4addd2d05ed90be4b046bbd74104aaa"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/cli-date.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "1e75ac661f67ec786f5b1739bdfac3a8",
+    "semantic_hash": "1e75ac661f67ec786f5b1739bdfac3a8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/cli.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "ff6e4c1c3b103c9922072ecc7f485a85",
+    "semantic_hash": "ff6e4c1c3b103c9922072ecc7f485a85"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/codex-cache.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "e309ffa2e9754eb7a623c069deb7e194",
+    "semantic_hash": "e309ffa2e9754eb7a623c069deb7e194"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/compare-stats.ts": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "6fcc0e0cba63c5ea27ceb9b5514b69dd",
+    "semantic_hash": "6fcc0e0cba63c5ea27ceb9b5514b69dd"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/compare.tsx": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "b966d18c811be8ea1fb6e98eb97814b7",
+    "semantic_hash": "b966d18c811be8ea1fb6e98eb97814b7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/config.ts": {
+    "mtime": 1781183922.107761,
+    "ast_hash": "d76c202295d7a9bc5141bff74c055f5a",
+    "semantic_hash": "d76c202295d7a9bc5141bff74c055f5a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/content-utils.ts": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "3e4e5113fa51392a10586e9bb65fb0e0",
+    "semantic_hash": "3e4e5113fa51392a10586e9bb65fb0e0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/context-budget.ts": {
+    "mtime": 1781024857.3137646,
+    "ast_hash": "5893b3ec49e096e33954a63dae3a5cb9",
+    "semantic_hash": "5893b3ec49e096e33954a63dae3a5cb9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/currency.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "9bf561dc7446e4ff98028acd02c7a6a3",
+    "semantic_hash": "9bf561dc7446e4ff98028acd02c7a6a3"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/cursor-cache.ts": {
+    "mtime": 1781178184.6285634,
+    "ast_hash": "2a539651e7d772264d62d3bce2b394dc",
+    "semantic_hash": "2a539651e7d772264d62d3bce2b394dc"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/daily-cache.ts": {
+    "mtime": 1781030265.2273073,
+    "ast_hash": "2a5d51aa7b412668f0bf6e239cd77710",
+    "semantic_hash": "2a5d51aa7b412668f0bf6e239cd77710"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/dashboard.tsx": {
+    "mtime": 1781178214.5688128,
+    "ast_hash": "fd121f6d420fb54a709e169b23a0a258",
+    "semantic_hash": "fd121f6d420fb54a709e169b23a0a258"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/data/litellm-snapshot.json": {
+    "mtime": 1781186411.4909081,
+    "ast_hash": "b0754c1d3bb9a8c6c7ca423e338345d6",
+    "semantic_hash": "b0754c1d3bb9a8c6c7ca423e338345d6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/data/pricing-fallback.json": {
+    "mtime": 1781186411.4923553,
+    "ast_hash": "247332a933fc2a7c27c1f129e479069c",
+    "semantic_hash": "247332a933fc2a7c27c1f129e479069c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/day-aggregator.ts": {
+    "mtime": 1781024857.3149478,
+    "ast_hash": "538be5541fc6e5c8acf8e1bc0023d7ac",
+    "semantic_hash": "538be5541fc6e5c8acf8e1bc0023d7ac"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/export.ts": {
+    "mtime": 1781030265.2293074,
+    "ast_hash": "d0e9dec40ec6f983ab8a2957340fc99e",
+    "semantic_hash": "d0e9dec40ec6f983ab8a2957340fc99e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/fetch-utils.ts": {
+    "mtime": 1781024857.3149478,
+    "ast_hash": "25452fddbaae2447e229d02ef1a72871",
+    "semantic_hash": "25452fddbaae2447e229d02ef1a72871"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/format.ts": {
+    "mtime": 1781024857.3159478,
+    "ast_hash": "80ac54a166194b430b3052cea0523d5d",
+    "semantic_hash": "80ac54a166194b430b3052cea0523d5d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/fs-utils.ts": {
+    "mtime": 1781030265.2293074,
+    "ast_hash": "40307e3c20fd40cfc7a06cff1e3ca8a0",
+    "semantic_hash": "40307e3c20fd40cfc7a06cff1e3ca8a0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/ink-win.ts": {
+    "mtime": 1781024857.3159478,
+    "ast_hash": "7bb38dbe67552c2d5b58c4d55489582e",
+    "semantic_hash": "7bb38dbe67552c2d5b58c4d55489582e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/main.ts": {
+    "mtime": 1781186395.8946924,
+    "ast_hash": "f23760e136100c10ac77da20876299b6",
+    "semantic_hash": "f23760e136100c10ac77da20876299b6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/mcp/redact.ts": {
+    "mtime": 1781030265.230931,
+    "ast_hash": "fea566a67c8a68eaf0fbed52db55b273",
+    "semantic_hash": "fea566a67c8a68eaf0fbed52db55b273"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/mcp/server.ts": {
+    "mtime": 1781030265.2310948,
+    "ast_hash": "dab0c27894a29438f877f310fb252086",
+    "semantic_hash": "dab0c27894a29438f877f310fb252086"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/mcp/tables.ts": {
+    "mtime": 1781024857.3169782,
+    "ast_hash": "a369ddfcd6ae16e9847f0183252bb0ee",
+    "semantic_hash": "a369ddfcd6ae16e9847f0183252bb0ee"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/menubar-installer.ts": {
+    "mtime": 1781030265.2312386,
+    "ast_hash": "bdd19c1a5f73dc3165645685e4d7f073",
+    "semantic_hash": "bdd19c1a5f73dc3165645685e4d7f073"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/menubar-json.ts": {
+    "mtime": 1781030265.2313516,
+    "ast_hash": "f1ba6d11ad06b0076269ad46d5f10f92",
+    "semantic_hash": "f1ba6d11ad06b0076269ad46d5f10f92"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/model-efficiency.ts": {
+    "mtime": 1781024857.3169782,
+    "ast_hash": "0ee84be7f8b0ebc7a75727d8e9181fc4",
+    "semantic_hash": "0ee84be7f8b0ebc7a75727d8e9181fc4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/models-report.ts": {
+    "mtime": 1781030265.2315273,
+    "ast_hash": "b8579120b9f937c920689e8e86cfe16d",
+    "semantic_hash": "b8579120b9f937c920689e8e86cfe16d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/models.ts": {
+    "mtime": 1781178184.631745,
+    "ast_hash": "3c9b3ed65d939af9c3c7182b260b4187",
+    "semantic_hash": "3c9b3ed65d939af9c3c7182b260b4187"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/optimize.ts": {
+    "mtime": 1781030265.2322905,
+    "ast_hash": "e01feaf8d85c4aced46ca398cb8dd107",
+    "semantic_hash": "e01feaf8d85c4aced46ca398cb8dd107"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/parser.ts": {
+    "mtime": 1781178184.6346624,
+    "ast_hash": "6818df2287a89b7b3f798023b9c33ceb",
+    "semantic_hash": "6818df2287a89b7b3f798023b9c33ceb"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/persistent-codeburn.ts": {
+    "mtime": 1781030265.2326915,
+    "ast_hash": "6a9ae5db5e25fe9cc66a299d372a2c38",
+    "semantic_hash": "6a9ae5db5e25fe9cc66a299d372a2c38"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/plan-usage.ts": {
+    "mtime": 1781024857.3179476,
+    "ast_hash": "5cc8a3d145336c6e429032eb152d25a0",
+    "semantic_hash": "5cc8a3d145336c6e429032eb152d25a0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/plans.ts": {
+    "mtime": 1781024857.3179476,
+    "ast_hash": "3c19e962374a62a6f4a6cfc9a185df45",
+    "semantic_hash": "3c19e962374a62a6f4a6cfc9a185df45"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/antigravity.ts": {
+    "mtime": 1781178184.6351795,
+    "ast_hash": "5dc08406887f12229c66b6fd7d95380e",
+    "semantic_hash": "5dc08406887f12229c66b6fd7d95380e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/claude.ts": {
+    "mtime": 1781030265.2331638,
+    "ast_hash": "23b071887085c10d93d8935d89c53693",
+    "semantic_hash": "23b071887085c10d93d8935d89c53693"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/cline.ts": {
+    "mtime": 1781024857.3189442,
+    "ast_hash": "f0ef3fe3e2342baa0fd5937ab1207248",
+    "semantic_hash": "f0ef3fe3e2342baa0fd5937ab1207248"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/codebuff.ts": {
+    "mtime": 1781030265.2332726,
+    "ast_hash": "6c3241c0adfc811950ccf0d300e1a236",
+    "semantic_hash": "6c3241c0adfc811950ccf0d300e1a236"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/codex.ts": {
+    "mtime": 1781024857.3189442,
+    "ast_hash": "28a090896b9b8bbfaa65dafff0694c05",
+    "semantic_hash": "28a090896b9b8bbfaa65dafff0694c05"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/copilot.ts": {
+    "mtime": 1781024857.3189442,
+    "ast_hash": "0f504db10f16dfb2c5f45c053e70dc38",
+    "semantic_hash": "0f504db10f16dfb2c5f45c053e70dc38"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/crush.ts": {
+    "mtime": 1781030265.2332726,
+    "ast_hash": "6282bc3a1e36ca0d4d6354a398cbb5ff",
+    "semantic_hash": "6282bc3a1e36ca0d4d6354a398cbb5ff"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/cursor-agent.ts": {
+    "mtime": 1781030265.2332726,
+    "ast_hash": "cd7419c1367f09158804eda4225c9453",
+    "semantic_hash": "cd7419c1367f09158804eda4225c9453"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/cursor.ts": {
+    "mtime": 1781178184.6355689,
+    "ast_hash": "8583f9afb4194b158ee2e6fb4b4f51bf",
+    "semantic_hash": "8583f9afb4194b158ee2e6fb4b4f51bf"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/devin.ts": {
+    "mtime": 1781178184.6355689,
+    "ast_hash": "6e9e5169f653d97757acccd6b9bb9467",
+    "semantic_hash": "6e9e5169f653d97757acccd6b9bb9467"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/droid.ts": {
+    "mtime": 1781030265.233712,
+    "ast_hash": "8117e4b9aedb01de81dff19d1a813d6e",
+    "semantic_hash": "8117e4b9aedb01de81dff19d1a813d6e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/forge.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "29f4233db04e48a73cc3b2a05363085c",
+    "semantic_hash": "29f4233db04e48a73cc3b2a05363085c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/gemini.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "67bdd634b7e03b44174f20f6c44a0926",
+    "semantic_hash": "67bdd634b7e03b44174f20f6c44a0926"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/goose.ts": {
+    "mtime": 1781030265.2339156,
+    "ast_hash": "970f9c62155a6d3ef40c8b1ef9a56081",
+    "semantic_hash": "970f9c62155a6d3ef40c8b1ef9a56081"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/ibm-bob.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "1067972d624854544356eda7ea5699e1",
+    "semantic_hash": "1067972d624854544356eda7ea5699e1"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/index.ts": {
+    "mtime": 1781178184.6355689,
+    "ast_hash": "8277b13926212d2c41ec789ff451bb9a",
+    "semantic_hash": "8277b13926212d2c41ec789ff451bb9a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/kilo-code.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "c002e481b17f2a13f2c5bd3ad54de69e",
+    "semantic_hash": "c002e481b17f2a13f2c5bd3ad54de69e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/kimi.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "b7abf22d6ecd0129324903e11ec5c25b",
+    "semantic_hash": "b7abf22d6ecd0129324903e11ec5c25b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/kiro.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "fdbd6bee87cfb0121762f7487ba4ce2b",
+    "semantic_hash": "fdbd6bee87cfb0121762f7487ba4ce2b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/mistral-vibe.ts": {
+    "mtime": 1781178184.6355689,
+    "ast_hash": "fba4be49bc3f4010bb557766dd4f66b6",
+    "semantic_hash": "fba4be49bc3f4010bb557766dd4f66b6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/mux.ts": {
+    "mtime": 1781178184.6364007,
+    "ast_hash": "27fcef0ca01962364f08f853238b8e89",
+    "semantic_hash": "27fcef0ca01962364f08f853238b8e89"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/openclaw.ts": {
+    "mtime": 1781024857.3189476,
+    "ast_hash": "4ecd7165ea6ef9425e193b983097718e",
+    "semantic_hash": "4ecd7165ea6ef9425e193b983097718e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/opencode.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "e2f2f92e36ff62737b38b1fba55062c1",
+    "semantic_hash": "e2f2f92e36ff62737b38b1fba55062c1"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/pi.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "c0c01ecc842f64299714fcdbe12d0588",
+    "semantic_hash": "c0c01ecc842f64299714fcdbe12d0588"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/qwen.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "f0e51d590007b4daa95e4ba8a98a447b",
+    "semantic_hash": "f0e51d590007b4daa95e4ba8a98a447b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/roo-code.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "df76369cd90f749613d531e843b14dd9",
+    "semantic_hash": "df76369cd90f749613d531e843b14dd9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/sqlite-session-parser.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "d04485c9b4bd06288ec89ad7042b6195",
+    "semantic_hash": "d04485c9b4bd06288ec89ad7042b6195"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/types.ts": {
+    "mtime": 1781178184.6364007,
+    "ast_hash": "3d42e956e0d48765330ba4a8c3aa3ecc",
+    "semantic_hash": "3d42e956e0d48765330ba4a8c3aa3ecc"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/vercel-gateway.ts": {
+    "mtime": 1781178184.6364007,
+    "ast_hash": "19c4c0179bdf4f142e39108ce70d1ebc",
+    "semantic_hash": "19c4c0179bdf4f142e39108ce70d1ebc"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/vscode-cline-parser.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "dc7da27b4671a0868686b4dc2fe9a3fe",
+    "semantic_hash": "dc7da27b4671a0868686b4dc2fe9a3fe"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/providers/warp.ts": {
+    "mtime": 1781178184.6368756,
+    "ast_hash": "578504e562fc1ab9f0301ef0673da308",
+    "semantic_hash": "578504e562fc1ab9f0301ef0673da308"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/session-cache.ts": {
+    "mtime": 1781178184.6370714,
+    "ast_hash": "03ddf1d5b0e1454393409b22749363ae",
+    "semantic_hash": "03ddf1d5b0e1454393409b22749363ae"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/sqlite.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "f6bed05986c01acd7de6b5bab79c1965",
+    "semantic_hash": "f6bed05986c01acd7de6b5bab79c1965"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/types.ts": {
+    "mtime": 1781178184.6372163,
+    "ast_hash": "090621e1e315731ecbc337c7a80321d8",
+    "semantic_hash": "090621e1e315731ecbc337c7a80321d8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/usage-aggregator.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "91dc3200f7ef9081c1adf9da612863ac",
+    "semantic_hash": "91dc3200f7ef9081c1adf9da612863ac"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/src/yield.ts": {
+    "mtime": 1781024857.3199475,
+    "ast_hash": "c74615348c4662890639d3e2ed2d327a",
+    "semantic_hash": "c74615348c4662890639d3e2ed2d327a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/antigravity-statusline.test.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "1bd81535da9c484c8dc3efe3df629952",
+    "semantic_hash": "1bd81535da9c484c8dc3efe3df629952"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/bash-commands.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "b547781337ec0546ed25af2892587c2a",
+    "semantic_hash": "b547781337ec0546ed25af2892587c2a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/blob-to-text.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "4b73d36dddff73bf11f22f2634d45865",
+    "semantic_hash": "4b73d36dddff73bf11f22f2634d45865"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/classifier.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "7c3ace6c3ceed711ff1f976c0be2f9c2",
+    "semantic_hash": "7c3ace6c3ceed711ff1f976c0be2f9c2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-date.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "53816ded3e979649656c3041c0f7821f",
+    "semantic_hash": "53816ded3e979649656c3041c0f7821f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-deepseek-v4-pricing.test.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "e36cc11f17e56654a3d31984843c4d72",
+    "semantic_hash": "e36cc11f17e56654a3d31984843c4d72"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-export-date-range.test.ts": {
+    "mtime": 1781030265.234007,
+    "ast_hash": "6c16a9e6d8f16e13e01f07c5db637bba",
+    "semantic_hash": "6c16a9e6d8f16e13e01f07c5db637bba"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-json-daily.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "12a33843be583b62923b0a3317f5a07e",
+    "semantic_hash": "12a33843be583b62923b0a3317f5a07e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-model-savings.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "fe08a0d91d5e4a4ec010d0b894ab623f",
+    "semantic_hash": "fe08a0d91d5e4a4ec010d0b894ab623f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-plan.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "d8706f1fa0a0d2da960a8d9c0e7ae317",
+    "semantic_hash": "d8706f1fa0a0d2da960a8d9c0e7ae317"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-proxy-path.test.ts": {
+    "mtime": 1781178184.6373866,
+    "ast_hash": "c9f607bfaa46e3b9f559392d780f3a0d",
+    "semantic_hash": "c9f607bfaa46e3b9f559392d780f3a0d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/cli-status-menubar.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "238e538915c7422036606a860986b5c7",
+    "semantic_hash": "238e538915c7422036606a860986b5c7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/compare-stats.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "3e6f2f5f8a045427576ef95a6f56d866",
+    "semantic_hash": "3e6f2f5f8a045427576ef95a6f56d866"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/content-utils.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "246186af738877a47fc260ff0d8f8e5e",
+    "semantic_hash": "246186af738877a47fc260ff0d8f8e5e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/currency-rounding.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "121c7930f6faebae043d459e1a5703f0",
+    "semantic_hash": "121c7930f6faebae043d459e1a5703f0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/daily-cache.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "73260d92981c4c76e23fae8404f65208",
+    "semantic_hash": "73260d92981c4c76e23fae8404f65208"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/dashboard.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "02b8c024c0f03721e3653a679f01d003",
+    "semantic_hash": "02b8c024c0f03721e3653a679f01d003"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/date-range-filter.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "815e28c4a8e52867cda49f7948d68841",
+    "semantic_hash": "815e28c4a8e52867cda49f7948d68841"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/day-aggregator-savings.test.ts": {
+    "mtime": 1781024857.3216872,
+    "ast_hash": "a2ad602734355b14f600548a36ea98b9",
+    "semantic_hash": "a2ad602734355b14f600548a36ea98b9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/day-aggregator.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "3ffbd40c1ca41c16f5a13cd981de95a5",
+    "semantic_hash": "3ffbd40c1ca41c16f5a13cd981de95a5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/export.test.ts": {
+    "mtime": 1781024857.3219473,
+    "ast_hash": "1c3d9840acb7fd998ca21072c4363e97",
+    "semantic_hash": "1c3d9840acb7fd998ca21072c4363e97"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/fetch-utils.test.ts": {
+    "mtime": 1781024857.3219473,
+    "ast_hash": "7b2cc2d8bd4de0c595010b299e8ef47b",
+    "semantic_hash": "7b2cc2d8bd4de0c595010b299e8ef47b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/fs-utils.test.ts": {
+    "mtime": 1781030265.2343073,
+    "ast_hash": "93c3c16792ba1b72d80a5ebc6c06a44c",
+    "semantic_hash": "93c3c16792ba1b72d80a5ebc6c06a44c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/local-model-savings.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "221becfe06169bcb67e6a42193df651f",
+    "semantic_hash": "221becfe06169bcb67e6a42193df651f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/mcp-coverage.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "b6261403b46d78fbb8acdb10b570ad52",
+    "semantic_hash": "b6261403b46d78fbb8acdb10b570ad52"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/mcp-redact.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "81c6f0edbf44fca741a6c9ce0fe0e86d",
+    "semantic_hash": "81c6f0edbf44fca741a6c9ce0fe0e86d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/mcp-server.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "5a4ab8d1145926ff2a4b93cf5bffa6d0",
+    "semantic_hash": "5a4ab8d1145926ff2a4b93cf5bffa6d0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/mcp-tables.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "90e38f46ca3d37d913bac06f061ae1df",
+    "semantic_hash": "90e38f46ca3d37d913bac06f061ae1df"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/menubar-installer.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "6e27c4aba2473d20a96c7232edb53d01",
+    "semantic_hash": "6e27c4aba2473d20a96c7232edb53d01"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/menubar-json.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "78f2c3e46c20218f1d38a737d8b1f133",
+    "semantic_hash": "78f2c3e46c20218f1d38a737d8b1f133"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/menubar-savings.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "349bec2f7a9d889a7eda0af4ecd0c6a8",
+    "semantic_hash": "349bec2f7a9d889a7eda0af4ecd0c6a8"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/minimax.test.ts": {
+    "mtime": 1781178184.6373866,
+    "ast_hash": "ece8f3fb6d577dc108f00410b2871c0e",
+    "semantic_hash": "ece8f3fb6d577dc108f00410b2871c0e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/model-efficiency.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "ff2c5895fa4605e50ee260c666480dea",
+    "semantic_hash": "ff2c5895fa4605e50ee260c666480dea"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/models-hoist.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "fcdd5634f121fc149d7068e1e213b98e",
+    "semantic_hash": "fcdd5634f121fc149d7068e1e213b98e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/models-report.test.ts": {
+    "mtime": 1781024857.3227308,
+    "ast_hash": "5e30752436aef8d239c5aaa5dd6a235a",
+    "semantic_hash": "5e30752436aef8d239c5aaa5dd6a235a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/models.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "f7ccfbd918be516a3f79ec1b16916146",
+    "semantic_hash": "f7ccfbd918be516a3f79ec1b16916146"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/optimize-fs.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "ef439c2bdf780ba379cbd854443337fe",
+    "semantic_hash": "ef439c2bdf780ba379cbd854443337fe"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/optimize.test.ts": {
+    "mtime": 1781024857.3229473,
+    "ast_hash": "bade9180163f64e96f66ef1a307c723a",
+    "semantic_hash": "bade9180163f64e96f66ef1a307c723a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-claude-cwd.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "4fc5f4eaf265c2c536923954dbece951",
+    "semantic_hash": "4fc5f4eaf265c2c536923954dbece951"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-compact-entry.test.ts": {
+    "mtime": 1781024857.3229473,
+    "ast_hash": "aa9e52d50f40691621c581d16b11320f",
+    "semantic_hash": "aa9e52d50f40691621c581d16b11320f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-filter.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "871a6b2dd50d4fd1311e259c6b1ed48a",
+    "semantic_hash": "871a6b2dd50d4fd1311e259c6b1ed48a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-gemini-cache.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "76ba61c367ccb22e359fc9eb1e7aa3d4",
+    "semantic_hash": "76ba61c367ccb22e359fc9eb1e7aa3d4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-large-json-scanner.test.ts": {
+    "mtime": 1781024857.3229473,
+    "ast_hash": "26f6de0e9b45af477cee932cb7ef5c2f",
+    "semantic_hash": "26f6de0e9b45af477cee932cb7ef5c2f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-large-session.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "24a340fe086eb7f4c39ced4c69082573",
+    "semantic_hash": "24a340fe086eb7f4c39ced4c69082573"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-local-savings.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "b2167cac806747fff57530f4078b9504",
+    "semantic_hash": "b2167cac806747fff57530f4078b9504"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-mcp-inventory.test.ts": {
+    "mtime": 1781024857.3229473,
+    "ast_hash": "c565b83ee36739767a08f9d98cecfd02",
+    "semantic_hash": "c565b83ee36739767a08f9d98cecfd02"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-number-helpers.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "b9e22c340817e2a87f80cc75ecdb5b4f",
+    "semantic_hash": "b9e22c340817e2a87f80cc75ecdb5b4f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-proxy-codex-only.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "86b5b2a6321506b3bb1df4eb81cc5317",
+    "semantic_hash": "86b5b2a6321506b3bb1df4eb81cc5317"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-proxy-merge.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "dfb2992bd67b2cd0141b9fba0322d1ab",
+    "semantic_hash": "dfb2992bd67b2cd0141b9fba0322d1ab"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-proxy-pricing.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "6ddbf3b8e57f4c14c1b66d708fda933a",
+    "semantic_hash": "6ddbf3b8e57f4c14c1b66d708fda933a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-skip-line.test.ts": {
+    "mtime": 1781024857.3229473,
+    "ast_hash": "16b8e0eaea9cf849226f493b6e030557",
+    "semantic_hash": "16b8e0eaea9cf849226f493b6e030557"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/parser-subagent-collection.test.ts": {
+    "mtime": 1781178184.6376252,
+    "ast_hash": "391201a84cf313b68108445c4809c8a3",
+    "semantic_hash": "391201a84cf313b68108445c4809c8a3"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/plan-usage.test.ts": {
+    "mtime": 1781030265.2353075,
+    "ast_hash": "19ad3f5ea591bfbe8285da216700ad15",
+    "semantic_hash": "19ad3f5ea591bfbe8285da216700ad15"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/plans.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "abdf7858da50d1dcc003b882e7572b2d",
+    "semantic_hash": "abdf7858da50d1dcc003b882e7572b2d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/pricing-fallback-data.test.ts": {
+    "mtime": 1781178184.638114,
+    "ast_hash": "f7407c6b1b7f1226f12349a497084aea",
+    "semantic_hash": "f7407c6b1b7f1226f12349a497084aea"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/provider-registry.test.ts": {
+    "mtime": 1781178184.6382163,
+    "ast_hash": "4ef6988f95dcbafd3ea3d169b221196a",
+    "semantic_hash": "4ef6988f95dcbafd3ea3d169b221196a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/provider-turn-grouping.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "e4a1808684f952645bca313496fcf1a0",
+    "semantic_hash": "e4a1808684f952645bca313496fcf1a0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/antigravity.test.ts": {
+    "mtime": 1781178184.6383634,
+    "ast_hash": "f1e942df8976f72690f2964c7be82fb7",
+    "semantic_hash": "f1e942df8976f72690f2964c7be82fb7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/claude-config-dirs.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "9ba3af760b3f0fd9e03e3ed863d500e6",
+    "semantic_hash": "9ba3af760b3f0fd9e03e3ed863d500e6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/cline.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "975a552ac3a5444dea8e6d3dec448278",
+    "semantic_hash": "975a552ac3a5444dea8e6d3dec448278"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/codebuff.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "bfec42d26018acef086a10d5f318c918",
+    "semantic_hash": "bfec42d26018acef086a10d5f318c918"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/codex.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "a49834ca93847e6d51c2006ce8737d03",
+    "semantic_hash": "a49834ca93847e6d51c2006ce8737d03"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/copilot.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "0bf7c0aab54e114534bfce0bd1b239eb",
+    "semantic_hash": "0bf7c0aab54e114534bfce0bd1b239eb"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/crush.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "1e671f27610a847ddf43964c3d6a2266",
+    "semantic_hash": "1e671f27610a847ddf43964c3d6a2266"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/cursor-agent.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "38506d52e3af36ab3acd922c2160d610",
+    "semantic_hash": "38506d52e3af36ab3acd922c2160d610"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/cursor-bubble-dedup.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "26785c98c1ffaded0fcd19def839394f",
+    "semantic_hash": "26785c98c1ffaded0fcd19def839394f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/cursor-workspace-breakdown.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "8392399f0743b11f4506f100538ac6e5",
+    "semantic_hash": "8392399f0743b11f4506f100538ac6e5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/cursor.test.ts": {
+    "mtime": 1781178184.6383634,
+    "ast_hash": "e65925f11829105e810731cd77f41453",
+    "semantic_hash": "e65925f11829105e810731cd77f41453"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/devin.test.ts": {
+    "mtime": 1781178184.6385324,
+    "ast_hash": "d68437318fd93ecc1a5b7aeab86733d9",
+    "semantic_hash": "d68437318fd93ecc1a5b7aeab86733d9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/droid.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "67964efd6d5ca1d41794c0120f221555",
+    "semantic_hash": "67964efd6d5ca1d41794c0120f221555"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/forge.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "3d8f3a61ccba9c60a0a0bcc1d7d5c623",
+    "semantic_hash": "3d8f3a61ccba9c60a0a0bcc1d7d5c623"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/gemini.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "2b0cb13e8238bfe463d687eecdf2389a",
+    "semantic_hash": "2b0cb13e8238bfe463d687eecdf2389a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/ibm-bob.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "958ec1e94e5c98221d2b90ad17abe8b2",
+    "semantic_hash": "958ec1e94e5c98221d2b90ad17abe8b2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/kilo-code.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "48565cfe1af5e80f07286293c132f1f6",
+    "semantic_hash": "48565cfe1af5e80f07286293c132f1f6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/kimi.test.ts": {
+    "mtime": 1781024857.3245704,
+    "ast_hash": "ac524f58f9b484223359f8b8bb9fe9f7",
+    "semantic_hash": "ac524f58f9b484223359f8b8bb9fe9f7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/kiro.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "18576405465f6b34f43597e1d896ce44",
+    "semantic_hash": "18576405465f6b34f43597e1d896ce44"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/mistral-vibe.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "12016e8973a471e3f4b9f0fa6ae8e889",
+    "semantic_hash": "12016e8973a471e3f4b9f0fa6ae8e889"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/mux.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "4abdc7b60b98bdda7f39a21285077527",
+    "semantic_hash": "4abdc7b60b98bdda7f39a21285077527"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/omp.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "81848061d1319516ade5a5ffaad41f7e",
+    "semantic_hash": "81848061d1319516ade5a5ffaad41f7e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/openclaw.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "09cbf1b386037d2f4262b822abc30684",
+    "semantic_hash": "09cbf1b386037d2f4262b822abc30684"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/opencode.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "41da88da43328acf810cf6697722bdf4",
+    "semantic_hash": "41da88da43328acf810cf6697722bdf4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/pi.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "3090e56088e814bdfac86c4f072f05cc",
+    "semantic_hash": "3090e56088e814bdfac86c4f072f05cc"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/roo-code.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "4987bc27d0ccd5f1e7f77222e3f68321",
+    "semantic_hash": "4987bc27d0ccd5f1e7f77222e3f68321"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/vercel-gateway.test.ts": {
+    "mtime": 1781178184.6385324,
+    "ast_hash": "dfa4a4cede7a0133d4a6a63c60b14b11",
+    "semantic_hash": "dfa4a4cede7a0133d4a6a63c60b14b11"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/vscode-cline-parser.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "091ea2743ce77a89137da6ee1426f9ea",
+    "semantic_hash": "091ea2743ce77a89137da6ee1426f9ea"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/providers/warp.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "16d836b6ae4f02f42d30167f4792c646",
+    "semantic_hash": "16d836b6ae4f02f42d30167f4792c646"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/security/prototype-pollution.test.ts": {
+    "mtime": 1781030265.2363074,
+    "ast_hash": "87acdf410db927bce28a37e1342c592e",
+    "semantic_hash": "87acdf410db927bce28a37e1342c592e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/session-cache.test.ts": {
+    "mtime": 1781030265.2373073,
+    "ast_hash": "8bd025c86d6941182126252b9f3b856e",
+    "semantic_hash": "8bd025c86d6941182126252b9f3b856e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tests/usage-aggregator.test.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "382a2c94da787a1d13ae275fa9639ce0",
+    "semantic_hash": "382a2c94da787a1d13ae275fa9639ce0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tsconfig.json": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "4f27a49f4e1f9158bda0b3c249b886f0",
+    "semantic_hash": "4f27a49f4e1f9158bda0b3c249b886f0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/tsup.config.ts": {
+    "mtime": 1781024857.324947,
+    "ast_hash": "777594dd555d3bdf28d351cedbe5620c",
+    "semantic_hash": "777594dd555d3bdf28d351cedbe5620c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/FUNDING.yml": {
+    "mtime": 1781024857.2859504,
+    "ast_hash": "e5b44fe4311496ee872fc05a596cca92",
+    "semantic_hash": "e5b44fe4311496ee872fc05a596cca92"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/PULL_REQUEST_TEMPLATE.md": {
+    "mtime": 1781024857.2868495,
+    "ast_hash": "6ca6143c9cb9b8cd9ce66456c3b8e026",
+    "semantic_hash": "6ca6143c9cb9b8cd9ce66456c3b8e026"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/block-claude-coauthor.yml": {
+    "mtime": 1781178184.624323,
+    "ast_hash": "2233e3305dc26f114b49a855b1e0e1ff",
+    "semantic_hash": "2233e3305dc26f114b49a855b1e0e1ff"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/ci.yml": {
+    "mtime": 1781178184.624323,
+    "ast_hash": "d6e5f38bed80184de569c588cfc25c01",
+    "semantic_hash": "d6e5f38bed80184de569c588cfc25c01"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/firstlook.yml": {
+    "mtime": 1781024857.2869306,
+    "ast_hash": "aa8b79af70f51c3908ea8e9b57bcedd4",
+    "semantic_hash": "aa8b79af70f51c3908ea8e9b57bcedd4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/release-menubar.yml": {
+    "mtime": 1781178184.624323,
+    "ast_hash": "6489d8a5c970197721eb83bea69449c1",
+    "semantic_hash": "6489d8a5c970197721eb83bea69449c1"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/.semgrep/rules/no-bracket-assign-hot-paths.yml": {
+    "mtime": 1781024857.2870927,
+    "ast_hash": "626e2ad9ef80450a0489ef87d5fd7f55",
+    "semantic_hash": "626e2ad9ef80450a0489ef87d5fd7f55"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/CHANGELOG.md": {
+    "mtime": 1781178184.6267161,
+    "ast_hash": "114e10cc209a928f9d059d5cbef1d58e",
+    "semantic_hash": "114e10cc209a928f9d059d5cbef1d58e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/CONTRIBUTING.md": {
+    "mtime": 1781030265.2177856,
+    "ast_hash": "cf245f2042e0fb18b925e6ecb09a725a",
+    "semantic_hash": "cf245f2042e0fb18b925e6ecb09a725a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/README.md": {
+    "mtime": 1781178184.6269548,
+    "ast_hash": "d3572eea54fbfa9bb45588588bfba512",
+    "semantic_hash": "d3572eea54fbfa9bb45588588bfba512"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/RELEASING.md": {
+    "mtime": 1781030265.2187433,
+    "ast_hash": "4662b934dd0134e38a889bcc4b7de0f5",
+    "semantic_hash": "4662b934dd0134e38a889bcc4b7de0f5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/SECURITY.md": {
+    "mtime": 1781030265.2187433,
+    "ast_hash": "142f56af68f8a29e8b1c991bf14586c0",
+    "semantic_hash": "142f56af68f8a29e8b1c991bf14586c0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/architecture.md": {
+    "mtime": 1781030265.2189221,
+    "ast_hash": "14572cf0e0a4e27b3b860f9f684220a2",
+    "semantic_hash": "14572cf0e0a4e27b3b860f9f684220a2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/design/codeburn-mcp-plan.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "baf03b97a57b2026f0b99e79b3a404a5",
+    "semantic_hash": "baf03b97a57b2026f0b99e79b3a404a5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/design/codeburn-mcp.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "a828b155b38175c3f80669a9a326d26d",
+    "semantic_hash": "a828b155b38175c3f80669a9a326d26d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/README.md": {
+    "mtime": 1781178184.6274147,
+    "ast_hash": "7ab2839af38e938d35d79554b1635072",
+    "semantic_hash": "7ab2839af38e938d35d79554b1635072"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/antigravity.md": {
+    "mtime": 1781178184.6274147,
+    "ast_hash": "5ce2ea0545f9c56153fba73b9c66fedf",
+    "semantic_hash": "5ce2ea0545f9c56153fba73b9c66fedf"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/claude.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "bfcd6745b3d36b47f6ad74b9926f0148",
+    "semantic_hash": "bfcd6745b3d36b47f6ad74b9926f0148"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/cline.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "4bd13867995221830678184170dd1ced",
+    "semantic_hash": "4bd13867995221830678184170dd1ced"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/codex.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "ca582a904464ab3ca27641cafa93ce7d",
+    "semantic_hash": "ca582a904464ab3ca27641cafa93ce7d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/copilot.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "343db0c0e973664c2e0d387c24562acf",
+    "semantic_hash": "343db0c0e973664c2e0d387c24562acf"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/crush.md": {
+    "mtime": 1781030265.2192621,
+    "ast_hash": "ec8b2659251f698488313a58a4b581b5",
+    "semantic_hash": "ec8b2659251f698488313a58a4b581b5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/cursor-agent.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "2ef51c7d9cd11b7cc4bc51da2591e5b2",
+    "semantic_hash": "2ef51c7d9cd11b7cc4bc51da2591e5b2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/cursor.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "c529a8b442fb6ee3fb9c4ff2c412e474",
+    "semantic_hash": "c529a8b442fb6ee3fb9c4ff2c412e474"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/devin.md": {
+    "mtime": 1781178184.6275465,
+    "ast_hash": "ba5ada816c37da1f5725be142f0ed981",
+    "semantic_hash": "ba5ada816c37da1f5725be142f0ed981"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/droid.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "cedd7b5900ce2ad3c2b2c5c79a8cd4fc",
+    "semantic_hash": "cedd7b5900ce2ad3c2b2c5c79a8cd4fc"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/forge.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "278c14ee3abb855d1e170bcc5d7a8e3b",
+    "semantic_hash": "278c14ee3abb855d1e170bcc5d7a8e3b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/gemini.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "177119ff95cee5854889ea37f4c83520",
+    "semantic_hash": "177119ff95cee5854889ea37f4c83520"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/goose.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "6b190faf22a6323027ef7bd8e6e8b1c5",
+    "semantic_hash": "6b190faf22a6323027ef7bd8e6e8b1c5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/ibm-bob.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "3bbb7ae48d4d0369b7bc8e49b2e99194",
+    "semantic_hash": "3bbb7ae48d4d0369b7bc8e49b2e99194"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/kilo-code.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "c788a7a701cbfa98b23b4dc4e9a724c7",
+    "semantic_hash": "c788a7a701cbfa98b23b4dc4e9a724c7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/kimi.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "b74722ff465c1fcec1f4cb81718bdd48",
+    "semantic_hash": "b74722ff465c1fcec1f4cb81718bdd48"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/kiro.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "79a07cc3cf079ef69641f90e5cdf3395",
+    "semantic_hash": "79a07cc3cf079ef69641f90e5cdf3395"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/mistral-vibe.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "56f6e8c5817f07c13f5ae5e2d50341b5",
+    "semantic_hash": "56f6e8c5817f07c13f5ae5e2d50341b5"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/mux.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "5e065fdd108961f7c2d6bd86904ff7bd",
+    "semantic_hash": "5e065fdd108961f7c2d6bd86904ff7bd"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/omp.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "c09b61b3b1a077883b4958ee52ea0887",
+    "semantic_hash": "c09b61b3b1a077883b4958ee52ea0887"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/openclaw.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "cf89ecd340c3845d2417df910bc0dd0e",
+    "semantic_hash": "cf89ecd340c3845d2417df910bc0dd0e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/opencode.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "7545895cc9d32a818845e2b6c8c14eec",
+    "semantic_hash": "7545895cc9d32a818845e2b6c8c14eec"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/pi.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "c8c5d70e3d69571dc5e92da788bd93d2",
+    "semantic_hash": "c8c5d70e3d69571dc5e92da788bd93d2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/qwen.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "f9b50b5cb789de2f0f8a2d0723bf4ddb",
+    "semantic_hash": "f9b50b5cb789de2f0f8a2d0723bf4ddb"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/roo-code.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "a2815a107e9d19802d781cf6e9bdf99e",
+    "semantic_hash": "a2815a107e9d19802d781cf6e9bdf99e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/vercel-gateway.md": {
+    "mtime": 1781178184.6275465,
+    "ast_hash": "71ee16b6f3f82fc7b9878246634a71e9",
+    "semantic_hash": "71ee16b6f3f82fc7b9878246634a71e9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/vscode-cline-parser.md": {
+    "mtime": 1781024857.3067198,
+    "ast_hash": "755b89b2856070a60aaf4d6faf2b88b9",
+    "semantic_hash": "755b89b2856070a60aaf4d6faf2b88b9"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/docs/providers/warp.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "4fbfb747877514d1f327d41484d4340f",
+    "semantic_hash": "4fbfb747877514d1f327d41484d4340f"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/README.md": {
+    "mtime": 1781030265.2193072,
+    "ast_hash": "9baa26b52afd6802f0b8c063269e479b",
+    "semantic_hash": "9baa26b52afd6802f0b8c063269e479b"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/mac/README.md": {
+    "mtime": 1781030265.220307,
+    "ast_hash": "89943539036cb6427a666f03daefa90d",
+    "semantic_hash": "89943539036cb6427a666f03daefa90d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/compare.jpg": {
+    "mtime": 1781024857.2899501,
+    "ast_hash": "7f0731c898a34aaf35e78521d77925b0",
+    "semantic_hash": "7f0731c898a34aaf35e78521d77925b0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/dashboard.jpg": {
+    "mtime": 1781024857.29195,
+    "ast_hash": "7e9eeb3d1ae3418b7b36a96e11bbf0be",
+    "semantic_hash": "7e9eeb3d1ae3418b7b36a96e11bbf0be"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/logo.png": {
+    "mtime": 1781024857.2939498,
+    "ast_hash": "2638748c375e39a5c54353a92c33a864",
+    "semantic_hash": "2638748c375e39a5c54353a92c33a864"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/menubar-0.7.2.png": {
+    "mtime": 1781024857.2939498,
+    "ast_hash": "da9523d92ee8b45ee251e0cbc9623b58",
+    "semantic_hash": "da9523d92ee8b45ee251e0cbc9623b58"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/menubar-0.8.0.png": {
+    "mtime": 1781024857.2949498,
+    "ast_hash": "68e75ba1a07bce711f6111f803d621cb",
+    "semantic_hash": "68e75ba1a07bce711f6111f803d621cb"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/menubar-0.9.11.png": {
+    "mtime": 1781024857.2959497,
+    "ast_hash": "7f252b1d28cf5f0bb14183b981b9e826",
+    "semantic_hash": "7f252b1d28cf5f0bb14183b981b9e826"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/menubar-logo.png": {
+    "mtime": 1781024857.2969496,
+    "ast_hash": "7e845ff99aac582d0d58787d6569406c",
+    "semantic_hash": "7e845ff99aac582d0d58787d6569406c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/optimize.jpg": {
+    "mtime": 1781024857.2999492,
+    "ast_hash": "b7a3dd4bd298b5e7aebbab5057fb1817",
+    "semantic_hash": "b7a3dd4bd298b5e7aebbab5057fb1817"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers.png": {
+    "mtime": 1781024857.302949,
+    "ast_hash": "8c86ce28a62eafd7f0745a9af0a35f4d",
+    "semantic_hash": "8c86ce28a62eafd7f0745a9af0a35f4d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/antigravity.png": {
+    "mtime": 1781024857.3039489,
+    "ast_hash": "8a1138c0a015f33ce0b438415a5b64ab",
+    "semantic_hash": "8a1138c0a015f33ce0b438415a5b64ab"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/claude.jpg": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "6d018ce2595ecb358a66264fd0242f56",
+    "semantic_hash": "6d018ce2595ecb358a66264fd0242f56"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/cline.svg": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "d6162f5ffd19172478e4f55c7115de67",
+    "semantic_hash": "d6162f5ffd19172478e4f55c7115de67"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/codex.png": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "1960bbf4c53fe3e7f4aa56c70ee5cf58",
+    "semantic_hash": "1960bbf4c53fe3e7f4aa56c70ee5cf58"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/copilot.jpg": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "d4c9eedc073b881e56e2862693913fa2",
+    "semantic_hash": "d4c9eedc073b881e56e2862693913fa2"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/crush.png": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "3730ac780abc16c83a267273721af8d4",
+    "semantic_hash": "3730ac780abc16c83a267273721af8d4"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/cursor-agent.jpg": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "e9d21ce74b960130844498db53ef754d",
+    "semantic_hash": "e9d21ce74b960130844498db53ef754d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/cursor.jpg": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "e9d21ce74b960130844498db53ef754d",
+    "semantic_hash": "e9d21ce74b960130844498db53ef754d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/devin.png": {
+    "mtime": 1781178184.6273081,
+    "ast_hash": "861110e5b9d0f9b71334474ed4c82d05",
+    "semantic_hash": "861110e5b9d0f9b71334474ed4c82d05"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/droid.png": {
+    "mtime": 1781024857.304835,
+    "ast_hash": "6367568040533562ee907f073d16978c",
+    "semantic_hash": "6367568040533562ee907f073d16978c"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/forge.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "a70e2f30727a96290b7ad76aff8554ea",
+    "semantic_hash": "a70e2f30727a96290b7ad76aff8554ea"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/gemini.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "81a91dab3cc6af8c4b65b3a47faffde7",
+    "semantic_hash": "81a91dab3cc6af8c4b65b3a47faffde7"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/goose.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "deb1744c7433ebbc03d02518189076c0",
+    "semantic_hash": "deb1744c7433ebbc03d02518189076c0"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/ibm-bob.svg": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "8c5497add6b6eb929dce40cfead753ca",
+    "semantic_hash": "8c5497add6b6eb929dce40cfead753ca"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/kilo-code.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "1d87db07965af7d1874aa5b66fca2b25",
+    "semantic_hash": "1d87db07965af7d1874aa5b66fca2b25"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/kimi.svg": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "04bcad8e500bdf9b9d517923d8b48377",
+    "semantic_hash": "04bcad8e500bdf9b9d517923d8b48377"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/kiro.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "92b297d98a5a87aa08acebf0b4e7accf",
+    "semantic_hash": "92b297d98a5a87aa08acebf0b4e7accf"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/mistral-vibe.svg": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "4b038accd1135ae76060043ce4836766",
+    "semantic_hash": "4b038accd1135ae76060043ce4836766"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/omp.svg": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "3c56144796410f3d60c5ebd8e541bf7d",
+    "semantic_hash": "3c56144796410f3d60c5ebd8e541bf7d"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/openclaw.jpg": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "46d8b27d1a80d32005cb4daa0479ab7e",
+    "semantic_hash": "46d8b27d1a80d32005cb4daa0479ab7e"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/opencode.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "52f99cb5da218847d2f750c33ab98440",
+    "semantic_hash": "52f99cb5da218847d2f750c33ab98440"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/pi.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "c02076d8467af4a3748a46ba7eae2579",
+    "semantic_hash": "c02076d8467af4a3748a46ba7eae2579"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/qwen.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "d4d3d8f63d60551219d6d8cc8e8cb94a",
+    "semantic_hash": "d4d3d8f63d60551219d6d8cc8e8cb94a"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/assets/providers/roo-code.png": {
+    "mtime": 1781024857.3049488,
+    "ast_hash": "38369bfb85c1eb1add15a32dd1986fa6",
+    "semantic_hash": "38369bfb85c1eb1add15a32dd1986fa6"
+  },
+  "/home/priya/Documents/Github/Ai/aiinsight/gnome/icons/codeburn-symbolic.svg": {
+    "mtime": 1781024857.3069487,
+    "ast_hash": "80d943a0c7d66dd1f78c47ad447e00e1",
+    "semantic_hash": "80d943a0c7d66dd1f78c47ad447e00e1"
+  }
+}

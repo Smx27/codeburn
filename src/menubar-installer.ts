@@ -8,23 +8,23 @@ import { pipeline } from 'node:stream/promises'
 import { Readable } from 'node:stream'
 
 import {
-  buildPersistentCodeburnLookupPath,
-  resolvePersistentCodeburnPathFromWhichOutput,
-} from './persistent-codeburn.js'
+  buildPersistentAiInsightLookupPath,
+  resolvePersistentAiInsightPathFromWhichOutput,
+} from './persistent-aiinsight.js'
 
 /// Public GitHub repo that hosts macOS release builds. CLI and menubar releases share
 /// the repository, so we scan recent releases and choose the newest `mac-v*` release
 /// that actually contains the menubar zip.
-const RELEASE_API = 'https://api.github.com/repos/getagentseal/codeburn/releases?per_page=20'
+const RELEASE_API = 'https://api.github.com/repos/getagentseal/aiinsight/releases?per_page=20'
 const APP_BUNDLE_NAME = 'CodeBurnMenubar.app'
-const EXPECTED_BUNDLE_ID = 'org.agentseal.codeburn-menubar'
+const EXPECTED_BUNDLE_ID = 'org.agentseal.aiinsight-menubar'
 const VERSIONED_ASSET_PATTERN = /^CodeBurnMenubar-v.+\.zip$/
 const APP_PROCESS_NAME = 'CodeBurnMenubar'
 const SUPPORTED_OS = 'darwin'
 const MIN_MACOS_MAJOR = 14
-const PERSISTED_CLI_PATH = join(homedir(), 'Library', 'Application Support', 'CodeBurn', 'codeburn-cli-path.v1')
+const PERSISTED_CLI_PATH = join(homedir(), 'Library', 'Application Support', 'AiInsight', 'aiinsight-cli-path.v1')
 const PERSISTENT_CLI_REQUIRED_MESSAGE =
-  'The menubar app needs a persistent codeburn command. Install CodeBurn globally first: npm install -g codeburn'
+  'The menubar app needs a persistent aiinsight command. Install AiInsight globally first: npm install -g aiinsight'
 
 export type InstallResult = { installedPath: string; launched: boolean }
 
@@ -37,7 +37,7 @@ export function resolveMenubarReleaseAssets(release: ReleaseResponse): ResolvedA
   if (!zip) {
     throw new Error(
       `No ${APP_BUNDLE_NAME} versioned zip found in release ${release.tag_name}. ` +
-      `Check https://github.com/getagentseal/codeburn/releases.`
+      `Check https://github.com/getagentseal/aiinsight/releases.`
     )
   }
   const checksum = release.assets.find(a => a.name === `${zip.name}.sha256`)
@@ -60,9 +60,9 @@ export function resolveLatestMenubarReleaseAssets(releases: ReleaseResponse[]): 
 }
 
 export {
-  buildPersistentCodeburnLookupPath,
-  resolvePersistentCodeburnPathFromWhichOutput,
-} from './persistent-codeburn.js'
+  buildPersistentAiInsightLookupPath as buildPersistentCodeburnLookupPath,
+  resolvePersistentAiInsightPathFromWhichOutput as resolvePersistentCodeburnPathFromWhichOutput,
+} from './persistent-aiinsight.js'
 
 function userApplicationsDir(): string {
   return join(homedir(), 'Applications')
@@ -104,7 +104,7 @@ async function sysProductVersion(): Promise<string> {
 async function fetchLatestReleaseAssets(): Promise<ResolvedAssets> {
   const response = await fetch(RELEASE_API, {
     headers: {
-      'User-Agent': 'codeburn-menubar-installer',
+      'User-Agent': 'aiinsight-menubar-installer',
       Accept: 'application/vnd.github+json',
     },
   })
@@ -117,7 +117,7 @@ async function fetchLatestReleaseAssets(): Promise<ResolvedAssets> {
 
 async function verifyChecksum(archivePath: string, checksumUrl: string): Promise<void> {
   const response = await fetch(checksumUrl, {
-    headers: { 'User-Agent': 'codeburn-menubar-installer' },
+    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok) {
@@ -139,7 +139,7 @@ async function verifyChecksum(archivePath: string, checksumUrl: string): Promise
 
 async function downloadToFile(url: string, destPath: string): Promise<void> {
   const response = await fetch(url, {
-    headers: { 'User-Agent': 'codeburn-menubar-installer' },
+    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok || response.body === null) {
@@ -195,7 +195,7 @@ async function resolvePersistentCodeburnPath(): Promise<string> {
       `PATH=${buildPersistentCodeburnLookupPath()}`,
       'which',
       '-a',
-      'codeburn',
+      'aiinsight',
     ])
   } catch {
     throw new Error(PERSISTENT_CLI_REQUIRED_MESSAGE)
@@ -249,7 +249,7 @@ export async function installMenubarApp(options: { force?: boolean } = {}): Prom
   console.log('Looking up the latest CodeBurn Menubar release...')
   const { zip, checksum } = await fetchLatestReleaseAssets()
 
-  const stagingDir = await mkdtemp(join(tmpdir(), 'codeburn-menubar-'))
+  const stagingDir = await mkdtemp(join(tmpdir(), 'aiinsight-menubar-'))
   try {
     const archivePath = join(stagingDir, zip.name)
     console.log(`Downloading ${zip.name}...`)

@@ -1,6 +1,6 @@
 # Antigravity
 
-Google Antigravity (CLI and IDE). CodeBurn discovers session files on disk and queries the local language-server RPC endpoint to parse them.
+Google Antigravity (CLI and IDE). AiInsight discovers session files on disk and queries the local language-server RPC endpoint to parse them.
 
 - **Source:** `src/providers/antigravity.ts`
 - **Loading:** lazy via `src/providers/index.ts`. Lazy because the protobuf dependency is heavy.
@@ -8,7 +8,7 @@ Google Antigravity (CLI and IDE). CodeBurn discovers session files on disk and q
 
 ## Where it reads from
 
-CodeBurn discovers Antigravity sessions from local directories on disk, then queries the live language-server process (if running) to fetch detailed trajectory generator metadata:
+AiInsight discovers Antigravity sessions from local directories on disk, then queries the live language-server process (if running) to fetch detailed trajectory generator metadata:
 
 1. **Session Discovery:** It scans the following folders for `.pb` or `.db` files:
    - **Antigravity CLI:** `%USERPROFILE%\.gemini\antigravity-cli\conversations` (and `implicit`)
@@ -23,14 +23,14 @@ builds can expose `--extension_server_port` and
 `--extension_server_csrf_token`. Both space-separated and `--flag=value`
 forms are supported. The parser identifies the target app type using the `--app-data-dir` flag (e.g., `antigravity`, `antigravity-cli`, or `antigravity-ide`).
 
-For Antigravity CLI (`agy`), CodeBurn can also install an opt-in status line
-hook with `codeburn antigravity-hook install`. The hook records the CLI's
+For Antigravity CLI (`agy`), AiInsight can also install an opt-in status line
+hook with `aiinsight antigravity-hook install`. The hook records the CLI's
 sanitized `context_window.current_usage` payload while `agy` is still alive,
 without prompts or local working-directory paths. It also attempts a best-effort
 RPC snapshot for full response metadata. The installed command points at a
-persistent `codeburn` binary from PATH rather than a local build artifact, and
-running `codeburn antigravity-hook install` again repairs older CodeBurn-owned
-statusLine commands that used stale absolute paths. Remove it with `codeburn
+persistent `aiinsight` binary from PATH rather than a local build artifact, and
+running `aiinsight antigravity-hook install` again repairs older AiInsight-owned
+statusLine commands that used stale absolute paths. Remove it with `aiinsight
 antigravity-hook uninstall`; if `--force` replaced an existing statusLine
 command, uninstall restores that previous command.
 
@@ -40,7 +40,7 @@ Protobuf. Cascade and response objects map to `ParsedProviderCall` directly.
 
 ## Caching
 
-Custom file cache at `$CODEBURN_CACHE_DIR/antigravity-results.json` (defaults to `~/.cache/codeburn/`). The cache is also used as the data source when the RPC endpoint is unavailable, not just as an optimization. Bumping the cache version forces a recompute.
+Custom file cache at `$AIINSIGHT_CACHE_DIR/antigravity-results.json` (defaults to `~/.cache/aiinsight/`). The cache is also used as the data source when the RPC endpoint is unavailable, not just as an optimization. Bumping the cache version forces a recompute.
 
 ## Deduplication
 

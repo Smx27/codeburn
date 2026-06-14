@@ -208,7 +208,7 @@ function Overview({ projects, label, width, planUsages }: { projects: ProjectSum
   return (
     <Box flexDirection="column" borderStyle="round" borderColor={PANEL_COLORS.overview} paddingX={1} width={width}>
       <Text wrap="truncate-end">
-        <Text bold color={ORANGE}>CodeBurn</Text>
+        <Text bold color={ORANGE}>AiInsight</Text>
         <Text dimColor>  {label}</Text>
       </Text>
       <Text wrap="truncate-end">
@@ -513,10 +513,12 @@ function BashBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; pw: n
 
 function SkillsAndAgents({ projects, pw, bw }: { projects: ProjectSummary[]; pw: number; bw: number }) {
   const merged: Record<string, { uses: number; cost: number }> = {}
-  for (const project of projects) { for (const session of project.sessions) {
-    for (const [skill, d] of Object.entries(session.skillBreakdown)) { const e = merged[skill] ?? { uses: 0, cost: 0 }; e.uses += d.turns; e.cost += d.costUSD; merged[skill] = e }
-    for (const [agent, d] of Object.entries(session.subagentBreakdown)) { const e = merged[agent] ?? { uses: 0, cost: 0 }; e.uses += d.calls; e.cost += d.costUSD; merged[agent] = e }
-  } }
+  for (const project of projects) {
+    for (const session of project.sessions) {
+      for (const [skill, d] of Object.entries(session.skillBreakdown)) { const e = merged[skill] ?? { uses: 0, cost: 0 }; e.uses += d.turns; e.cost += d.costUSD; merged[skill] = e }
+      for (const [agent, d] of Object.entries(session.subagentBreakdown)) { const e = merged[agent] ?? { uses: 0, cost: 0 }; e.uses += d.calls; e.cost += d.costUSD; merged[agent] = e }
+    }
+  }
   const sorted = Object.entries(merged).sort(([, a], [, b]) => b.cost - a.cost)
   if (sorted.length === 0) return <Panel title="Skills & Agents" color={PANEL_COLORS.skills} width={pw}><Text dimColor>No skill/agent usage</Text></Panel>
   const maxCost = sorted[0]?.[1]?.cost ?? 0
@@ -536,11 +538,13 @@ function SkillsAndAgents({ projects, pw, bw }: { projects: ProjectSummary[]; pw:
 // are no agent transcripts, so it never shows for other providers.
 function ClaudeAgentTypes({ projects, pw, bw }: { projects: ProjectSummary[]; pw: number; bw: number }) {
   const merged: Record<string, { uses: number; cost: number }> = {}
-  for (const project of projects) { for (const session of project.sessions) {
-    if (!session.agentType) continue
-    const e = merged[session.agentType] ?? { uses: 0, cost: 0 }
-    e.uses += session.apiCalls; e.cost += session.totalCostUSD; merged[session.agentType] = e
-  } }
+  for (const project of projects) {
+    for (const session of project.sessions) {
+      if (!session.agentType) continue
+      const e = merged[session.agentType] ?? { uses: 0, cost: 0 }
+      e.uses += session.apiCalls; e.cost += session.totalCostUSD; merged[session.agentType] = e
+    }
+  }
   const sorted = Object.entries(merged).sort(([, a], [, b]) => b.cost - a.cost)
   if (sorted.length === 0) return null
   const maxCost = sorted[0]?.[1]?.cost ?? 0
@@ -667,7 +671,7 @@ function OptimizeView({ findings, costRate, projects, label, width, healthScore,
     <Box flexDirection="column" width={width}>
       <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={width}>
         <Text wrap="truncate-end">
-          <Text bold color={ORANGE}>CodeBurn Optimize</Text>
+          <Text bold color={ORANGE}>AiInsight Optimize</Text>
           <Text dimColor>  {label}   Setup: </Text>
           <Text bold color={gradeColor}>{healthGrade}</Text>
           <Text dimColor> ({healthScore}/100)</Text>
@@ -693,8 +697,8 @@ function StatusBar({ width, showProvider, view, findingCount, optimizeAvailable,
           : dayMode
             ? <><Text color={ORANGE} bold>{'<'}</Text><Text color={ORANGE}>{'>'}</Text><Text dimColor> day   </Text></>
             : !customRange
-            ? <><Text color={ORANGE} bold>{'<'}</Text><Text color={ORANGE}>{'>'}</Text><Text dimColor> switch   </Text></>
-            : null}
+              ? <><Text color={ORANGE} bold>{'<'}</Text><Text color={ORANGE}>{'>'}</Text><Text dimColor> switch   </Text></>
+              : null}
         <Text color={ORANGE} bold>q</Text><Text dimColor> quit</Text>
         {!customRange && !isOptimize && (
           <>
@@ -731,7 +735,7 @@ function DashboardContent({ projects, period, columns, activeProvider, budgets, 
   const { dashWidth, wide, halfWidth, barWidth } = getLayout(columns)
   const isCursor = activeProvider === 'cursor'
   const activeLabel = label ?? PERIOD_LABELS[period]
-  if (projects.length === 0) return <Panel title="CodeBurn" color={ORANGE} width={dashWidth}><Text dimColor>No usage data found for {activeLabel}.</Text></Panel>
+    if (projects.length === 0) return <Panel title="AiInsight" color={ORANGE} width={dashWidth}><Text dimColor>No usage data found for {activeLabel}.</Text></Panel>
   const pw = wide ? halfWidth : dashWidth
   const days = dayMode ? 1 : period === 'all' ? undefined : (period === 'month' || period === '30days' ? 31 : 14)
   return (
@@ -949,7 +953,7 @@ function InteractiveDashboard({ initialProjects, initialPeriod, initialProvider,
       const total = optimizeResult?.findings.length ?? 0
       const maxStart = Math.max(0, total - FINDINGS_WINDOW_SIZE)
       if (input === 'j' || key.downArrow) { setFindingsCursor(c => Math.min(c + 1, maxStart)); return }
-      if (input === 'k' || key.upArrow)   { setFindingsCursor(c => Math.max(c - 1, 0)); return }
+      if (input === 'k' || key.upArrow) { setFindingsCursor(c => Math.max(c - 1, 0)); return }
       return
     }
     if (input === 'c' && compareAvailable && view === 'dashboard') { setView('compare'); return }
@@ -1012,15 +1016,15 @@ function InteractiveDashboard({ initialProjects, initialPeriod, initialProvider,
         {isCustomRange && <CustomRangeBanner label={headerLabel} width={dashWidth} />}
         {view === 'compare'
           ? <Box flexDirection="column" paddingX={2} paddingY={1}>
-              <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
-                <Text bold color={ORANGE}>Model Comparison</Text>
-                <Text> </Text>
-                <Text dimColor>Loading {headerLabel} model data...</Text>
-              </Box>
+            <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
+              <Text bold color={ORANGE}>Model Comparison</Text>
+              <Text> </Text>
+              <Text dimColor>Loading {headerLabel} model data...</Text>
             </Box>
+          </Box>
           : view === 'optimize'
-            ? <Panel title="CodeBurn Optimize" color={ORANGE} width={dashWidth}><Text dimColor>Scanning {headerLabel}...</Text></Panel>
-            : <Panel title="CodeBurn" color={ORANGE} width={dashWidth}><Text dimColor>Loading {headerLabel}...</Text></Panel>}
+            ? <Panel title="AiInsight Optimize" color={ORANGE} width={dashWidth}><Text dimColor>Scanning {headerLabel}...</Text></Panel>
+            : <Panel title="AiInsight" color={ORANGE} width={dashWidth}><Text dimColor>Loading {headerLabel}...</Text></Panel>}
         {view !== 'compare' && <StatusBar width={dashWidth} showProvider={multipleProviders} view={view} findingCount={0} optimizeAvailable={false} compareAvailable={false} customRange={isCustomRange} dayMode={isDayMode} />}
       </Box>
     )

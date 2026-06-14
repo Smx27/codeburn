@@ -1,0 +1,11 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/login/page": "/login",
+  "/models/page": "/models",
+  "/page": "/",
+  "/projects/page": "/projects",
+  "/settings/page": "/settings",
+  "/providers/page": "/providers",
+  "/trends/page": "/trends",
+  "/users/page": "/users"
+}

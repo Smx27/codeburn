@@ -8,7 +8,7 @@ Cloud usage for [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) via the 
 
 ## Where it reads from
 
-Not local disk. CodeBurn calls:
+Not local disk. AiInsight calls:
 
 ```
 GET https://ai-gateway.vercel.sh/v1/report?start_date=...&end_date=...&date_part=day&group_by=model
@@ -40,6 +40,6 @@ Per `vercel-gateway:<day>:<model>`.
 
 ## When fixing a bug here
 
-1. Confirm env vars are set in the same shell running `codeburn`.
-2. Reproduce with `codeburn report --provider vercel-gateway -p week --format json`.
+1. Confirm env vars are set in the same shell running `aiinsight`.
+2. Reproduce with `aiinsight report --provider vercel-gateway -p week --format json`.
 3. Compare totals to the Vercel dashboard AI Gateway usage view.

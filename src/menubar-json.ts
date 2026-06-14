@@ -6,7 +6,7 @@ export type PeriodData = {
   cost: number
   /// Counterfactual USD the same tokens would have cost on the paid
   /// baseline configured for each local model. Stays `0` when no
-  /// `codeburn model-savings` mappings are active. Always shown
+  /// `aiinsight model-savings` mappings are active. Always shown
   /// separately from `cost` so the two never get summed into a "real
   /// spend" number by accident.
   savingsUSD: number
@@ -103,7 +103,7 @@ export type MenubarPayload = {
     /// optimize savings concepts which describe hypothetical optimization
     /// opportunities. This block tracks counterfactual spend that was
     /// already avoided because the user ran a local model mapped via
-    /// `codeburn model-savings`.
+    /// `aiinsight model-savings`.
     localModelSavings: LocalModelSavings
     providers: Record<string, number>
     topProjects: Array<{

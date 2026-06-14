@@ -8,12 +8,12 @@ import {
   snapshotAntigravityStatusLinePayload,
 } from './providers/antigravity.js'
 import {
-  buildPersistentCodeburnLookupPath,
-  resolvePersistentCodeburnPathFromPath,
-} from './persistent-codeburn.js'
+  buildPersistentAiInsightLookupPath,
+  resolvePersistentAiInsightPathFromPath,
+} from './persistent-aiinsight.js'
 
-export { buildPersistentCodeburnLookupPath as buildAntigravityHookLookupPath } from './persistent-codeburn.js'
-export { resolvePersistentCodeburnPathFromPath } from './persistent-codeburn.js'
+export { buildPersistentAiInsightLookupPath as buildAntigravityHookLookupPath } from './persistent-aiinsight.js'
+export { resolvePersistentAiInsightPathFromPath } from './persistent-aiinsight.js'
 
 type Settings = Record<string, unknown> & {
   statusLine?: {
@@ -26,13 +26,13 @@ type Settings = Record<string, unknown> & {
 type StatusLineSettings = NonNullable<Settings['statusLine']>
 
 const PERSISTENT_CLI_REQUIRED_MESSAGE =
-  'The Antigravity hook needs a persistent codeburn command. Install CodeBurn globally first: npm install -g codeburn'
+  'The Antigravity hook needs a persistent aiinsight command. Install AiInsight globally first: npm install -g aiinsight'
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-function isCodeBurnHook(command: unknown): boolean {
+function isAiInsightHook(command: unknown): boolean {
   return typeof command === 'string' && /(?:^|\s)agy-statusline-hook$/.test(command.trim())
 }
 
@@ -42,11 +42,11 @@ function shellQuote(value: string): string {
 }
 
 async function hookCommand(): Promise<string> {
-  const codeburnPath = await resolvePersistentCodeburnPathFromPath(
-    buildPersistentCodeburnLookupPath(),
+  const aiinsightPath = await resolvePersistentAiInsightPathFromPath(
+    buildPersistentAiInsightLookupPath(),
     PERSISTENT_CLI_REQUIRED_MESSAGE,
   )
-  return `${shellQuote(codeburnPath)} agy-statusline-hook`
+  return `${shellQuote(aiinsightPath)} agy-statusline-hook`
 }
 
 function settingsPath(): string {
@@ -54,12 +54,12 @@ function settingsPath(): string {
     ?? join(homedir(), '.gemini', 'antigravity-cli', 'settings.json')
 }
 
-function codeburnCacheDir(): string {
-  return process.env['CODEBURN_CACHE_DIR'] ?? join(homedir(), '.cache', 'codeburn')
+function aiinsightCacheDir(): string {
+  return process.env['AIINSIGHT_CACHE_DIR'] ?? join(homedir(), '.cache', 'aiinsight')
 }
 
 function previousStatusLinePath(): string {
-  return join(codeburnCacheDir(), 'antigravity-statusline-previous.json')
+  return join(aiinsightCacheDir(), 'antigravity-statusline-previous.json')
 }
 
 async function readSettings(): Promise<Settings> {
@@ -121,17 +121,17 @@ async function clearPreviousStatusLine(): Promise<void> {
 export async function installAntigravityStatusLineHook(force = false): Promise<'installed' | 'already-installed'> {
   const settings = await readSettings()
   const existing = settings.statusLine
-  if (existing && !isCodeBurnHook(existing.command) && !force) {
+  if (existing && !isAiInsightHook(existing.command) && !force) {
     throw new Error(
       'Antigravity CLI already has a custom statusLine command. Re-run with --force to replace it.'
     )
   }
 
   const command = await hookCommand()
-  if (isCodeBurnHook(existing?.command) && existing?.command === command && existing.type === 'command' && existing.padding === 0) {
+  if (isAiInsightHook(existing?.command) && existing?.command === command && existing.type === 'command' && existing.padding === 0) {
     return 'already-installed'
   }
-  if (existing && !isCodeBurnHook(existing.command)) await savePreviousStatusLine(existing)
+  if (existing && !isAiInsightHook(existing.command)) await savePreviousStatusLine(existing)
 
   settings.statusLine = {
     type: 'command',
@@ -144,7 +144,7 @@ export async function installAntigravityStatusLineHook(force = false): Promise<'
 
 export async function uninstallAntigravityStatusLineHook(): Promise<'removed' | 'restored' | 'not-installed'> {
   const settings = await readSettings()
-  if (!isCodeBurnHook(settings.statusLine?.command)) return 'not-installed'
+  if (!isAiInsightHook(settings.statusLine?.command)) return 'not-installed'
 
   const previous = await readPreviousStatusLine()
   if (previous) settings.statusLine = previous

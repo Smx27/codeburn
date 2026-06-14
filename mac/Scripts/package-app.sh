@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds a universal CodeBurnMenubar.app bundle from the SwiftPM target and drops a
+# Builds a universal AiInsightMenubar.app bundle from the SwiftPM target and drops a
 # distributable zip alongside. Used by the GitHub release workflow; also runnable locally.
 #
 # Usage:
@@ -11,9 +11,9 @@ set -euo pipefail
 VERSION="${1:-dev}"
 ASSET_VERSION="${VERSION#mac-}"
 BUNDLE_VERSION="${ASSET_VERSION#v}"
-BUNDLE_NAME="CodeBurnMenubar.app"
-BUNDLE_ID="org.agentseal.codeburn-menubar"
-EXECUTABLE_NAME="CodeBurnMenubar"
+BUNDLE_NAME="AiInsightMenubar.app"
+BUNDLE_ID="org.aiinsight.menubar"
+EXECUTABLE_NAME="AiInsightMenubar"
 MIN_MACOS="14.0"
 
 repo_root() {
@@ -72,7 +72,7 @@ cat > "${BUNDLE}/Contents/Info.plist" <<PLIST
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>CodeBurn Menubar</string>
+    <string>AiInsight Menubar</string>
     <key>CFBundleExecutable</key>
     <string>${EXECUTABLE_NAME}</string>
     <key>CFBundleIconFile</key>
@@ -120,7 +120,7 @@ else
 fi
 codesign --verify --deep --strict "${BUNDLE}"
 
-ZIP_NAME="CodeBurnMenubar-${ASSET_VERSION}.zip"
+ZIP_NAME="AiInsightMenubar-${ASSET_VERSION}.zip"
 ZIP_PATH="${DIST_DIR}/${ZIP_NAME}"
 echo "▸ Packaging ${ZIP_NAME}..."
 (cd "${DIST_DIR}" && COPYFILE_DISABLE=1 /usr/bin/ditto -c -k --norsrc --keepParent "${BUNDLE_NAME}" "${ZIP_NAME}")

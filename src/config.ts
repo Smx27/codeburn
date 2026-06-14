@@ -19,7 +19,7 @@ export type PlanConfig = Omit<Plan, 'provider' | 'setAt'> & Partial<Pick<Plan, '
 export type PlanConfigMap = Partial<Record<PlanProvider, PlanConfig>>
 export type PlanMap = Partial<Record<PlanProvider, Plan>>
 
-export type CodeburnConfig = {
+export type AiInsightConfig = {
   currency?: {
     code: string
     symbol?: string
@@ -45,7 +45,7 @@ export type CodeburnConfig = {
   // Absolute directory prefixes whose Claude Code sessions are routed through a
   // subscription-backed LLM proxy (e.g. GitHub Copilot via ANTHROPIC_BASE_URL;
   // tools like claude-code-over-github-copilot / claudegate). The JSONL records
-  // the underlying model name and no endpoint, so codeburn cannot auto-detect
+  // the underlying model name and no endpoint, so aiinsight cannot auto-detect
   // proxying — the user declares it here, scoped by the project's canonical cwd.
   // Matching projects keep their full API-rate `totalCostUSD` (the billable /
   // would-be figure is never destroyed) but expose `totalProxiedCostUSD` so the
@@ -53,26 +53,34 @@ export type CodeburnConfig = {
   // Matched against the canonical project path: prefix on a path-segment
   // boundary, case-insensitive, trailing-slash and backslash tolerant.
   proxyPaths?: string[]
+  // Cloud sync configuration
+  sync?: {
+    organizationId?: string
+    machineId?: string
+    apiUrl?: string
+    apiKey?: string
+    enabled?: boolean
+  }
 }
 
 function getConfigDir(): string {
-  return join(homedir(), '.config', 'codeburn')
+  return join(homedir(), '.config', 'aiinsight')
 }
 
 function getConfigPath(): string {
   return join(getConfigDir(), 'config.json')
 }
 
-export async function readConfig(): Promise<CodeburnConfig> {
+export async function readConfig(): Promise<AiInsightConfig> {
   try {
     const raw = await readFile(getConfigPath(), 'utf-8')
-    return JSON.parse(raw) as CodeburnConfig
+    return JSON.parse(raw) as AiInsightConfig
   } catch {
     return {}
   }
 }
 
-export async function saveConfig(config: CodeburnConfig): Promise<void> {
+export async function saveConfig(config: AiInsightConfig): Promise<void> {
   await mkdir(getConfigDir(), { recursive: true })
   const configPath = getConfigPath()
   // Randomize the temp path so two simultaneous saveConfig calls (from
@@ -102,7 +110,7 @@ function planFromConfig(provider: PlanProvider, plan: PlanConfig | undefined): P
   }
 }
 
-function normalizePlans(config: CodeburnConfig): PlanMap {
+function normalizePlans(config: AiInsightConfig): PlanMap {
   const plans: PlanMap = {}
 
   if (config.plans && Object.keys(config.plans).length > 0) {
@@ -163,4 +171,38 @@ export async function clearPlan(provider?: PlanProvider): Promise<void> {
 
 export function getConfigFilePath(): string {
   return getConfigPath()
+}
+
+const MACHINE_ID_FILE = join(getConfigDir(), 'machine-id')
+
+export async function getOrCreateMachineId(): Promise<string> {
+  try {
+    const id = await readFile(MACHINE_ID_FILE, 'utf-8')
+    return id.trim()
+  } catch {
+    // Generate new machine ID
+    const { randomBytes } = await import('crypto')
+    const id = randomBytes(16).toString('hex')
+    await mkdir(getConfigDir(), { recursive: true })
+    await writeFile(MACHINE_ID_FILE, id, 'utf-8')
+    return id
+  }
+}
+
+export async function getSyncConfig(): Promise<{
+  organizationId: string | undefined
+  machineId: string
+  apiUrl: string | undefined
+  apiKey: string | undefined
+  enabled: boolean
+}> {
+  const config = await readConfig()
+  const machineId = await getOrCreateMachineId()
+  return {
+    organizationId: config.sync?.organizationId,
+    machineId,
+    apiUrl: config.sync?.apiUrl,
+    apiKey: config.sync?.apiKey,
+    enabled: config.sync?.enabled ?? false,
+  }
 }

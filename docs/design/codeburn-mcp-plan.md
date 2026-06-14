@@ -1,8 +1,8 @@
-# CodeBurn MCP Server — Implementation Plan
+# AiInsight MCP Server — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a `codeburn mcp` stdio MCP server exposing CodeBurn's usage/cost data to AI agents via two tools (`get_usage`, `get_savings`), each returning a markdown table plus typed structured JSON.
+**Goal:** Add a `aiinsight mcp` stdio MCP server exposing AiInsight's usage/cost data to AI agents via two tools (`get_usage`, `get_savings`), each returning a markdown table plus typed structured JSON.
 
 **Architecture:** Extract the existing `status --format menubar-json` aggregation into one reusable `buildMenubarPayloadForRange(periodInfo, opts)` (with an `optimize` boolean — the only expensive call, `scanAndDetect`, is skipped for `get_usage`). A long-lived in-process `McpServer` registers the two tools, injects the aggregator for testability, coalesces concurrent calls, hashes project names by default, and relies on the existing 180 s parser cache for warm reuse.
 
@@ -21,7 +21,7 @@
 - **Modify `tsup.config.ts`** — `external: ['@modelcontextprotocol/sdk', 'zod']`.
 - **Create tests** — `tests/usage-aggregator.test.ts`, `tests/mcp-redact.test.ts`, `tests/mcp-tables.test.ts`, `tests/mcp-server.test.ts`.
 
-Internal MCP period names map to CodeBurn's: `today→today`, `last_7_days→week`, `last_30_days→30days`, `month_to_date→month`, `last_6_months→all` (≈6 months).
+Internal MCP period names map to AiInsight's: `today→today`, `last_7_days→week`, `last_30_days→30days`, `month_to_date→month`, `last_6_months→all` (≈6 months).
 
 ---
 
@@ -547,7 +547,7 @@ const periodSchema = z.enum(['today', 'last_7_days', 'last_30_days', 'month_to_d
 type Aggregate = (periodInfo: PeriodInfo, opts: { provider?: string; optimize?: boolean }) => Promise<MenubarPayload>
 
 const INSTRUCTIONS =
-  'CodeBurn exposes local AI-coding spend data. Use get_usage for spend/usage and breakdowns (fast); ' +
+  'AiInsight exposes local AI-coding spend data. Use get_usage for spend/usage and breakdowns (fast); ' +
   'use get_savings to find cost reductions (slower — runs a deeper analysis). Project names are pseudonymized ' +
   'unless include_project_names is true. All data is read locally from this machine; last_6_months is the widest ' +
   'window. Numbers reflect the most recent scan and may lag the current session by up to a few minutes.'
@@ -566,12 +566,12 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
     return p
   }
 
-  const server = new McpServer({ name: 'codeburn', version: deps.version }, { instructions: INSTRUCTIONS })
+  const server = new McpServer({ name: 'aiinsight', version: deps.version }, { instructions: INSTRUCTIONS })
 
   server.registerTool(
     'get_usage',
     {
-      title: 'CodeBurn — usage & cost',
+      title: 'AiInsight — usage & cost',
       description:
         'Show AI coding token spend and usage for a period. Omit `by` for a headline summary; set `by` to break ' +
         'it down by project, model, task, or provider (Claude Code / Cursor / Codex). Fast. Local to this machine.',
@@ -587,7 +587,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
         totals: z.object({ costUSD: z.number(), calls: z.number(), sessions: z.number(), cacheHitPercent: z.number(), oneShotRate: z.number().nullable() }),
         breakdown: z.array(z.object({ name: z.string(), costUSD: z.number() })).nullable(),
       },
-      annotations: { title: 'CodeBurn — usage & cost', readOnlyHint: true, openWorldHint: false, idempotentHint: true },
+      annotations: { title: 'AiInsight — usage & cost', readOnlyHint: true, openWorldHint: false, idempotentHint: true },
     },
     async ({ period, by, limit, include_project_names }): Promise<CallToolResult> => {
       try {
@@ -601,7 +601,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
         const breakdown = by ? breakdownRows(payload, by as BreakdownBy, limit) : null
         return { content: [{ type: 'text', text }], structuredContent: { period: c.label, empty: false, totals, breakdown } }
       } catch (err) {
-        return { content: [{ type: 'text', text: `codeburn: failed to read usage — ${err instanceof Error ? err.message : String(err)}` }], isError: true }
+        return { content: [{ type: 'text', text: `aiinsight: failed to read usage — ${err instanceof Error ? err.message : String(err)}` }], isError: true }
       }
     },
   )
@@ -609,7 +609,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
   server.registerTool(
     'get_savings',
     {
-      title: 'CodeBurn — savings opportunities',
+      title: 'AiInsight — savings opportunities',
       description:
         'Find ways to reduce AI coding cost for a period: optimization findings, retry tax (money spent re-doing ' +
         'work), and routing waste (what you would have saved on a cheaper model). Slower than get_usage.',
@@ -620,7 +620,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
         retryTaxUSD: z.number(),
         routingWasteUSD: z.number(),
       },
-      annotations: { title: 'CodeBurn — savings opportunities', readOnlyHint: true, openWorldHint: false, idempotentHint: true },
+      annotations: { title: 'AiInsight — savings opportunities', readOnlyHint: true, openWorldHint: false, idempotentHint: true },
     },
     async ({ period, include_project_names }): Promise<CallToolResult> => {
       try {
@@ -631,7 +631,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
           structuredContent: { period: c.label, optimize: payload.optimize, retryTaxUSD: c.retryTax.totalUSD, routingWasteUSD: c.routingWaste.totalSavingsUSD },
         }
       } catch (err) {
-        return { content: [{ type: 'text', text: `codeburn: failed to compute savings — ${err instanceof Error ? err.message : String(err)}` }], isError: true }
+        return { content: [{ type: 'text', text: `aiinsight: failed to compute savings — ${err instanceof Error ? err.message : String(err)}` }], isError: true }
       }
     },
   )
@@ -672,7 +672,7 @@ git commit -m "feat(mcp): get_usage + get_savings tools with annotations, schema
 
 ---
 
-## Task 7: Wire the `codeburn mcp` command
+## Task 7: Wire the `aiinsight mcp` command
 
 **Files:**
 - Modify: `src/main.ts` (add command + stdout guard)
@@ -717,7 +717,7 @@ Expected: `McpServer source inlined? false` (it's imported from node_modules at 
 
 ```bash
 git add src/main.ts
-git commit -m "feat(mcp): add 'codeburn mcp' stdio command with stdout guard"
+git commit -m "feat(mcp): add 'aiinsight mcp' stdio command with stdout guard"
 ```
 
 ---

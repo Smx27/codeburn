@@ -153,8 +153,8 @@ function warnUnrecognizedSchemaOnce(providerLabel: string, missing: string[]): v
   providerSet.add(key)
   warnedSchemas.set(providerLabel, providerSet)
   process.stderr.write(
-    `codeburn: ${providerLabel} database is missing expected tables (${missing.join(', ')}). ` +
-    `Run ${providerLabel} once to apply migrations, or report at https://github.com/getagentseal/codeburn/issues if this persists.\n`
+    `aiinsight: ${providerLabel} database is missing expected tables (${missing.join(', ')}). ` +
+    `Run ${providerLabel} once to apply migrations, or report at https://github.com/getagentseal/aiinsight/issues if this persists.\n`
   )
 }
 
@@ -185,7 +185,7 @@ export function createSqliteSessionParser(
       try {
         db = openDatabase(dbPath)
       } catch (err) {
-        process.stderr.write(`codeburn: cannot open ${config.displayName} database: ${err instanceof Error ? err.message : err}\n`)
+        process.stderr.write(`aiinsight: cannot open ${config.displayName} database: ${err instanceof Error ? err.message : err}\n`)
         return
       }
 
@@ -378,7 +378,7 @@ export function createSqliteSessionParser(
 
           if (yieldCount === 0 && process.env['CODEBURN_VERBOSE'] === '1') {
             process.stderr.write(
-              `codeburn: ${config.displayName} session ${sessionId} has ${messages.length} messages ` +
+              `aiinsight: ${config.displayName} session ${sessionId} has ${messages.length} messages ` +
               `(${parseFailCount} unparseable, ${roleSkipCount} non-user/assistant roles) ` +
               `but yielded 0 calls. Parts: ${parts.length}.\n`
             )

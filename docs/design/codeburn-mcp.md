@@ -1,4 +1,4 @@
-# CodeBurn MCP Server — Design Spec
+# AiInsight MCP Server — Design Spec
 
 - **Date:** 2026-06-02
 - **Status:** Approved design (pre-implementation)
@@ -6,7 +6,7 @@
 
 ## 1. Context & Goal
 
-CodeBurn already aggregates rich AI-coding usage/cost data (by task, model, project, provider; retry tax; routing waste; optimize findings; 365-day history). This spec adds an **MCP server** that exposes that data to AI agents (Claude Code, Cursor, Claude Desktop) so an agent can answer "where did my tokens go?" and "how do I spend less?" mid-conversation.
+AiInsight already aggregates rich AI-coding usage/cost data (by task, model, project, provider; retry tax; routing waste; optimize findings; 365-day history). This spec adds an **MCP server** that exposes that data to AI agents (Claude Code, Cursor, Claude Desktop) so an agent can answer "where did my tokens go?" and "how do I spend less?" mid-conversation.
 
 **Why (and why not):** This is a **product / differentiation** play, not a downloads play. We measured that MCP is a niche *download* lever (`@ccusage/mcp` ≈ 1.1% of ccusage's downloads; competitor tokscale ships no MCP), and the real download lever is npx-first CLI positioning — tracked separately. The MCP's value is agent-facing utility on data competitors don't expose (retry tax, routing waste, one-shot rate, task attribution).
 
@@ -14,14 +14,14 @@ CodeBurn already aggregates rich AI-coding usage/cost data (by task, model, proj
 
 1. **Use case:** unified — serves both live self-optimization and historical analysis from one tool set.
 2. **Output contract:** every tool returns a ready-to-display **markdown table** *and* the same data as **structured JSON**.
-3. **Architecture:** Approach A — a `codeburn mcp` subcommand on the existing CLI (no second package), reusing the existing aggregation; run as a **long-lived in-process stdio server**.
+3. **Architecture:** Approach A — a `aiinsight mcp` subcommand on the existing CLI (no second package), reusing the existing aggregation; run as a **long-lived in-process stdio server**.
 4. **Tool surface:** **2 tools** — `get_usage` and `get_savings`. (`compare_periods` cut — no reusable backend, overlap-incoherent.)
 5. **Privacy:** project/session names **hashed by default** (`project-<6hex>`); real names only when `include_project_names: true`. Absolute paths never exposed.
 
 ## 3. Architecture
 
 ### Process model
-- `codeburn mcp` starts a **resident, in-process** MCP server over **stdio** (`StdioServerTransport`). Not exec-per-call — a resident process is required so the existing in-process session cache (180s TTL, `src/parser.ts`) amortizes across tool calls. Measured cost otherwise: `--period all` is ~17.6s **even warm** when the process exits between calls.
+- `aiinsight mcp` starts a **resident, in-process** MCP server over **stdio** (`StdioServerTransport`). Not exec-per-call — a resident process is required so the existing in-process session cache (180s TTL, `src/parser.ts`) amortizes across tool calls. Measured cost otherwise: `--period all` is ~17.6s **even warm** when the process exits between calls.
 - **First line of the `mcp` action:** `console.log = console.error`. The aggregation path is stdout-clean today (writes go to stderr), but the global `preAction` hook and `runOptimize` contain stdout `console.log`s; reassigning immunizes the JSON-RPC stream against any present or future stdout write. (Verified: `scanAndDetect`, `parseAllSessions`, providers, caches, `buildMenubarPayload` do not write to stdout.)
 - Pre-warm `today` usage on boot so the first interactive call is fast.
 
@@ -42,12 +42,12 @@ CodeBurn already aggregates rich AI-coding usage/cost data (by task, model, proj
 
 ## 4. Tool Surface
 
-Period enum (LLM-clear names, mapped internally): `today→today`, `last_7_days→week`, `last_30_days→30days`, `month_to_date→month`, `last_6_months→all`. Documented: `last_6_months` is the maximum window (codeburn's "all" = ~6 months); history is summarized, not dumped.
+Period enum (LLM-clear names, mapped internally): `today→today`, `last_7_days→week`, `last_30_days→30days`, `month_to_date→month`, `last_6_months→all`. Documented: `last_6_months` is the maximum window (aiinsight's "all" = ~6 months); history is summarized, not dumped.
 
 Both tools carry annotations `{ readOnlyHint: true, openWorldHint: false, idempotentHint: true, title }`, a zod `inputSchema` and `outputSchema`, and return `{ content: [{ type:'text', text: <markdown table> }], structuredContent: <object matching outputSchema> }`.
 
 ### 4.1 `get_usage`
-- **title:** "CodeBurn — usage & cost"
+- **title:** "AiInsight — usage & cost"
 - **description (agent-facing):** "Show AI coding token spend and usage for a period. Omit `by` for a headline summary; set `by` to break it down by project, model, task, or provider. Fast (does not run the deeper savings analysis). Data is local to this machine and current as of the last scan."
 - **inputSchema:**
   - `period?: enum` (default `today`)
@@ -58,14 +58,14 @@ Both tools carry annotations `{ readOnlyHint: true, openWorldHint: false, idempo
 - **outputSchema:** the relevant subset of `MenubarPayload.current` (typed).
 
 ### 4.2 `get_savings`
-- **title:** "CodeBurn — savings opportunities"
+- **title:** "AiInsight — savings opportunities"
 - **description (agent-facing):** "Find ways to reduce AI coding cost for a period: optimization findings, retry tax (money spent re-doing work), and routing waste (what you'd have saved on a cheaper model). Runs a deeper analysis, so it is slower than get_usage."
 - **inputSchema:** `period?: enum` (default `last_7_days` — never default to the slow `last_6_months`), `include_project_names?: boolean` (default `false`).
 - **Behavior:** runs `buildSavings`; returns optimize findings (title, impact, $ saved), retry tax (total + by model), routing waste (total savings, baseline model, by model).
 - **outputSchema:** `{ optimize, retryTax, routingWaste }` (typed).
 
 ### 4.3 Server `instructions`
-> "CodeBurn exposes local AI-coding spend data. Use `get_usage` for spend/usage and breakdowns (fast); use `get_savings` to find cost reductions (slower). Project names are pseudonymized unless you pass `include_project_names: true`. All data is read locally from this machine; `last_6_months` is the widest window. Numbers reflect the most recent scan and may lag the current in-flight session by a short interval."
+> "AiInsight exposes local AI-coding spend data. Use `get_usage` for spend/usage and breakdowns (fast); use `get_savings` to find cost reductions (slower). Project names are pseudonymized unless you pass `include_project_names: true`. All data is read locally from this machine; `last_6_months` is the widest window. Numbers reflect the most recent scan and may lag the current in-flight session by a short interval."
 
 ## 5. Data Flow
 
@@ -84,7 +84,7 @@ agent tool call
 ## 6. Privacy / Redaction
 - Name-bearing fields — `topProjects[].name`, `topSessions[].project`, `topProjects[].sessionDetails` — are replaced with stable pseudonyms `project-<6hex(sha256(name))>` unless `include_project_names: true`.
 - Absolute paths are never emitted (they aren't in the payload today; the MCP must not enrich with them).
-- Rationale: an MCP is an egress surface to possibly-remote/cloud agents; codeburn's brand is "data never leaves your machine." Hashing keeps breakdowns coherent (stable pseudonyms) without leaking identity; local users who want real names opt in per call.
+- Rationale: an MCP is an egress surface to possibly-remote/cloud agents; aiinsight's brand is "data never leaves your machine." Hashing keeps breakdowns coherent (stable pseudonyms) without leaking identity; local users who want real names opt in per call.
 
 ## 7. Performance
 - **Two paths:** `get_usage` uses the cheap aggregation (`--no-optimize` seam already exists; ~3s `today`, ~5s `all`). `get_savings` runs the optimize pass (~+13s) — isolated to the one tool that needs it. Without this split, every tool paid the 13s tax.

@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aiinsight
+      POSTGRES_USER: aiinsight
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiinsight_secret}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aiinsight"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ingestion-api:
+    build:
+      context: .
+      dockerfile: apps/ingestion-api/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://aiinsight:${POSTGRES_PASSWORD:-aiinsight_secret}@postgres:5432/aiinsight
+      PORT: 3001
+      NODE_ENV: production
+      LOG_LEVEL: info
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  dashboard-api:
+    build:
+      context: .
+      dockerfile: apps/dashboard-api/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      DATABASE_URL: postgresql://aiinsight:${POSTGRES_PASSWORD:-aiinsight_secret}@postgres:5432/aiinsight
+      PORT: 3002
+      NODE_ENV: production
+      LOG_LEVEL: info
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  dashboard-web:
+    build:
+      context: .
+      dockerfile: apps/dashboard-web/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3002
+    depends_on:
+      - dashboard-api
+
+volumes:
+  postgres_data:

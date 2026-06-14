@@ -1,0 +1,29 @@
+{
+  "name": "@aiinsight/analytics-engine",
+  "version": "0.1.0",
+  "description": "AiInsight Analytics Engine - Aggregation and analytics processing",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts",
+    "aggregate:daily": "tsx src/jobs/dailyAggregation.job.ts",
+    "aggregate:backfill": "tsx src/jobs/historicalBackfill.job.ts"
+  },
+  "dependencies": {
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
+    "pg": "^8.12.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.17",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0",
+    "vitest": "^3.1.0"
+  }
+}

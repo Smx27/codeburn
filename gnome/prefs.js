@@ -31,7 +31,7 @@ const PERIODS = [
   { id: 'all', label: '6 Months' },
 ];
 
-export default class CodeBurnPreferences extends ExtensionPreferences {
+export default class AiInsightPreferences extends ExtensionPreferences {
   fillPreferencesWindow(window) {
     const settings = this.getSettings();
 
@@ -43,7 +43,7 @@ export default class CodeBurnPreferences extends ExtensionPreferences {
 
     const displayGroup = new Adw.PreferencesGroup({
       title: 'Display',
-      description: 'Configure how CodeBurn appears in the panel',
+      description: 'Configure how AiInsight appears in the panel',
     });
     displayPage.add(displayGroup);
 
@@ -160,11 +160,11 @@ export default class CodeBurnPreferences extends ExtensionPreferences {
     displayPage.add(advancedGroup);
 
     const pathRow = new Adw.EntryRow({
-      title: 'CodeBurn CLI Path',
-      text: settings.get_string('codeburn-path'),
+      title: 'AiInsight CLI Path',
+      text: settings.get_string('aiinsight-path'),
     });
     pathRow.connect('changed', () => {
-      settings.set_string('codeburn-path', pathRow.get_text());
+      settings.set_string('aiinsight-path', pathRow.get_text());
     });
     advancedGroup.add(pathRow);
   }

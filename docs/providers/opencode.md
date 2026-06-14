@@ -36,7 +36,7 @@ Per `<sessionId>:<messageId>`.
   when their parts contain non-empty text or tool activity. Empty zero-usage
   assistant placeholders are still skipped.
 - External MCP tools are stored as `<server>_<tool>` names (for example
-  `clickup_clickup_get_task`). The provider normalizes those to CodeBurn's
+  `clickup_clickup_get_task`). The provider normalizes those to AiInsight's
   canonical `mcp__<server>__<tool>` names before aggregation so shared MCP
   panels and `optimize` findings count OpenCode usage.
 

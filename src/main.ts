@@ -1,5 +1,6 @@
 import { isAbsolute } from 'path'
 import { Command } from 'commander'
+import chalk from 'chalk'
 import { installMenubarApp } from './menubar-installer.js'
 import { exportCsv, exportJson, type PeriodExport } from './export.js'
 import { loadPricing, setModelAliases, setLocalModelSavings, setProxyPaths, normalizeProxyPath } from './models.js'
@@ -24,6 +25,13 @@ import { clearPlan, readConfig, readPlan, readPlans, saveConfig, savePlan, getCo
 import { clampResetDay, getPlanUsageOrNull, getPlanUsages, type PlanUsage } from './plan-usage.js'
 import { getPresetPlan, isPlanId, isPlanProvider, PLAN_IDS, PLAN_PROVIDERS, planDisplayName } from './plans.js'
 import { createRequire } from 'node:module'
+import { renderBanner, renderFooter, renderVersionBlock } from './ui/banner.js'
+import { renderCustomHelp } from './ui/help.js'
+import { renderTerminalStatus } from './ui/status.js'
+import { runDoctor } from './ui/doctor.js'
+import { renderSuccess, renderOrganizationConnected, renderSyncComplete, renderProviderDiscovering, renderProviderFound, renderPreparingImport, renderWelcome } from './ui/success.js'
+import { renderError, renderMissingConfig, renderSyncError } from './ui/errors.js'
+import { createSpinner, renderBatchProgress } from './ui/spinners.js'
 
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json')
@@ -115,9 +123,7 @@ function sortedPlans(plans: Partial<Record<PlanProvider, Plan>>): Plan[] {
 
 function assertFormat(value: string, allowed: readonly string[], command: string): void {
   if (!allowed.includes(value)) {
-    process.stderr.write(
-      `codeburn ${command}: unknown format "${value}". Valid values: ${allowed.join(', ')}.\n`
-    )
+    process.stderr.write(renderError(`${command}: unknown format "${value}". Valid values: ${allowed.join(', ')}.`))
     process.exit(1)
   }
 }
@@ -131,19 +137,30 @@ async function runJsonReport(period: Period, provider: string, project: string[]
 }
 
 const program = new Command()
-  .name('codeburn')
-  .description('See where your AI coding tokens go - by task, tool, model, and project')
-  .version(version)
+  .name('aiinsight')
+  .description('AI Usage Intelligence Platform')
   .option('--verbose', 'print warnings to stderr on read failures and skipped files')
   .option('--timezone <zone>', 'IANA timezone for date grouping (e.g. Asia/Tokyo, America/New_York)')
 
+program.configureHelp({
+  formatHelp: () => renderCustomHelp(),
+})
+
+program
+  .command('version')
+  .description('Show version and platform info')
+  .action(() => {
+    console.log(renderBanner())
+    console.log(renderVersionBlock())
+  })
+
 program.hook('preAction', async (thisCommand) => {
-  const tz = thisCommand.opts<{ timezone?: string }>().timezone ?? process.env['CODEBURN_TZ']
+  const tz = thisCommand.opts<{ timezone?: string }>().timezone ?? process.env['AIINSIGHT_TZ']
   if (tz) {
     try {
       Intl.DateTimeFormat(undefined, { timeZone: tz })
     } catch {
-      console.error(`\n  Invalid timezone: "${tz}". Use an IANA timezone like "America/New_York" or "Asia/Tokyo".\n`)
+      console.error(renderError(`Invalid timezone: "${tz}". Use an IANA timezone like "America/New_York" or "Asia/Tokyo".`))
       process.exit(1)
     }
     process.env.TZ = tz
@@ -153,7 +170,7 @@ program.hook('preAction', async (thisCommand) => {
   setLocalModelSavings(config.localModelSavings ?? {})
   setProxyPaths(config.proxyPaths ?? [])
   if (thisCommand.opts<{ verbose?: boolean }>().verbose) {
-    process.env['CODEBURN_VERBOSE'] = '1'
+    process.env['AIINSIGHT_VERBOSE'] = '1'
   }
   await loadCurrency()
 })
@@ -540,7 +557,7 @@ program
 
     const monthProjects2 = fp(await parseAllSessions(getDateRange('month').range, pf))
     clearSessionCache()
-    console.log(renderStatusBar(monthProjects2))
+    console.log(renderTerminalStatus(monthProjects2))
   })
 
 program
@@ -620,7 +637,7 @@ program
       return
     }
 
-    const defaultName = `codeburn-${toDateString(new Date())}`
+    const defaultName = `aiinsight-${toDateString(new Date())}`
     const outputPath = opts.output ?? `${defaultName}.${opts.format}`
 
     let savedPath: string
@@ -631,16 +648,19 @@ program
         savedPath = await exportCsv(periods, outputPath)
       }
     } catch (err) {
-      // Protection guards in export.ts (symlink refusal, non-codeburn folder refusal, etc.)
+      // Protection guards in export.ts (symlink refusal, non-aiinsight folder refusal, etc.)
       // throw with a user-readable message. Print just the message, not the stack, so the CLI
       // doesn't spray its internals at the user.
       const message = err instanceof Error ? err.message : String(err)
-      console.error(`\n  Export failed: ${message}\n`)
+      console.error(renderError(`Export failed: ${message}`))
       process.exit(1)
     }
 
     const exportedLabel = customRange ? formatDateRangeLabel(opts.from, opts.to) : 'Today + 7 Days + 30 Days'
-    console.log(`\n  Exported (${exportedLabel}) to: ${savedPath}\n`)
+    console.log(renderSuccess('Export Complete', {
+      'Period': exportedLabel,
+      'File': savedPath,
+    }))
   })
 
 program
@@ -650,17 +670,19 @@ program
   .action(async (opts: { force?: boolean }) => {
     try {
       const result = await installMenubarApp({ force: opts.force })
-      console.log(`\n  Ready. ${result.installedPath}\n`)
+      console.log(renderSuccess('Menubar Installed', {
+        'Path': result.installedPath,
+      }))
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.error(`\n  Menubar install failed: ${message}\n`)
+      console.error(renderError(`Menubar install failed: ${message}`))
       process.exit(1)
     }
   })
 
 program
   .command('currency [code]')
-  .description('Set display currency (e.g. codeburn currency GBP)')
+  .description('Set display currency (e.g. aiinsight currency GBP)')
   .option('--symbol <symbol>', 'Override the currency symbol')
   .option('--reset', 'Reset to USD (removes currency config)')
   .action(async (code?: string, opts?: { symbol?: string; reset?: boolean }) => {
@@ -688,7 +710,7 @@ program
 
     const upperCode = code.toUpperCase()
     if (!isValidCurrencyCode(upperCode)) {
-      console.error(`\n  "${code}" is not a valid ISO 4217 currency code.\n`)
+      console.error(renderError(`"${code}" is not a valid ISO 4217 currency code.`))
       process.exitCode = 1
       return
     }
@@ -711,7 +733,7 @@ program
 
 program
   .command('model-alias [from] [to]')
-  .description('Map a provider model name to a canonical one for pricing (e.g. codeburn model-alias my-model claude-opus-4-6)')
+  .description('Map a provider model name to a canonical one for pricing (e.g. aiinsight model-alias my-model claude-opus-4-6)')
   .option('--remove <from>', 'Remove an alias')
   .option('--list', 'List configured aliases')
   .action(async (from?: string, to?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -747,7 +769,7 @@ program
     }
 
     if (!from || !to) {
-      console.error('\n  Usage: codeburn model-alias <from> <to>\n')
+      console.error(renderError('Usage: aiinsight model-alias <from> <to>'))
       process.exitCode = 1
       return
     }
@@ -755,13 +777,16 @@ program
     aliases[from] = to
     config.modelAliases = aliases
     await saveConfig(config)
-    console.log(`\n  Alias saved: ${from} -> ${to}`)
-    console.log(`  Config: ${getConfigFilePath()}\n`)
+    console.log(renderSuccess('Alias Saved', {
+      'From': from,
+      'To': to,
+      'Config': getConfigFilePath(),
+    }))
   })
 
 program
   .command('model-savings [local] [baseline]')
-  .description('Track a local model as "savings" rather than cost. Maps a local-model name to a paid baseline so the dashboard can show what the same tokens would have cost on the baseline (e.g. codeburn model-savings "llama3.1:8b" gpt-4o). The local call itself still costs $0 — actual cost is left untouched.')
+  .description('Track a local model as "savings" rather than cost. Maps a local-model name to a paid baseline so the dashboard can show what the same tokens would have cost on the baseline (e.g. aiinsight model-savings "llama3.1:8b" gpt-4o). The local call itself still costs $0 — actual cost is left untouched.')
   .option('--remove <local>', 'Remove a savings mapping for the given local model')
   .option('--list', 'List configured savings mappings')
   .action(async (local?: string, baseline?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -773,7 +798,7 @@ program
       if (entries.length === 0) {
         console.log('\n  No local-model savings mappings configured.')
         console.log(`  Config: ${getConfigFilePath()}`)
-        console.log('  Add one with: codeburn model-savings <local-model> <baseline-model>\n')
+        console.log('  Add one with: aiinsight model-savings <local-model> <baseline-model>\n')
       } else {
         console.log('\n  Local-model savings mappings:')
         for (const [src, dst] of entries) {
@@ -798,7 +823,7 @@ program
     }
 
     if (!local || !baseline) {
-      console.error('\n  Usage: codeburn model-savings <local-model> <baseline-model>\n')
+      console.error(renderError('Usage: aiinsight model-savings <local-model> <baseline-model>'))
       process.exitCode = 1
       return
     }
@@ -820,7 +845,7 @@ program
 
 program
   .command('proxy-path [path]')
-  .description('Mark a project directory as routed through a subscription-backed LLM proxy (e.g. Claude Code over GitHub Copilot). Sessions whose canonical path is under it keep their full API-rate cost as the "would-be" figure, but that amount is reported as subscription-covered so the report can show net out-of-pocket (e.g. codeburn proxy-path ~/work/copilot-repo). Actual API-key sessions elsewhere are untouched.')
+  .description('Mark a project directory as routed through a subscription-backed LLM proxy (e.g. Claude Code over GitHub Copilot). Sessions whose canonical path is under it keep their full API-rate cost as the "would-be" figure, but that amount is reported as subscription-covered so the report can show net out-of-pocket (e.g. aiinsight proxy-path ~/work/copilot-repo). Actual API-key sessions elsewhere are untouched.')
   .option('--remove <path>', 'Remove a configured proxy path')
   .option('--list', 'List configured proxy paths')
   .action(async (path?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -836,7 +861,7 @@ program
       if (paths.length === 0) {
         console.log('\n  No proxy paths configured.')
         console.log(`  Config: ${getConfigFilePath()}`)
-        console.log('  Add one with: codeburn proxy-path <project-dir>\n')
+        console.log('  Add one with: aiinsight proxy-path <project-dir>\n')
       } else {
         console.log('\n  Proxy paths (sessions under these are subscription-covered):')
         for (const p of paths) console.log(`    ${p}`)
@@ -860,16 +885,14 @@ program
     }
 
     if (!path) {
-      console.error('\n  Usage: codeburn proxy-path <project-dir>\n')
+      console.error(renderError('Usage: aiinsight proxy-path <project-dir>'))
       process.exitCode = 1
       return
     }
 
     const trimmed = path.trim()
     if (!isAbsolute(trimmed) || normalizeProxyPath(trimmed) === '') {
-      console.error(`\n  Proxy path must be an absolute project directory (got: ${path}).`)
-      console.error('  codeburn matches sessions by their recorded absolute cwd; the')
-      console.error('  filesystem root is too broad and is not accepted.\n')
+      console.error(renderError(`Proxy path must be an absolute project directory (got: ${path}).\n  aiinsight matches sessions by their recorded absolute cwd; the\n  filesystem root is too broad and is not accepted.`))
       process.exitCode = 1
       return
     }
@@ -897,7 +920,7 @@ program
     const mode = action ?? 'show'
     const providerOption = opts?.provider
     if (providerOption !== undefined && !isPlanProvider(providerOption)) {
-      console.error(`\n  --provider must be one of: all, claude, codex, cursor; got "${providerOption}".\n`)
+      console.error(renderError(`--provider must be one of: all, claude, codex, cursor; got "${providerOption}".`))
       process.exitCode = 1
       return
     }
@@ -945,20 +968,20 @@ program
     }
 
     if (mode !== 'set') {
-      console.error('\n  Usage: codeburn plan [set <id> | reset]\n')
+      console.error(renderError('Usage: aiinsight plan [set <id> | reset]'))
       process.exitCode = 1
       return
     }
 
     if (!id || !isPlanId(id)) {
-      console.error(`\n  Plan id must be one of: ${PLAN_IDS.join(', ')}; got "${id ?? ''}".\n`)
+      console.error(renderError(`Plan id must be one of: ${PLAN_IDS.join(', ')}; got "${id ?? ''}".`))
       process.exitCode = 1
       return
     }
 
     const resetDay = opts?.resetDay ?? 1
     if (!Number.isInteger(resetDay) || resetDay < 1 || resetDay > 28) {
-      console.error(`\n  --reset-day must be an integer from 1 to 28; got ${resetDay}.\n`)
+      console.error(renderError(`--reset-day must be an integer from 1 to 28; got ${resetDay}.`))
       process.exitCode = 1
       return
     }
@@ -975,13 +998,13 @@ program
 
     if (id === 'custom') {
       if (opts?.monthlyUsd === undefined) {
-        console.error('\n  Custom plans require --monthly-usd <positive number>.\n')
+        console.error(renderError('Custom plans require --monthly-usd <positive number>.'))
         process.exitCode = 1
         return
       }
       const monthlyUsd = opts.monthlyUsd
       if (!Number.isFinite(monthlyUsd) || monthlyUsd <= 0) {
-        console.error(`\n  --monthly-usd must be a positive number; got ${opts.monthlyUsd}.\n`)
+        console.error(renderError(`--monthly-usd must be a positive number; got ${opts.monthlyUsd}.`))
         process.exitCode = 1
         return
       }
@@ -1006,13 +1029,13 @@ program
     }
 
     if (providerOption === 'all') {
-      console.error(`\n  ${id} is a ${preset.provider} plan; omit --provider or use --provider ${preset.provider}.\n`)
+      console.error(renderError(`${id} is a ${preset.provider} plan; omit --provider or use --provider ${preset.provider}.`))
       process.exitCode = 1
       return
     }
 
     if (providerOption && providerOption !== preset.provider) {
-      console.error(`\n  ${id} is a ${preset.provider} plan; use --provider ${preset.provider} or omit --provider.\n`)
+      console.error(renderError(`${id} is a ${preset.provider} plan; use --provider ${preset.provider} or omit --provider.`))
       process.exitCode = 1
       return
     }
@@ -1036,7 +1059,10 @@ program
   .action(async (opts) => {
     await loadPricing()
     const { range, label } = getDateRange(opts.period)
+    const spinner = createSpinner()
+    spinner.start(`Analyzing sessions for ${label}...`)
     const projects = await parseAllSessions(range, opts.provider)
+    spinner.stop()
     await runOptimize(projects, label, range)
   })
 
@@ -1072,7 +1098,7 @@ program
     if (opts.from || opts.to) {
       const customRange = parseDateRangeFlags(opts.from, opts.to)
       if (!customRange) {
-        process.stderr.write('codeburn: --from and --to must be valid YYYY-MM-DD dates\n')
+        process.stderr.write(renderError('--from and --to must be valid YYYY-MM-DD dates'))
         process.exit(1)
       }
       range = customRange
@@ -1102,7 +1128,7 @@ program
     } else if (fmt === 'table') {
       process.stdout.write(renderTable(rows, { byTask: !!opts.byTask, showTotals: opts.totals !== false }) + '\n')
     } else {
-      process.stderr.write(`codeburn: unknown --format "${opts.format}". Choose table, markdown, json, or csv.\n`)
+      process.stderr.write(renderError(`unknown --format "${opts.format}". Choose table, markdown, json, or csv.`))
       process.exit(1)
     }
   })
@@ -1115,8 +1141,10 @@ program
     const { computeYield, formatYieldSummary } = await import('./yield.js')
     await loadPricing()
     const { range, label } = getDateRange(opts.period)
-    console.log(`\n  Analyzing yield for ${label}...\n`)
+    const spinner = createSpinner()
+    spinner.start(`Analyzing yield for ${label}...`)
     const summary = await computeYield(range, process.cwd())
+    spinner.stop()
     console.log(formatYieldSummary(summary))
   })
 
@@ -1143,7 +1171,7 @@ program
           : '\n  Antigravity CLI usage capture removed.\n')
         return
       }
-      console.error('\n  Usage: codeburn antigravity-hook <install|uninstall>\n')
+      console.error(renderError('Usage: aiinsight antigravity-hook <install|uninstall>'))
       process.exit(1)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -1169,6 +1197,89 @@ program
     console.log = ((...args: unknown[]) => process.stderr.write(args.join(' ') + '\n')) as typeof console.log
     const { startStdioServer } = await import('./mcp/server.js')
     await startStdioServer(version)
+  })
+
+program
+  .command('sync')
+  .description('Sync historical and incremental usage to AiInsight Cloud')
+  .option('--org-id <uuid>', 'Organization ID')
+  .option('--machine-id <uuid>', 'Machine ID (auto-generated if not provided)')
+  .option('--api-url <url>', 'Ingestion API URL (e.g. http://localhost:3001)')
+  .option('--api-key <key>', 'API Key for authentication')
+  .option('--once', 'Run historical + incremental sync once and exit')
+  .option('--historical-only', 'Run only historical sync (no incremental)')
+  .action(async (opts) => {
+    const { getSyncConfig } = await import('./config.js')
+    const { createSyncEngine } = await import('@aiinsight/sync-engine')
+    
+    const savedConfig = await getSyncConfig()
+    
+    const organizationId = opts.orgId || savedConfig.organizationId
+    const machineId = opts.machineId || savedConfig.machineId
+    const apiUrl = opts.apiUrl || savedConfig.apiUrl
+    const apiKey = opts.apiKey || savedConfig.apiKey
+    
+    if (!organizationId) {
+      console.error(renderMissingConfig('Organization ID'))
+      process.exit(1)
+    }
+    
+    if (!apiUrl) {
+      console.error(renderMissingConfig('API URL'))
+      process.exit(1)
+    }
+    
+    if (!apiKey) {
+      console.error(renderMissingConfig('API Key'))
+      process.exit(1)
+    }
+    
+    console.log(renderBanner())
+    console.log(`  ${chalk.dim('Mode')}    : ${opts.once ? 'once' : (opts.historicalOnly ? 'historical-only' : 'continuous')}`)
+    console.log(`  ${chalk.dim('API')}     : ${apiUrl}`)
+    console.log(`  ${chalk.dim('Org')}     : ${organizationId}`)
+    console.log('')
+    
+    const engine = createSyncEngine({
+      organizationId,
+      machineId,
+      apiUrl,
+      apiKey,
+    })
+    
+    await engine.initialize()
+    
+    const spinner = createSpinner()
+    
+    try {
+      if (opts.historicalOnly) {
+        spinner.start('Running historical sync...')
+        const result = await engine.runHistoricalSync()
+        spinner.stop()
+        console.log(renderSyncComplete(result))
+      } else if (opts.once) {
+        spinner.start('Running one-time sync (historical + incremental)...')
+        await engine.runOnce()
+        spinner.succeed('Sync completed successfully')
+      } else {
+        spinner.start('Starting continuous sync (Ctrl+C to stop)...')
+        await engine.start()
+        await new Promise(() => {})
+      }
+    } catch (error) {
+      spinner.fail((error as Error).message)
+      console.error(renderSyncError((error as Error).message))
+      process.exit(1)
+    } finally {
+      await engine.shutdown()
+    }
+  })
+
+program
+  .command('doctor')
+  .description('Run diagnostics to check configuration and connectivity')
+  .action(async () => {
+    console.log(await runDoctor())
   })
 
 program.parse()

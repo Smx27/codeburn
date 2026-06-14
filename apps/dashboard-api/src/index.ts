@@ -1,0 +1,70 @@
+import express from 'express';
+import pino from 'pino';
+import pinoHttp from 'pino-http';
+import cors from 'cors';
+import dashboardRoutes from './routes/dashboard.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import organizationRoutes from './routes/organization.routes.js';
+import teamRoutes from './routes/team.routes.js';
+import invitationRoutes from './routes/invitation.routes.js';
+import enrollmentRoutes from './routes/enrollment.routes.js';
+import agentRoutes from './routes/agent.routes.js';
+import healthRoutes from './routes/health.route.js';
+import { closePool } from './database/pool.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+const app = express();
+
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(pinoHttp({ logger }));
+
+app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/organizations', organizationRoutes);
+app.use('/api/v1/teams', teamRoutes);
+app.use('/api/v1/invitations', invitationRoutes);
+app.use('/api/v1/enrollment-keys', enrollmentRoutes);
+app.use('/api/v1/agents', agentRoutes);
+app.use('/api/v1', healthRoutes);
+
+app.get('/', (req, res) => {
+  res.json({
+    name: 'AiInsight Dashboard API',
+    version: process.env.npm_package_version ?? '0.1.0',
+    docs: '/api/v1/health',
+  });
+});
+
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  logger.error({ err }, 'Unhandled error');
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+const PORT = process.env.PORT || 3002;
+
+const server = app.listen(PORT, () => {
+  logger.info(`🚀 Dashboard API listening on port ${PORT}`);
+});
+
+async function shutdown() {
+  logger.info('Shutting down...');
+  server.close(async () => {
+    await closePool();
+    logger.info('Shutdown complete');
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    logger.error('Forced shutdown');
+    process.exit(1);
+  }, 10000);
+}
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+export { app };

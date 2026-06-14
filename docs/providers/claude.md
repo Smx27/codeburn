@@ -30,7 +30,7 @@ JSONL, one event per line, per session file. Sessions live under `<project>/<ses
 Claude Code reports total cache-write tokens in `usage.cache_creation_input_tokens`.
 When available, it also splits those writes by duration in
 `usage.cache_creation.ephemeral_5m_input_tokens` and
-`usage.cache_creation.ephemeral_1h_input_tokens`. CodeBurn keeps the existing
+`usage.cache_creation.ephemeral_1h_input_tokens`. AiInsight keeps the existing
 aggregate cache-write token total for reports, but prices the 1-hour portion at
 2x base input cost (1.6x the 5-minute cache-write rate exposed by LiteLLM).
 If the split fields are missing, the parser falls back to the legacy behavior

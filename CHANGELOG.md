@@ -1,9 +1,54 @@
 # Changelog
 
+## 0.11.0 - 2026-06-13
+
+### Added (Cloud)
+- **User Registration & Authentication.** Full auth system with registration, login, JWT access tokens (24h), refresh token rotation (30d), and logout. Uses Argon2 for password hashing.
+- **Organization Management.** Create, update, and view organizations with settings (timezone, currency, retention). Organizations are created during registration with default settings.
+- **Team Management.** Teams with role-based membership (admin, member). Default "General" team created during onboarding.
+- **Invitation System.** Email-based invite flow with crypto tokens (7-day expiry). Supports create, list, accept, revoke, and resend operations.
+- **Agent Enrollment Keys.** Generate, list, revoke, and rotate enrollment keys for agent registration. Keys use `ai_live_` prefix and are stored as Argon2 hashes.
+- **Machine Registration.** Agent registration via enrollment key with heartbeat tracking. Machines show ONLINE/OFFLINE/UNKNOWN status.
+- **Ingestion API Authentication.** API key and JWT validation on ingestion routes. Configurable via `REQUIRE_INGEST_AUTH` env var.
+- **Dashboard Enhancements.** New endpoints for organization overview, agent dashboard, sync jobs, and onboarding status.
+- **Seed Data System.** `npm run dev:setup-org` creates complete test environment with org, users, teams, enrollment keys, machines, and sample data.
+- **Database Migration 011.** 7 new tables: organization_settings, teams, team_members, organization_invitations, organization_enrollment_keys, sync_jobs. Altered machines and users tables.
+
+### Changed
+- **Password hashing:** Migrated from bcrypt to Argon2 for improved security.
+- **License:** Changed from MIT to PolyForm Free Trial License.
+
+### Documentation
+- **Dev Setup Guide.** Comprehensive developer setup documentation at `docs/dev-setup.md` with API reference, seed data instructions, and troubleshooting.
+- **Roadmap Update.** Phase 03 marked as complete with detailed deliverables and success criteria.
+
+## 0.10.1 - 2026-06-13
+
+### Added (Cloud)
+- **Docker support.** Multi-stage Dockerfiles for `ingestion-api`, `dashboard-api`, and `dashboard-web`. `docker-compose.yml` orchestrates all services with PostgreSQL 16, health checks, and persistent volumes. `.dockerignore` and `.env.docker.example` included.
+
+### Documentation
+- **Docker deployment docs.** Updated README, architecture, phase docs, and CONTRIBUTING guide with Docker instructions.
+
+## 0.10.0 - 2026-06-12
+
+### Added (Cloud)
+- **Analytics Engine.** `@aiinsight/analytics-engine` package with 5 aggregators (daily usage, provider, model, user, project), daily aggregation job (hourly runs), and historical backfill job (resume-capable). Aggregates raw events into precomputed summary tables for fast dashboard queries.
+- **Dashboard API.** `@aiinsight/dashboard-api` Express REST API with 6 query endpoints (overview, providers, models, users, projects, trends) + backfill trigger. JWT and API key dual authentication. Zod request validation. Structured logging with Pino.
+- **Dashboard Web.** `@aiinsight/dashboard-web` Next.js 15 frontend with 7 pages (Overview, Providers, Models, Users, Projects, Trends, Login). 3 chart components (TrendChart, ProviderChart, BarChart). TanStack Query for data fetching. TailwindCSS styling.
+- **Database Migrations.** 7 new migrations (004-010): `aggregation_runs`, `daily_usage`, `daily_provider_usage`, `daily_model_usage`, `daily_user_usage`, `daily_project_usage`, `api_keys`, `refresh_tokens`, and `users.role` column.
+- **Authentication.** JWT tokens (24h expiry) for web dashboard users. API keys (cb_ prefix, bcrypt hashed) for machine-to-machine. Role-based access control (user, org_admin).
+
+### Documentation
+- **Phase 02 Documentation.** Comprehensive documentation for Analytics & Dashboard Foundation with Mermaid diagrams, ERD, API docs, ADRs, and deployment notes.
+- **Architecture Update.** Updated architecture document with Cloud packages (Sync Engine, Ingestion API, Analytics Engine, Dashboard API, Dashboard Web).
+- **Roadmap.** Created project roadmap with phase status, milestones, and success criteria.
+- **ADRs.** Generated 6 Architecture Decision Records for key decisions (separate bounded context, precomputed aggregates, dual auth, Next.js 15, idempotent jobs, hourly backfill pattern).
+
 ## 0.9.12 - 2026-06-09
 
 ### Added (CLI)
-- **MCP server.** `codeburn mcp` runs a stdio Model Context Protocol server
+- **MCP server.** `aiinsight mcp` runs a stdio Model Context Protocol server
   exposing `get_usage` and `get_savings` to AI agents, with project names
   pseudonymized by default (opt-in reveal). (#429)
 - **New providers:** Devin (#444), Antigravity IDE (#418), JetBrains —
@@ -11,11 +56,11 @@
   Vercel AI Gateway datasource via `AI_GATEWAY_API_KEY` (#432).
 - **Automatic pricing gap-fill** from models.dev and OpenRouter for models
   LiteLLM has not indexed yet (e.g. Claude Fable 5). (#457)
-- **Proxy-aware cost attribution.** `codeburn proxy-path` marks a project as
+- **Proxy-aware cost attribution.** `aiinsight proxy-path` marks a project as
   routed through a subscription-backed proxy (e.g. Claude Code over GitHub
   Copilot); the full API-rate cost is reported as subscription-covered so the
   dashboard shows net out-of-pocket, leaving actual cost untouched. (#417, #459)
-- **Local-model cost savings reports.** New `codeburn model-savings` command
+- **Local-model cost savings reports.** New `aiinsight model-savings` command
   maps a local-model name (e.g. `llama3.1:8b`) to a paid baseline (e.g.
   `gpt-4o`) so the dashboard can report the counterfactual spend the same
   tokens would have incurred on the baseline. The local call still costs
@@ -42,9 +87,9 @@
 - Critical-path fetches (pricing, currency) now time out so a stalled network
   cannot wedge the CLI or menubar. (#445, #448)
 - Cursor lookback is period-aligned with a 6-month floor. (#432)
-- **Antigravity hook stale path repair.** `codeburn antigravity-hook install`
-  now installs the statusLine command through a persistent `codeburn` binary
-  from PATH and repairs older CodeBurn-owned hooks that pointed at stale local
+- **Antigravity hook stale path repair.** `aiinsight antigravity-hook install`
+  now installs the statusLine command through a persistent `aiinsight` binary
+  from PATH and repairs older AiInsight-owned hooks that pointed at stale local
   build artifacts, preventing `agy` from auto-disabling capture after
   `MODULE_NOT_FOUND` failures.
 
@@ -63,11 +108,11 @@
 ## 0.9.11 - 2026-05-27
 
 ### Added (CLI)
-- **MCP project profile advisor.** `codeburn optimize` now flags MCP servers
+- **MCP project profile advisor.** `aiinsight optimize` now flags MCP servers
   that are useful in one project but loaded into other projects where they are
   never invoked, with a project-scoping prompt that preserves the hot workflow
   while reducing cold-project schema overhead. Thanks @ozymandiashh. (#356)
-- **MCP and skill reliability report.** `codeburn optimize` now detects MCP
+- **MCP and skill reliability report.** `aiinsight optimize` now detects MCP
   servers and skills whose edit turns are disproportionately retry-heavy,
   using turn-level MCP/Skill call evidence and a shared-turn token estimate so
   one retry-heavy turn is not double-counted across multiple capabilities.
@@ -140,7 +185,7 @@
   project-level `subagents/*.jsonl` files, and Codex agent tool normalization
   is covered by regression tests. Addresses #336. Thanks @ozymandiashh. (#340)
 - **Optimize tab with retry tax, routing waste, and token display modes.** New
-  `codeburn optimize` surface in the dashboard and menubar, with daily budget
+  `aiinsight optimize` surface in the dashboard and menubar, with daily budget
   alerts and project drill-down. (#349)
 
 ### Fixed (CLI)
@@ -244,12 +289,12 @@
   cancelled on sleep/wake and restarted cleanly, preventing overlapping
   refreshes after lid-open.
 - **Version display.** The settings panel now shows the version without the
-  `v` prefix for consistency with `codeburn --version`.
+  `v` prefix for consistency with `aiinsight --version`.
 
 ## 0.9.8 - 2026-05-10
 
 ### Added (CLI)
-- **Cline provider support.** CodeBurn now reads Cline task usage from both
+- **Cline provider support.** AiInsight now reads Cline task usage from both
   VS Code globalStorage (`saoudrizwan.claude-dev`) and Cline's
   `~/.cline/data` task root. It reuses the existing Cline-family parser for
   `ui_messages.json` usage entries, deduplicates migrated tasks by the newest
@@ -270,7 +315,7 @@
   `CLAUDE_CONFIG_DIR` (previously the value was passed through verbatim,
   which only worked when the shell expanded `~` before exporting).
   Closes #208.
-- **`codeburn models` command.** Per-model breakdown across all providers,
+- **`aiinsight models` command.** Per-model breakdown across all providers,
   one row per (provider, model), sorted by cost. Each row carries Input,
   Output, Cache Write, Cache Read, Total, and Cost columns plus a Top Task
   cell showing the dominant task category and its cost share (e.g.
@@ -371,7 +416,7 @@
   context-bloat and cost-outlier findings so the same session is not listed
   more than once.
 - **Per-model efficiency metrics.** JSON report includes edit turns, one-shot rate, retries per edit, and cost per edit for each model.
-- **Custom date range export.** `codeburn export --from --to` exports a single custom period.
+- **Custom date range export.** `aiinsight export --from --to` exports a single custom period.
 - **Live Claude quota bar.** Menubar shows real-time quota usage inside the agent tab strip with OAuth refresh gate.
 
 ### Fixed (CLI)
@@ -389,7 +434,7 @@
 - **SHA-256 checksum verification.** Menubar installer verifies download integrity before replacing the running app.
 
 ### Fixed (macOS menubar)
-- **Stuck loading spinner.** The menubar ran `--optimize` on every 30-second background refresh. As sessions accumulated, optimize exceeded the 45-second timeout, and the loading overlay stayed forever with no fallback. Optimize is now stripped from all menubar fetches (use `codeburn optimize` in the CLI instead). On fetch failure with empty cache, the app retries without optimize so the spinner always clears.
+- **Stuck loading spinner.** The menubar ran `--optimize` on every 30-second background refresh. As sessions accumulated, optimize exceeded the 45-second timeout, and the loading overlay stayed forever with no fallback. Optimize is now stripped from all menubar fetches (use `aiinsight optimize` in the CLI instead). On fetch failure with empty cache, the app retries without optimize so the spinner always clears.
 - **Stale data after overnight sleep.** Cache keys used the period enum (`.today`) not a calendar date, so data from yesterday persisted after midnight. Cache now tracks the current date and clears itself on day rollover. Wake-from-sleep additionally clears all cached entries before fetching fresh data.
 - **Refresh button appeared to do nothing.** Clicking refresh with stale cached data never showed the loading overlay because loading state only triggered on empty cache. Manual refresh and wake-from-sleep now explicitly request loading feedback.
 - **Update button stuck spinning forever.** `performUpdate()` only reset `isUpdating` on failure. On success the installer kills and relaunches the app, but if the process survives (pkill fails silently), the button stayed on "Updating..." permanently. Now always resets on termination and clears the update badge on success.
@@ -422,7 +467,7 @@
 ## 0.9.5 - 2026-05-01
 
 ### Added (CLI)
-- **Homebrew.** `brew install codeburn` (originally via tap, now in homebrew-core).
+- **Homebrew.** `brew install aiinsight` (originally via tap, now in homebrew-core).
 - **GPT-5.3 and DeepSeek display names.** GPT-5.3, DeepSeek Coder, DeepSeek Coder Max, DeepSeek R1.
 
 ### Fixed (macOS menubar)
@@ -469,12 +514,12 @@
 - **Performance improvements.** Reduced unnecessary redraws and CLI invocations.
 
 ### Added (macOS menubar)
-- **Right-click context menu.** Right-click the status bar icon for "Check for Updates" and "Quit CodeBurn".
+- **Right-click context menu.** Right-click the status bar icon for "Check for Updates" and "Quit AiInsight".
 - **Version label in footer.**
 
 ### Changed
 - README restructured with honeycomb provider hero image, 2x2 screenshot grid, and complete inline reference.
-- `bunx codeburn` added as alternative install option.
+- `bunx aiinsight` added as alternative install option.
 
 ## 0.9.3 - 2026-04-28
 
@@ -509,12 +554,12 @@
 ## 0.9.1 - 2026-04-25
 
 ### Added
-- **`codeburn yield` command.** Correlates AI sessions with git history to categorize spend by outcome: **productive** (code shipped to main), **reverted** (commits later undone), or **abandoned** (work that never committed). Shows percentage breakdown so you know not just what you spent, but what happened to it. Accepts `--today`, `--week`, `--month` flags.
+- **`aiinsight yield` command.** Correlates AI sessions with git history to categorize spend by outcome: **productive** (code shipped to main), **reverted** (commits later undone), or **abandoned** (work that never committed). Shows percentage breakdown so you know not just what you spent, but what happened to it. Accepts `--today`, `--week`, `--month` flags.
 
 ## 0.9.0 - 2026-04-24
 
 ### Added (CLI)
-- **Claude Max 5x plan preset.** `codeburn plan claude-max-5x` sets a $100/month budget for heavy Claude Code users.
+- **Claude Max 5x plan preset.** `aiinsight plan claude-max-5x` sets a $100/month budget for heavy Claude Code users.
 
 ### Fixed (CLI)
 - **Cursor provider failed on newer versions.** Cursor 0.50+ stores session data in `agentKv:blob:*` entries instead of `bubbleId:*`. Added fallback parser that extracts usage from the new format.
@@ -541,7 +586,7 @@
 - **OOM crash on large session files.** `scanJsonlFile` and `parseSessionFile` loaded entire files into memory via `readViaStream` (which defeated its own streaming by joining all lines back into one string). Switched both to the existing `readSessionLines` async generator that yields one line at a time. Contributed by @maucher (#132).
 
 ### Added (macOS menubar)
-- **Compact mode.** Opt-in tighter menubar display: no decimals, variable width that hugs the text. Enable with `defaults write CodeBurnMenubar CodeBurnMenubarCompact -bool true`. Default off.
+- **Compact mode.** Opt-in tighter menubar display: no decimals, variable width that hugs the text. Enable with `defaults write AiInsightMenubar AiInsightMenubarCompact -bool true`. Default off.
 
 ### Fixed (macOS menubar, shipped alongside via mac-v0.8.8)
 - **Plan tab never loaded on Claude Code 2.1.x.** Keychain credential lookup filtered on `kSecAttrAccount == "default"`, but Claude Code writes the macOS login username. Removed the hardcoded allowlist; the service name is sufficient to scope the query.
@@ -552,8 +597,8 @@
 
 ### Added
 - **MiniMax-M2.7 and MiniMax-M2.7-highspeed pricing.** Added to `FALLBACK_PRICING` plus display names so MiniMax sessions show up with the right cost and readable labels when users route MiniMax through providers like OpenCode. Rates verified against MiniMax's live paygo pricing: base model $0.3/M input, $1.2/M output; highspeed $0.6/M input, $2.4/M output; cache read $0.06/M, cache write $0.375/M on both.
-- **OMP provider (Oh My Pi).** Auto-discovers sessions at `~/.omp/agent/sessions/*.jsonl` and tracks them alongside Pi. Shares Pi's JSONL parser via a `providerName` parameter, so OMP rows keep their own `omp:` dedup prefix and never cross-dedupe with Pi on a shared `conversationId` namespace. `codeburn report --provider omp` filters to OMP only; the default combined view includes both. Contributed by @cgrossde (#59).
-- **`codeburn model-alias` command.** Maps any provider-emitted model name to a canonical pricing name so cost rows no longer read `$0.00` when a proxy rewrites names. Aliases persist in `~/.config/codeburn/config.json` under `modelAliases`. Usage: `codeburn model-alias <from> <to>` to set, `--list` to view, `--remove <from>` to clear. User aliases resolve before the built-in list. Contributed by @cgrossde (#59).
+- **OMP provider (Oh My Pi).** Auto-discovers sessions at `~/.omp/agent/sessions/*.jsonl` and tracks them alongside Pi. Shares Pi's JSONL parser via a `providerName` parameter, so OMP rows keep their own `omp:` dedup prefix and never cross-dedupe with Pi on a shared `conversationId` namespace. `aiinsight report --provider omp` filters to OMP only; the default combined view includes both. Contributed by @cgrossde (#59).
+- **`aiinsight model-alias` command.** Maps any provider-emitted model name to a canonical pricing name so cost rows no longer read `$0.00` when a proxy rewrites names. Aliases persist in `~/.config/aiinsight/config.json` under `modelAliases`. Usage: `aiinsight model-alias <from> <to>` to set, `--list` to view, `--remove <from>` to clear. User aliases resolve before the built-in list. Contributed by @cgrossde (#59).
 - **Built-in aliases for Anthropic-compatible proxy format.** `anthropic--claude-4.6-opus`, `anthropic--claude-4.6-sonnet`, `anthropic--claude-4.5-opus`, `anthropic--claude-4.5-sonnet`, and `anthropic--claude-4.5-haiku` now resolve to canonical Claude names and price correctly with no user configuration. `getCanonicalName` also strips `provider/` prefixes before alias resolution so double-wrapped forms like `anthropic/anthropic--claude-4.6-opus` work the same way. Contributed by @cgrossde (#59).
 
 ### Fixed (CLI)
@@ -561,22 +606,22 @@
 
 ### Fixed (macOS menubar, shipped alongside via mac-v0.8.7)
 - **Menubar label froze in the background and only refreshed when you clicked the icon.** Three independent causes fixed:
-  - `prefetchAll` on launch spawned four concurrent `codeburn` subprocesses that competed with the main refresh loop for disk and parser time. Removed; period tabs now fetch lazily on first click.
+  - `prefetchAll` on launch spawned four concurrent `aiinsight` subprocesses that competed with the main refresh loop for disk and parser time. Removed; period tabs now fetch lazily on first click.
   - `NSStatusItem` sometimes deferred the status bar paint for an accessory app, so `attributedTitle` updates hit memory but not the screen until the popover opened. Explicit `needsDisplay` + `display()` after each update forces the paint.
   - **The real root cause:** macOS App Nap / Automatic Termination was suspending the app whenever the icon sat idle in the background, stretching the 15-second refresh Task's sleep indefinitely. Holding a `ProcessInfo.beginActivity` token for the life of the app opts out. Confirmed via `log show`: `_kLSApplicationWouldBeTerminatedByTALKey` now stays at 0.
-- Subprocess `QualityOfService` lifted to `.userInitiated` so `codeburn` runs at terminal speed when spawned from the menubar.
+- Subprocess `QualityOfService` lifted to `.userInitiated` so `aiinsight` runs at terminal speed when spawned from the menubar.
 
 ### Skipped
 - 0.8.6 was never published to npm. The version was briefly planned and then skipped to align CLI and macOS menubar versioning at 0.8.7.
 
 ### Notes
 - If you are on 0.8.5 and do not use MiniMax, Oh My Pi, or a proxy that rewrites model names to the `anthropic--claude-X.Y-tier` format, CLI behavior is unchanged and you can safely stay on 0.8.5.
-- macOS menubar users on `mac-v0.8.6` or earlier should update: the refresh loop only ticks reliably from `mac-v0.8.7` onward. The in-app update pill surfaces within 2 days, or quit and re-run `npx codeburn menubar` to pull immediately.
+- macOS menubar users on `mac-v0.8.6` or earlier should update: the refresh loop only ticks reliably from `mac-v0.8.7` onward. The in-app update pill surfaces within 2 days, or quit and re-run `npx aiinsight menubar` to pull immediately.
 
 ## 0.8.5 - 2026-04-21
 
 ### Fixed
-- **Stale Today totals after 0.8.2.** The persistent source cache introduced in 0.8.2 caused Today's cost to under-report and sometimes drop between polls during active Claude Code sessions. The cache keyed entries on `(mtime, size)` fingerprints that diverged from Claude's append-mostly JSONL model, producing empty or partial entries that were served on subsequent polls. Reverted the cache rewrite to the v0.8.1 full-reparse path for Claude sessions. Both the menubar and `codeburn status` now return consistent, monotonically-increasing Today totals.
+- **Stale Today totals after 0.8.2.** The persistent source cache introduced in 0.8.2 caused Today's cost to under-report and sometimes drop between polls during active Claude Code sessions. The cache keyed entries on `(mtime, size)` fingerprints that diverged from Claude's append-mostly JSONL model, producing empty or partial entries that were served on subsequent polls. Reverted the cache rewrite to the v0.8.1 full-reparse path for Claude sessions. Both the menubar and `aiinsight status` now return consistent, monotonically-increasing Today totals.
 - **Menubar and terminal status disagreed on Today.** A turn that straddled midnight (user message in one day, response in the next) was bucketed by user timestamp in one code path and by assistant timestamp in another, producing different Today values in the two surfaces. Both paths now count a turn on the day its first assistant call ran.
 - **Kept from 0.8.2-0.8.4:** subscription plan tracking, pricing accuracy and CSV injection hardening, cursor-agent provider, menubar prefetch and timezone alignment. Only the cache rewrite and its follow-up patches were reverted.
 
@@ -584,13 +629,13 @@
 - `--no-cache` flag on `report`, `today`, `month`, `status`, `export`, `optimize`, and `compare`. The flag existed to bypass the persistent source cache which no longer exists. If your scripts pass `--no-cache`, drop it; the parse runs fresh every time now.
 
 ### Notes
-- 0.8.2, 0.8.3, and 0.8.4 on npm contain the buggy cache. Upgrade with `npm i -g codeburn@latest` or `npm i -g codeburn@0.8.5`.
+- 0.8.2, 0.8.3, and 0.8.4 on npm contain the buggy cache. Upgrade with `npm i -g aiinsight@latest` or `npm i -g aiinsight@0.8.5`.
 - This release uses a full reparse on every invocation, matching v0.8.1 behavior. On large corpora (5,000+ session files) expect 3 to 10 seconds per invocation. An incremental refresh design that preserves correctness is planned for a follow-up release.
 
 ## 0.8.0 - 2026-04-19
 
 ### Added
-- **`codeburn compare` command.** Side-by-side model comparison across any two models in your session data. Interactive model picker, period switching, and provider filtering.
+- **`aiinsight compare` command.** Side-by-side model comparison across any two models in your session data. Interactive model picker, period switching, and provider filtering.
 - **Compare view in dashboard.** Press `c` in the TUI to enter compare mode. Arrow keys switch periods, `b` to return.
 - **Performance metrics.** One-shot rate, retry rate, and self-correction detection per model. Self-corrections are detected by scanning JSONL transcripts for tool error followed by retry patterns.
 - **Efficiency metrics.** Cost per call, cost per edit turn, output tokens per call, and cache hit rate.
@@ -606,7 +651,7 @@
 ## 0.7.4 - 2026-04-19
 
 ### Added
-- **`codeburn report --from/--to`.** Filter sessions to an exact `YYYY-MM-DD` date range (local time). Either flag alone is valid: `--from` alone runs from the given date through end-of-today, `--to` alone runs from the earliest data through the given date. Inverted ranges or malformed dates exit with a clear error. In the TUI, pressing `1`-`5` still switches to the predefined periods. Credit: @lfl1337 (PR #80).
+- **`aiinsight report --from/--to`.** Filter sessions to an exact `YYYY-MM-DD` date range (local time). Either flag alone is valid: `--from` alone runs from the given date through end-of-today, `--to` alone runs from the earliest data through the given date. Inverted ranges or malformed dates exit with a clear error. In the TUI, pressing `1`-`5` still switches to the predefined periods. Credit: @lfl1337 (PR #80).
 - **`avgCostPerSession` in reports.** JSON `projects[]` entries gain an `avgCostPerSession` field and `export -f csv` adds an `Avg/Session (USD)` column to `projects.csv`. Column order in `projects.csv` is now `Project, Cost, Avg/Session, Share, API Calls, Sessions` -- scripts parsing by column position should read by header instead. Credit: @lfl1337 (PR #80).
 - **Menubar auto-update checker.** Background check every 2 days against GitHub Releases. When a newer menubar build is available, an "Update" pill appears in the popover header. One click downloads, replaces, and relaunches the app automatically.
 - **Smart agent tab visibility.** The provider tab strip hides when fewer than two providers have spend, reducing clutter for single-tool users.
@@ -631,23 +676,23 @@
 
 ### Added
 - **Native macOS menubar app.** Swift + SwiftUI app under `mac/` replaces the SwiftBar plugin. Agent tabs, Today/7/30/Month/All period switcher, Trend/Forecast/Pulse/Stats/Plan insights, activity and model breakdowns, optimize findings, CSV/JSON export, instant currency switching, live 60s refresh.
-- **`codeburn menubar`.** One-command install: downloads the latest `.app` from GitHub Releases, strips Gatekeeper quarantine, drops it into `~/Applications`, and launches it. `--force` reinstalls in place.
+- **`aiinsight menubar`.** One-command install: downloads the latest `.app` from GitHub Releases, strips Gatekeeper quarantine, drops it into `~/Applications`, and launches it. `--force` reinstalls in place.
 - **`status --format menubar-json`.** Structured payload consumed by the native menubar app. Current-period totals, per-activity and per-model breakdowns, provider costs, optimize findings, and 365-day history.
 - **Release workflow.** `.github/workflows/release-menubar.yml` builds a universal `.app` bundle and zip on `mac-v*` tag push.
 
 ### Changed
-- **`codeburn export -f csv`** now writes a folder of one-table-per-file CSVs (`summary`, `daily`, `activity`, `models`, `projects`, `sessions`, `tools`, `shell-commands`) plus a `README.txt` index. Each file opens cleanly as a single table in any spreadsheet.
-- **`codeburn export -f json`** upgraded to schema `codeburn.export.v2` with currency metadata.
+- **`aiinsight export -f csv`** now writes a folder of one-table-per-file CSVs (`summary`, `daily`, `activity`, `models`, `projects`, `sessions`, `tools`, `shell-commands`) plus a `README.txt` index. Each file opens cleanly as a single table in any spreadsheet.
+- **`aiinsight export -f json`** upgraded to schema `aiinsight.export.v2` with currency metadata.
 
 ### Fixed
-- **`codeburn status` terminal Today/Month** now buckets by local date instead of UTC, so spend shows correctly during the window between local midnight and UTC midnight.
+- **`aiinsight status` terminal Today/Month** now buckets by local date instead of UTC, so spend shows correctly during the window between local midnight and UTC midnight.
 - **FX rate validation.** Frankfurter responses are checked to be finite and within `[0.0001, 1_000_000]` before they affect displayed costs.
 
 ### Removed
-- **SwiftBar plugin.** `src/menubar.ts`, `codeburn install-menubar`, `codeburn uninstall-menubar`, and `status --format menubar` are gone. The native Swift app is the single menubar surface.
+- **SwiftBar plugin.** `src/menubar.ts`, `aiinsight install-menubar`, `aiinsight uninstall-menubar`, and `status --format menubar` are gone. The native Swift app is the single menubar surface.
 
 ### Security
-- **`codeburn export -o` guard.** Writes a `.codeburn-export` marker into every folder it creates and refuses to reuse non-marked directories or overwrite existing files, so a typo like `-o ~/.ssh/id_ed25519` cannot delete a sensitive file.
+- **`aiinsight export -o` guard.** Writes a `.aiinsight-export` marker into every folder it creates and refuses to reuse non-marked directories or overwrite existing files, so a typo like `-o ~/.ssh/id_ed25519` cannot delete a sensitive file.
 
 ## 0.7.1 - 2026-04-17
 
@@ -664,7 +709,7 @@
 ## 0.7.0 - 2026-04-16
 
 ### Added
-- **`codeburn optimize` command.** Scans your sessions and your `~/.claude/`
+- **`aiinsight optimize` command.** Scans your sessions and your `~/.claude/`
   setup for 11 common waste patterns and hands back exact copy-paste fixes.
   Detection-only, never writes to user files. Supports `--period` (today,
   week, 30days, month, all) and `--provider` (all, claude, codex, cursor).
@@ -731,9 +776,9 @@
   model prices (`gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-5-mini`, `o3`,
   `o4-mini`). Contributed by @theodorosD. Note: Copilot logs only output
   tokens, so cost rows will sit below actual API cost.
-- **All Time period (key `5`).** Shows every recorded session since CodeBurn
+- **All Time period (key `5`).** Shows every recorded session since AiInsight
   started tracking. Daily Activity expands to every available day instead of
-  the fixed 14- or 31-day window. `codeburn report -p all` also works from
+  the fixed 14- or 31-day window. `aiinsight report -p all` also works from
   the CLI. Contributed by @lfl1337.
 - **avg/s column in By Project.** Average cost per session next to the
   existing total cost and session count. Surfaces projects where individual
@@ -777,7 +822,7 @@
 ## 0.4.4 - 2026-04-15
 
 ### Added
-- Auto-refresh flag. `codeburn report --refresh 60` reloads data at a set
+- Auto-refresh flag. `aiinsight report --refresh 60` reloads data at a set
   interval. Works on `report`, `today`, and `month` commands. Default off.
 - Readable project names. Strips home directory prefix from encoded paths,
   shows 3 path segments for more context. Home dir sessions display as "home".
@@ -795,7 +840,7 @@
 - CSV formula injection. Cells starting with =, +, -, @ are prefixed with
   an apostrophe before CSV escaping. Contributed by @serabi.
 - Menubar "Open Full Report" and "Export CSV" actions broken for npm-installed
-  users. Invokes resolved binary directly instead of assuming ~/codeburn
+  users. Invokes resolved binary directly instead of assuming ~/aiinsight
   checkout. Currency picker used nonexistent `config currency` subcommand.
   Contributed by @MukundaKatta. Closes #32, #27.
 - Activity panel moved from full-width to half-width row for better space
@@ -804,10 +849,10 @@
 ## 0.4.1 - 2026-04-14
 
 ### Added
-- Multi-currency support. `codeburn currency GBP` sets display currency (162 ISO
+- Multi-currency support. `aiinsight currency GBP` sets display currency (162 ISO
   4217 codes). Exchange rates from Frankfurter API (ECB data, 24h cache). Applies
   to dashboard, status, menubar, and exports. Contributed by @BlairWelsh.
-- 30-day rolling window period (`codeburn report -p 30days`, key `3` in TUI).
+- 30-day rolling window period (`aiinsight report -p 30days`, key `3` in TUI).
   Distinct from calendar month. Contributed by @oysteinkrog.
 - Menubar currency picker with 17 common currencies.
 

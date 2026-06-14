@@ -1,33 +1,33 @@
-# CodeBurn Menubar (macOS)
+# AiInsight Menubar (macOS)
 
-Native Swift + SwiftUI menubar app. The codeburn menubar surface.
+Native Swift + SwiftUI menubar app. The aiinsight menubar surface.
 
 ## Requirements
 
 - macOS 14+ (Sonoma)
 - Swift 6.0+ toolchain (bundled with Xcode 16 or standalone)
-- `codeburn` CLI installed globally (`npm install -g codeburn`)
+- `aiinsight` CLI installed globally (`npm install -g aiinsight`)
 
 ## Install (end users)
 
 One command:
 
 ```bash
-codeburn menubar
+aiinsight menubar
 ```
 
-That's it. The command records the persistent `codeburn` CLI path, downloads the latest `.app` from the newest `mac-v*` GitHub Release with a matching checksum, verifies it, drops it into `~/Applications`, clears Gatekeeper quarantine, and launches it. Re-running it upgrades in place with `--force`, or just launches the existing copy otherwise.
+That's it. The command records the persistent `aiinsight` CLI path, downloads the latest `.app` from the newest `mac-v*` GitHub Release with a matching checksum, verifies it, drops it into `~/Applications`, clears Gatekeeper quarantine, and launches it. Re-running it upgrades in place with `--force`, or just launches the existing copy otherwise.
 
 ### Build from source
 
 For contributors running a local build instead of the packaged release:
 
 ```bash
-npm install -g codeburn                       # CLI the app shells out to for data
-git clone https://github.com/getagentseal/codeburn.git
-cd codeburn/mac
+npm install -g aiinsight                       # CLI the app shells out to for data
+git clone https://github.com/priya/aiinsight.git
+cd aiinsight/mac
 swift build -c release
-.build/release/CodeBurnMenubar                # launch
+.build/release/AiInsightMenubar                # launch
 ```
 
 ## Build & run (dev against a local CLI checkout)
@@ -35,26 +35,26 @@ swift build -c release
 ```bash
 cd mac
 swift build
-# Point the app at your dev CLI build instead of the globally installed `codeburn`:
+# Point the app at your dev CLI build instead of the globally installed `aiinsight`:
 npm --prefix .. run build
-CODEBURN_ALLOW_DEV_BIN=1 CODEBURN_BIN="node $(pwd)/../dist/cli.js" swift run
+AIINSIGHT_ALLOW_DEV_BIN=1 AIINSIGHT_BIN="node $(pwd)/../dist/cli.js" swift run
 ```
 
 The app registers itself as a menubar accessory (`LSUIElement = true` at runtime). No Dock icon.
 
 ## Data source
 
-On launch and every 60 seconds thereafter, the app spawns `codeburn status --format menubar-json --no-optimize` directly (argv, no shell) via `CodeburnCLI.makeProcess` and decodes the JSON into `MenubarPayload`. The manual refresh button in the footer invokes the same command without `--no-optimize`, which includes optimize findings but takes longer.
+On launch and every 60 seconds thereafter, the app spawns `aiinsight status --format menubar-json --no-optimize` directly (argv, no shell) via `AiInsightCLI.makeProcess` and decodes the JSON into `MenubarPayload`. The manual refresh button in the footer invokes the same command without `--no-optimize`, which includes optimize findings but takes longer.
 
-Release installs record a persistent absolute CLI path in `~/Library/Application Support/CodeBurn/codeburn-cli-path.v1`, then fall back to Homebrew's common `codeburn` locations. For development only, set `CODEBURN_ALLOW_DEV_BIN=1` with `CODEBURN_BIN`; the value is validated against a strict allowlist before use, so a malicious env var can't inject shell commands.
+Release installs record a persistent absolute CLI path in `~/Library/Application Support/AiInsight/aiinsight-cli-path.v1`, then fall back to Homebrew's common `aiinsight` locations. For development only, set `AIINSIGHT_ALLOW_DEV_BIN=1` with `AIINSIGHT_BIN`; the value is validated against a strict allowlist before use, so a malicious env var can't inject shell commands.
 
 ## Project layout
 
 ```
 mac/
 ├── Package.swift                     SwiftPM manifest
-├── Sources/CodeBurnMenubar/
-│   ├── CodeBurnApp.swift             @main + MenuBarExtra scene
+├── Sources/AiInsightMenubar/
+│   ├── AiInsightApp.swift             @main + MenuBarExtra scene
 │   ├── AppStore.swift                @Observable store + enums
 │   ├── Data/MenubarPayload.swift     Codable payload types + placeholder
 │   ├── Theme/Theme.swift             Design tokens (warm terracotta palette)
@@ -74,7 +74,7 @@ Live data wired. Next iterations:
 
 ## Design tokens
 
-Sourced from `~/codeburn-menubar-mac-swiftui.html`. Warm terracotta-ember palette:
+Sourced from `~/aiinsight-menubar-mac-swiftui.html`. Warm terracotta-ember palette:
 
 - Accent (light): `#C9521D`
 - Accent (dark): `#E8774A`

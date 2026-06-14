@@ -72,7 +72,7 @@ export function roundForActiveCurrency(value: number): number {
 }
 
 function getCacheDir(): string {
-  return join(homedir(), '.cache', 'codeburn')
+  return join(homedir(), '.cache', 'aiinsight')
 }
 
 function getRateCachePath(): string {

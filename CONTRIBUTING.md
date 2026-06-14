@@ -9,6 +9,7 @@ Thanks for your interest. This document covers what you need to know to send a w
 - macOS or Linux for full provider coverage. Windows works for most providers but Cursor / Antigravity development is easier on macOS.
 - Optional: Swift 6 toolchain if you are touching the macOS menubar (`mac/`).
 - Optional: GNOME 45 or newer if you are touching the GNOME extension (`gnome/`).
+- Optional: Docker and Docker Compose if you want to run the cloud services locally.
 
 ## Setup
 
@@ -20,6 +21,16 @@ npm install
 
 There is no separate build step required to run the dev CLI. `npm run dev` runs `tsx` against `src/cli.ts` directly.
 
+### Running Cloud Services Locally with Docker
+
+```bash
+cp .env.docker.example .env
+docker compose up --build -d
+docker compose exec ingestion-api node dist/database/migrate.js
+```
+
+This starts the ingestion API (port 3001), dashboard API (port 3002), dashboard web (port 3000), and PostgreSQL (port 5432).
+
 ## Common Commands
 
 | Command | What it does |
@@ -28,6 +39,9 @@ There is no separate build step required to run the dev CLI. `npm run dev` runs 
 | `npm run dev -- status` | Runs the CLI in dev mode against your real data. |
 | `npm run build` | Bundles the litellm pricing snapshot, then runs `tsup` to produce `dist/cli.js`. |
 | `npm run bundle-litellm` | Refreshes `src/data/litellm-snapshot.json` from the upstream litellm repo. |
+| `docker compose up --build` | Build and start all cloud services (ingestion-api, dashboard-api, dashboard-web, PostgreSQL). |
+| `docker compose down` | Stop all cloud services. |
+| `docker compose logs -f` | Tail logs from all running cloud services. |
 
 To test a specific suite, pass a path:
 

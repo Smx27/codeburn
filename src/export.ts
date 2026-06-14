@@ -254,7 +254,7 @@ function buildReadme(periods: PeriodExport[]): string {
   const { code } = getCurrency()
   const generated = new Date().toISOString()
   const lines = [
-    'CodeBurn Usage Export',
+    'AiInsight Usage Export',
     '====================',
     '',
     `Generated: ${generated}`,
@@ -282,15 +282,15 @@ function buildReadme(periods: PeriodExport[]): string {
 }
 
 /// Sentinel file dropped into every folder we create so we can safely overwrite an older
-/// codeburn export without ever deleting a user's unrelated files by accident.
-const EXPORT_MARKER_FILE = '.codeburn-export'
+/// aiinsight export without ever deleting a user's unrelated files by accident.
+const EXPORT_MARKER_FILE = '.aiinsight-export'
 
-async function isCodeburnExportFolder(path: string): Promise<boolean> {
+async function isAiInsightExportFolder(path: string): Promise<boolean> {
   const markerStat = await stat(join(path, EXPORT_MARKER_FILE)).catch(() => null)
   return markerStat?.isFile() ?? false
 }
 
-async function clearCodeburnExportFolder(path: string): Promise<void> {
+async function clearAiInsightExportFolder(path: string): Promise<void> {
   const entries = await readdir(path)
   for (const entry of entries) {
     await rm(join(path, entry), { recursive: true, force: true })
@@ -299,7 +299,7 @@ async function clearCodeburnExportFolder(path: string): Promise<void> {
 
 /// Writes a folder of one-table-per-file CSVs. The outputPath is treated as a directory. If it
 /// ends in `.csv` the extension is stripped to form the folder name. Refuses to delete a
-/// pre-existing file or a non-codeburn folder, so a typo like `-o ~/.ssh/id_ed25519` can't
+/// pre-existing file or a non-aiinsight folder, so a typo like `-o ~/.ssh/id_ed25519` can't
 /// wipe a sensitive file (prior versions did `rm(path, { force: true })` unconditionally).
 export async function exportCsv(periods: PeriodExport[], outputPath: string): Promise<string> {
   const thirtyDays = periods.find(p => p.label === '30 Days')
@@ -315,13 +315,13 @@ export async function exportCsv(periods: PeriodExport[], outputPath: string): Pr
     throw new Error(`Refusing to overwrite existing file at ${folder}. Pass a directory path instead.`)
   }
   if (existingStat?.isDirectory()) {
-    if (!(await isCodeburnExportFolder(folder))) {
+    if (!(await isAiInsightExportFolder(folder))) {
       throw new Error(
         `Refusing to reuse non-empty directory ${folder}: no ${EXPORT_MARKER_FILE} marker. ` +
         `Delete it manually or pick a different -o path.`
       )
     }
-    await clearCodeburnExportFolder(folder)
+    await clearAiInsightExportFolder(folder)
   }
   await mkdir(folder, { recursive: true })
   await writeFile(join(folder, EXPORT_MARKER_FILE), '', 'utf-8')
@@ -349,7 +349,7 @@ export async function exportJson(periods: PeriodExport[], outputPath: string): P
   const { code, rate, symbol } = getCurrency()
 
   const data = {
-    schema: 'codeburn.export.v2',
+    schema: 'aiinsight.export.v2',
     generated: new Date().toISOString(),
     currency: { code, rate, symbol },
     summary: buildSummaryRows(periods),
@@ -366,8 +366,8 @@ export async function exportJson(periods: PeriodExport[], outputPath: string): P
   }
 
   const target = resolve(outputPath.toLowerCase().endsWith('.json') ? outputPath : `${outputPath}.json`)
-  // Refuse to overwrite an existing file that wasn't produced by codeburn
-  // export. CSV path has the same guard via the .codeburn-export marker; JSON
+  // Refuse to overwrite an existing file that wasn't produced by aiinsight
+  // export. CSV path has the same guard via the .aiinsight-export marker; JSON
   // was missing it, so a stray `-o ~/important.json` would silently clobber.
   const existing = await stat(target).catch(() => null)
   if (existing?.isFile()) {
@@ -380,9 +380,9 @@ export async function exportJson(periods: PeriodExport[], outputPath: string): P
       const buf = Buffer.alloc(4096)
       const { bytesRead } = await fh.read(buf, 0, buf.length, 0)
       const head = buf.toString('utf-8', 0, bytesRead)
-      if (!head.includes('"schema": "codeburn.export.v')) {
+      if (!head.includes('"schema": "aiinsight.export.v')) {
         throw new Error(
-          `Refusing to overwrite ${target}: file does not look like a codeburn export. ` +
+          `Refusing to overwrite ${target}: file does not look like an aiinsight export. ` +
           `Delete it manually or pick a different -o path.`
         )
       }

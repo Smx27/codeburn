@@ -28,7 +28,7 @@ function dedupeResolved(paths: string[]): string[] {
 /// removed (resolved-path equality). Precedence: `CLAUDE_CONFIG_DIRS` (a
 /// `path.delimiter`-separated list, ":" on POSIX, ";" on Windows), then
 /// `CLAUDE_CONFIG_DIR` (single dir), then the `claudeConfigDirs` array in
-/// `~/.config/codeburn/config.json` (how the macOS menubar configures
+/// `~/.config/aiinsight/config.json` (how the macOS menubar configures
 /// multi-account aggregation, since a GUI app can't inherit the shell env),
 /// then `~/.claude`. Sessions from every returned dir are merged into one
 /// ProjectSummary per project name in `src/parser.ts:scanProjectDirs`, so two
@@ -213,7 +213,7 @@ export const claude: Provider = {
     const explicitMulti = process.env['CLAUDE_CONFIG_DIRS']
     if (!anyDirReadable && explicitMulti !== undefined && explicitMulti !== '' && configDirs.length > 0) {
       process.stderr.write(
-        `codeburn: CLAUDE_CONFIG_DIRS was set but no listed directory could be read. ` +
+        `aiinsight: CLAUDE_CONFIG_DIRS was set but no listed directory could be read. ` +
         `Tried: ${configDirs.join(', ')}. ` +
         `Use "${pathDelimiter}" as the separator on this platform.\n`,
       )

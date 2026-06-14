@@ -1,21 +1,41 @@
 {
-  "name": "codeburn",
+  "name": "aiinsight",
   "version": "0.9.12",
   "description": "See where your AI coding tokens go - by task, tool, model, and project",
   "type": "module",
   "main": "./dist/cli.js",
   "bin": {
-    "codeburn": "dist/cli.js"
+    "aiinsight": "dist/cli.js"
   },
   "files": [
     "dist"
+  ],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "bundle-litellm": "node scripts/bundle-litellm.mjs",
     "build": "node scripts/bundle-litellm.mjs && tsup && node -e \"const fs=require('fs'); fs.copyFileSync('src/cli.ts','dist/cli.js'); fs.chmodSync('dist/cli.js',0o755)\"",
     "dev": "tsx src/cli.ts",
     "test": "vitest",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "sync:build": "npm run build --workspace=packages/sync-engine",
+    "analytics:build": "npm run build --workspace=packages/analytics-engine",
+    "api:build": "npm run build --workspace=apps/ingestion-api",
+    "api:dev": "npm run dev --workspace=apps/ingestion-api",
+    "api:migrate": "npm run migrate --workspace=apps/ingestion-api",
+    "dashboard-api:build": "npm run build --workspace=apps/dashboard-api",
+    "dashboard-api:dev": "npm run dev --workspace=apps/dashboard-api",
+    "dashboard-web:dev": "npm run dev --workspace=apps/dashboard-web",
+    "dev:setup-org": "npx tsx scripts/dev/setup-test-org.ts",
+    "dashboard-web:build": "npm run build --workspace=apps/dashboard-web",
+    "seed": "npm run seed --workspace=apps/ingestion-api",
+    "seed:small": "npm run seed:small --workspace=apps/ingestion-api",
+    "seed:medium": "npm run seed:medium --workspace=apps/ingestion-api",
+    "seed:large": "npm run seed:large --workspace=apps/ingestion-api",
+    "seed:demo": "npm run seed:demo --workspace=apps/ingestion-api",
+    "seed:reset": "npm run seed:reset --workspace=apps/ingestion-api"
   },
   "keywords": [
     "claude-code",
@@ -40,22 +60,24 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getagentseal/codeburn.git"
+    "url": "git+https://github.com/priya/aiinsight.git"
   },
   "bugs": {
-    "url": "https://github.com/getagentseal/codeburn/issues"
+    "url": "https://github.com/priya/aiinsight/issues"
   },
-  "homepage": "https://github.com/getagentseal/codeburn#readme",
+  "homepage": "https://github.com/priya/aiinsight#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
+    "figlet": "^1.11.0",
     "ink": "^7.0.0",
     "react": "^19.2.5",
     "strip-ansi": "^7.2.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/figlet": "^1.7.0",
     "@types/node": "^22.19.17",
     "@types/react": "^19.2.14",
     "tsup": "^8.4.0",

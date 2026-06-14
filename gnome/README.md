@@ -1,11 +1,11 @@
-# CodeBurn GNOME Extension
+# AiInsight GNOME Extension
 
 Monitor AI coding assistant token usage and costs from your GNOME desktop panel.
 
 ## Requirements
 
 - GNOME Shell 45 or later
-- CodeBurn CLI installed (`npm i -g codeburn`)
+- AiInsight CLI installed (`npm i -g aiinsight`)
 - `glib-compile-schemas` (usually part of `glib2-devel` or `libglib2.0-dev`)
 
 ## Install
@@ -23,7 +23,7 @@ Then restart GNOME Shell:
 Enable the extension:
 
 ```bash
-gnome-extensions enable codeburn@codeburn.dev
+gnome-extensions enable aiinsight@aiinsight.dev
 ```
 
 ## Configure
@@ -31,7 +31,7 @@ gnome-extensions enable codeburn@codeburn.dev
 Open preferences:
 
 ```bash
-gnome-extensions prefs codeburn@codeburn.dev
+gnome-extensions prefs aiinsight@aiinsight.dev
 ```
 
 Or use the GNOME Extensions app.
@@ -40,18 +40,18 @@ Or use the GNOME Extensions app.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| Refresh Interval | 30s | How often to poll CodeBurn CLI |
+| Refresh Interval | 30s | How often to poll AiInsight CLI |
 | Default Period | Today | Period shown on open |
 | Compact Mode | Off | Hide cost label, show icon only |
 | Budget Threshold | $0 | Daily budget alert (0 = disabled) |
 | Budget Alerts | Off | Show warning when budget exceeded |
-| CLI Path | (auto) | Custom path to `codeburn` binary |
+| CLI Path | (auto) | Custom path to `aiinsight` binary |
 
 ## Uninstall
 
 ```bash
-gnome-extensions disable codeburn@codeburn.dev
-rm -r ~/.local/share/gnome-shell/extensions/codeburn@codeburn.dev
+gnome-extensions disable aiinsight@aiinsight.dev
+rm -r ~/.local/share/gnome-shell/extensions/aiinsight@aiinsight.dev
 ```
 
 ## Development
@@ -63,7 +63,7 @@ Test changes without installing:
 glib-compile-schemas schemas/
 
 # Symlink for development
-ln -sf "$(pwd)" ~/.local/share/gnome-shell/extensions/codeburn@codeburn.dev
+ln -sf "$(pwd)" ~/.local/share/gnome-shell/extensions/aiinsight@aiinsight.dev
 
 # Watch logs
 journalctl -f -o cat /usr/bin/gnome-shell
