@@ -1325,10 +1325,6 @@ function buildSessionSummary(
       totalCacheWrite += call.usage.cacheCreationInputTokens
       apiCalls++
 
-      if (process.env['DEBUG_OTEL'] && (call.usage.cacheReadInputTokens > 0 || call.usage.cacheCreationInputTokens > 0)) {
-        console.warn(`[Aggregate] Model=${call.model}, cache_read=${call.usage.cacheReadInputTokens}, cache_write=${call.usage.cacheCreationInputTokens}`)
-      }
-
       const modelKey = getShortModelName(call.model)
       if (!modelBreakdown[modelKey]) {
         modelBreakdown[modelKey] = {
@@ -2033,18 +2029,9 @@ async function parseProviderSources(
         for await (const call of parser.parse()) {
           providerCalls.push(call)
         }
-        if (process.env['DEBUG_OTEL']) {
-          console.warn(`[Parse] File ${source.path.substring(0, 40)}: Collected ${providerCalls.length} provider calls, ${providerCalls.filter(c => c.cacheReadInputTokens > 0 || c.cacheCreationInputTokens > 0).length} with cache tokens`)
-        }
-        if (process.env['DEBUG_OTEL'] && providerCalls.some(c => c.cacheReadInputTokens > 0 || c.cacheCreationInputTokens > 0)) {
-          console.warn(`[Parse] After conversion: turns to be created...`)
-        }
         const canonicalCalls = await Promise.all(providerCalls.map(canonicalizeProviderCallProject))
         const turns = providerCallsToCachedTurns(canonicalCalls)
-        if (process.env['DEBUG_OTEL'] && providerCalls.some(c => c.cacheReadInputTokens > 0 || c.cacheCreationInputTokens > 0)) {
-          console.warn(`[Parse] After conversion: ${turns.length} turns, calls with cache: ${turns.flatMap(t => t.calls).filter(c => c.usage.cacheReadInputTokens > 0 || c.usage.cacheCreationInputTokens > 0).length}`)
-        }
-        
+
         // Store/merge parsed turns into the cache.
         // Durable providers use a union-by-deduplicationKey merge: existing turns
         // are NEVER deleted (preserves data for spans pruned from the DB), and
@@ -2061,24 +2048,17 @@ async function parseProviderSources(
             )
             existingEntry.turns = [...existingEntry.turns, ...newTurns]
             existingEntry.fingerprint = fp
-            if (process.env['DEBUG_OTEL']) {
-              console.warn(`[Parse] Durable union-merge for ${source.path.substring(0, 40)}: kept ${existingEntry.turns.length - newTurns.length} existing, added ${newTurns.length} new turns`)
-            }
           } else {
             section.files[source.path] = { fingerprint: fp, mcpInventory: [], turns }
           }
         } else {
           // Non-durable: overwrite (clearedPaths already deleted stale entry above)
-          // or append when multiple sources map to the same path.
+          // or append when multiple sources map to the same path. NOTE: the append
+          // path assumes discoverSessions yields a unique path per source, which all
+          // current providers do; it only fires for same-path multi-source providers.
           const existingCacheEntry = section.files[source.path]
-          if (process.env['DEBUG_OTEL']) {
-            console.warn(`[Parse] Cache entry exists for path: ${!!existingCacheEntry}, turns to merge: ${turns.length}`)
-          }
           if (existingCacheEntry) {
             existingCacheEntry.turns = [...existingCacheEntry.turns, ...turns]
-            if (process.env['DEBUG_OTEL']) {
-              console.warn(`[Parse] Merged with existing cache entry for ${source.path.substring(0, 40)}, now has ${existingCacheEntry.turns.length} turns total`)
-            }
           } else {
             section.files[source.path] = { fingerprint: fp, mcpInventory: [], turns }
           }
@@ -2147,31 +2127,13 @@ async function parseProviderSources(
   // Uses seenKeys (shared across providers) for cross-provider dedup.
   const sessionMap = new Map<string, { project: string; projectPath?: string; turns: ClassifiedTurn[] }>()
 
-  if (process.env['DEBUG_OTEL']) {
-    const totalCacheCalls = sources.flatMap(s => section.files[s.path]?.turns ?? []).flatMap(t => t.calls).filter(c => c.usage.cacheReadInputTokens > 0 || c.usage.cacheCreationInputTokens > 0)
-    console.warn(`[SessionMap] Starting with ${sources.length} sources, ${totalCacheCalls.length} calls with cache tokens`)
-    
-    const filesInfo = Object.entries(section.files).map(([path, file]) => ({
-      path: path.substring(0, 50),
-      turns: file.turns.length,
-      totalCalls: file.turns.flatMap(t => t.calls).length,
-      cacheTokenCalls: file.turns.flatMap(t => t.calls).filter(c => c.usage.cacheReadInputTokens > 0 || c.usage.cacheCreationInputTokens > 0).length
-    }))
-    console.warn(`[SessionMap] Cache files: ${JSON.stringify(filesInfo)}`)
-  }
-
   for (const source of sources) {
     const cachedFile = section.files[source.path]
     if (!cachedFile) continue
 
     for (const turn of cachedFile.turns) {
       const hasDup = turn.calls.some(c => seenKeys.has(c.deduplicationKey))
-      if (hasDup) {
-        if (process.env['DEBUG_OTEL'] && turn.calls.some(c => c.usage.cacheReadInputTokens > 0 || c.usage.cacheCreationInputTokens > 0)) {
-          console.warn(`[SessionMap] Skipping turn with cache tokens due to dedup: ${turn.calls.map(c => c.deduplicationKey).join(',')}`)
-        }
-        continue
-      }
+      if (hasDup) continue
 
       for (const c of turn.calls) seenKeys.add(c.deduplicationKey)
 
@@ -2185,10 +2147,6 @@ async function parseProviderSources(
       const classified = cachedTurnToClassified(turn)
       const project = turn.calls[0]?.project ?? source.project
       const key = `${providerName}:${turn.sessionId}:${project}`
-
-      if (process.env['DEBUG_OTEL'] && turn.calls.some(c => c.usage.cacheReadInputTokens > 0 || c.usage.cacheCreationInputTokens > 0)) {
-        console.warn(`[SessionMap] Adding turn with cache tokens to sessionMap key=${key}`)
-      }
 
       const existing = sessionMap.get(key)
       if (existing) {

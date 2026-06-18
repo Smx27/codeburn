@@ -184,19 +184,6 @@ type CopilotEvent =
 // The Copilot Budget extension reads from this same DB and uses per-span
 // token counts, confirming this schema is stable enough to depend on.
 
-interface OTelSpanRow {
-  trace_id: string
-  span_id: string
-  parent_span_id: string | null
-  name: string              // e.g. "chat gpt-4o" or "invoke_agent copilot"
-  start_time: number        // nanosecond epoch or millisecond epoch
-  end_time: number
-  attributes: string | null // JSON blob of all OTel attributes
-  // Some DB versions may use separate columns instead of a JSON blob.
-  // We try JSON parsing first, then fall back to individual column queries.
-  [key: string]: unknown
-}
-
 // Parsed attribute bag from a span
 interface SpanAttributes {
   'gen_ai.operation.name'?: string
@@ -286,19 +273,6 @@ function parseCwd(yaml: string): string | null {
 }
 
 /**
- * Parse the JSON attributes blob from an OTel span row.
- * Returns an empty object if parsing fails.
- */
-function parseSpanAttributes(raw: string | null): SpanAttributes {
-  if (!raw) return {}
-  try {
-    return JSON.parse(raw) as SpanAttributes
-  } catch {
-    return {}
-  }
-}
-
-/**
  * Load span attributes from the span_attributes table (key-value pairs).
  * This handles the modern VS Code Copilot Chat schema where attributes
  * are stored as separate key-value rows rather than a JSON blob.
@@ -327,8 +301,7 @@ function loadSpanAttributesFromTable(
       }
     }
     return attrs
-  } catch (e) {
-    if (process.env['DEBUG_OTEL']) console.warn(`loadSpanAttributesFromTable error for span ${spanId}:`, e)
+  } catch {
     return {}
   }
 }
@@ -338,6 +311,9 @@ function loadSpanAttributesFromTable(
  * The OTel spec uses nanoseconds, but some implementations use milliseconds.
  */
 function epochToISO(epoch: number): string {
+  // Guard malformed rows: new Date(NaN).toISOString() throws. Fall back to the
+  // epoch (1970) so a bad timestamp is excluded from period totals, not crashing.
+  if (!Number.isFinite(epoch) || epoch <= 0) return new Date(0).toISOString()
   // If the value looks like nanoseconds (> 1e15), convert to ms
   const ms = epoch > 1e15 ? Math.floor(epoch / 1e6) : epoch > 1e12 ? epoch : epoch * 1000
   return new Date(ms).toISOString()
@@ -529,7 +505,6 @@ function createOtelParser(
 
       // One DB open handles ALL conversations — avoids N opens for N conversations.
       const db = openDatabase(source.path)
-      if (!db) return
 
       try {
         // ---------------------------------------------------------------
@@ -554,8 +529,6 @@ function createOtelParser(
            ORDER BY min_start DESC`
         )
 
-        if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Found ${conversationRows.length} conversations in DB`)
-
         for (const convRow of conversationRows) {
           const conversationId = convRow.conversation_id
           if (!conversationId) continue
@@ -578,8 +551,6 @@ function createOtelParser(
             [conversationId]
           )
 
-          if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Found ${spanIdRows.length} spans for conversation ${conversationId}`)
-
           // Collect trace IDs and span IDs belonging to this conversation
           const traceIds = new Set<string>()
           for (const row of spanIdRows) {
@@ -587,24 +558,33 @@ function createOtelParser(
           }
 
           if (traceIds.size === 0) {
-            if (process.env['DEBUG_OTEL']) console.warn(`[OTel] No trace IDs found for conversation`)
             continue
           }
 
-          // Now query all spans within those traces to find chat and tool spans
-          const traceIdList = [...traceIds].map((id) => `'${id.replace(/'/g, "''")}'`).join(',')
-          const traceSpans = db.query<{ span_id: string; trace_id: string; operation_name: string | null }>(
-            `SELECT span_id, trace_id, operation_name FROM spans WHERE trace_id IN (${traceIdList})`
+          // Now query all spans within those traces to find chat and tool spans.
+          // Pull the metadata columns in the same query so we don't re-query the
+          // spans table once per chat span below (avoids an N+1).
+          const traceIdArr = [...traceIds]
+          const tracePlaceholders = traceIdArr.map(() => '?').join(',')
+          const traceSpans = db.query<{
+            span_id: string
+            trace_id: string
+            operation_name: string | null
+            start_time_ms: number
+            response_model: string | null
+          }>(
+            `SELECT span_id, trace_id, operation_name, start_time_ms, response_model FROM spans WHERE trace_id IN (${tracePlaceholders})`,
+            traceIdArr
           )
-
-          if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Found ${traceSpans.length} total spans across ${traceIds.size} traces`)
 
           // Collect tool names from execute_tool spans for each trace
           const toolsByTrace = new Map<string, string[]>()
           const chatSpanIds: string[] = []
+          const spanMetaById = new Map<string, { trace_id: string; start_time_ms: number; response_model: string | null }>()
 
           for (const span of traceSpans) {
             const opName = span.operation_name || ''
+            spanMetaById.set(span.span_id, span)
 
             if (opName === 'chat') {
               chatSpanIds.push(span.span_id)
@@ -622,22 +602,12 @@ function createOtelParser(
             }
           }
 
-          if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Found ${chatSpanIds.length} chat spans`)
-
           // Yield one ParsedProviderCall per chat span
           for (const spanId of chatSpanIds) {
             const attrs = loadSpanAttributesFromTable(db, spanId)
 
-            // Get span metadata from the spans table
-            const spanMetadata = db.query<{ trace_id: string; start_time_ms: number; response_model: string | null }>(
-              `SELECT trace_id, start_time_ms, response_model FROM spans WHERE span_id = ?`,
-              [spanId]
-            )?.[0]
-
-            if (!spanMetadata) {
-              if (process.env['DEBUG_OTEL']) console.warn(`[OTel] No metadata for span ${spanId}`)
-              continue
-            }
+            const spanMetadata = spanMetaById.get(spanId)
+            if (!spanMetadata) continue
 
             const model =
               (attrs['gen_ai.response.model'] as string | undefined) ??
@@ -650,10 +620,7 @@ function createOtelParser(
             const cacheReadTokens = Number(attrs['gen_ai.usage.cache_read.input_tokens'] ?? 0)
             const cacheCreationTokens = Number(attrs['gen_ai.usage.cache_creation.input_tokens'] ?? 0)
 
-            if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Span ${spanId.substring(0, 8)}: model=${model}, input=${inputTokens}, output=${outputTokens}, cache_read=${cacheReadTokens}, cache_creation=${cacheCreationTokens}`)
-
             if (inputTokens === 0 && outputTokens === 0) {
-              if (process.env['DEBUG_OTEL']) console.warn(`[OTel] Skipping span with 0 tokens`)
               continue
             }
 
@@ -935,17 +902,12 @@ export function createCopilotProvider(sessionStateDir?: string, workspaceStorage
       if (!disableOtel) {
         const dbPath = getAgentTracesDbPath()
         if (dbPath) {
-          if (process.env['DEBUG_OTEL']) console.warn(`[Provider] Discovering OTel sessions from ${dbPath}`)
           try {
             const otelSources = await discoverOtelSessions(dbPath)
-            if (process.env['DEBUG_OTEL']) console.warn(`[Provider] Got ${otelSources.length} OTel sources`)
             sources.push(...otelSources)
-          } catch (e) {
+          } catch {
             // OTel discovery failed — fall through to JSONL
-            if (process.env['DEBUG_OTEL']) console.warn(`[Provider] OTel discovery error:`, e)
           }
-        } else {
-          if (process.env['DEBUG_OTEL']) console.warn(`[Provider] No OTel DB path found`)
         }
       }
 
@@ -953,7 +915,6 @@ export function createCopilotProvider(sessionStateDir?: string, workspaceStorage
       try {
         const jsonlDir = getCopilotSessionStateDir(sessionStateDir)
         const jsonlSources = await discoverJsonlSessions(jsonlDir)
-        if (process.env['DEBUG_OTEL']) console.warn(`[Provider] Got ${jsonlSources.length} JSONL sources`)
         sources.push(...jsonlSources)
       } catch {
         // JSONL discovery failed
@@ -962,13 +923,11 @@ export function createCopilotProvider(sessionStateDir?: string, workspaceStorage
       // 3. Discover VS Code workspace transcript sessions
       try {
         const transcriptSources = await discoverTranscriptSessions(getWsDirs())
-        if (process.env['DEBUG_OTEL']) console.warn(`[Provider] Got ${transcriptSources.length} transcript sources`)
         sources.push(...transcriptSources)
       } catch {
         // Transcript discovery failed
       }
 
-      if (process.env['DEBUG_OTEL']) console.warn(`[Provider] Total sources: ${sources.length}`)
       return sources
     },
 
@@ -980,10 +939,6 @@ export function createCopilotProvider(sessionStateDir?: string, workspaceStorage
       // The dedup key set (seenKeys) is shared across both parsers,
       // so if OTel already yielded a span, the JSONL parser will skip
       // the matching assistant.message (and vice versa).
-      if (process.env['DEBUG_OTEL']) {
-        const isOtel = isOtelSource(source)
-        console.warn(`[Provider] Creating ${isOtel ? 'OTel' : 'JSONL'} parser for source: ${source.path}`)
-      }
       if (isOtelSource(source)) {
         return createOtelParser(source, seenKeys)
       }
