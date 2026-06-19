@@ -1,4 +1,4 @@
-import type { DashboardOverview, ProviderAnalytics, ModelAnalytics, UserAnalytics, ProjectAnalytics, TrendsResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Period, EnrollmentKey, GenerateEnrollmentKeyRequest, GenerateEnrollmentKeyResponse, Agent, OnboardingProgress } from '@/types/dashboard';
+import type { DashboardOverview, ProviderAnalytics, ModelAnalytics, UserAnalytics, ProjectAnalytics, TrendsResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Period, EnrollmentKey, GenerateEnrollmentKeyRequest, GenerateEnrollmentKeyResponse, Agent, OnboardingProgress, ApiKey, CreateApiKeyRequest, CreateApiKeyResponse, SessionListResponse, SessionListFilters, SessionDetail, MachineDetailResponse } from '@/types/dashboard';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -134,4 +134,47 @@ export async function listAgents(): Promise<Agent[]> {
 
 export async function getOnboardingProgress(): Promise<OnboardingProgress> {
   return fetchApi<OnboardingProgress>('/api/v1/onboarding/progress');
+}
+
+// ── API Keys ─────────────────────────────────────────────
+
+export async function listApiKeys(): Promise<ApiKey[]> {
+  return fetchApi<ApiKey[]>('/api/v1/api-keys/');
+}
+
+export async function createApiKey(data: CreateApiKeyRequest): Promise<CreateApiKeyResponse> {
+  return fetchApi<CreateApiKeyResponse>('/api/v1/api-keys/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteApiKey(id: string): Promise<{ success: boolean }> {
+  return fetchApi<{ success: boolean }>(`/api/v1/api-keys/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+// ── Sessions ─────────────────────────────────────────────
+
+export async function listSessions(filters?: SessionListFilters): Promise<SessionListResponse> {
+  const params = new URLSearchParams();
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== '') {
+        params.set(key, String(value));
+      }
+    });
+  }
+  return fetchApi<SessionListResponse>(`/api/v1/sessions/?${params}`);
+}
+
+export async function getSession(id: string): Promise<SessionDetail> {
+  return fetchApi<SessionDetail>(`/api/v1/sessions/${id}`);
+}
+
+// ── Machines ─────────────────────────────────────────────
+
+export async function getMachine(id: string): Promise<MachineDetailResponse> {
+  return fetchApi<MachineDetailResponse>(`/api/v1/machines/${id}`);
 }

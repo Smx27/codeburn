@@ -1,0 +1,198 @@
+# Deployment
+
+## Docker Compose
+
+The recommended deployment method uses Docker Compose.
+
+### Services
+
+| Service | Image | Port | Purpose |
+|---------|-------|------|---------|
+| `postgres` | `postgres:16-alpine` | 5432 | Database |
+| `ingestion-api` | Custom build | 3001 | Data ingestion |
+| `dashboard-api` | Custom build | 3002 | Backend API |
+| `dashboard-web` | Custom build | 3000 | Frontend |
+
+### Quick Start
+
+```bash
+# Clone and configure
+git clone https://github.com/priya/aiinsight.git
+cd aiinsight
+cp .env.docker.example .env
+# Edit .env with production values
+
+# Start
+docker compose up -d
+
+# Run migrations
+docker compose exec ingestion-api npm run migrate
+
+# Verify
+curl http://localhost:3002/api/v1/health
+```
+
+### Production Configuration
+
+```bash
+# .env
+POSTGRES_PASSWORD=<strong-random-password>
+JWT_SECRET=<strong-random-secret-32-chars-min>
+```
+
+### Health Checks
+
+| Service | Endpoint | Expected |
+|---------|----------|----------|
+| PostgreSQL | `pg_isready -U aiinsight` | Exit code 0 |
+| Ingestion API | `GET /api/v1/health` | `{ "status": "ok" }` |
+| Dashboard API | `GET /api/v1/health` | `{ "status": "ok" }` |
+| Dashboard Web | `GET /` | HTML response |
+
+---
+
+## Manual Deployment
+
+### Prerequisites
+
+- Node.js 22+
+- PostgreSQL 16+
+- npm
+
+### Steps
+
+```bash
+# Install dependencies
+npm install
+
+# Build all packages
+npm run sync:build
+npm run analytics:build
+npm run api:build
+npm run dashboard-api:build
+npm run dashboard-web:build
+
+# Run migrations
+npm run api:migrate
+
+# Start services (in separate terminals)
+npm run api:dev           # Ingestion API on :3001
+npm run dashboard-api:dev # Dashboard API on :3002
+npm run dashboard-web:dev # Dashboard Web on :3000
+```
+
+---
+
+## Ports
+
+| Port | Service | Protocol |
+|------|---------|----------|
+| 3000 | Dashboard Web | HTTP |
+| 3001 | Ingestion API | HTTP |
+| 3002 | Dashboard API | HTTP |
+| 5432 | PostgreSQL | TCP |
+
+---
+
+## Environment Variables
+
+See [configuration.md](configuration.md) for complete list.
+
+### Required for Production
+
+| Variable | Example |
+|----------|---------|
+| `DATABASE_URL` | `postgresql://user:pass@host:5432/aiinsight` |
+| `JWT_SECRET` | `<random-32-char-string>` |
+| `POSTGRES_PASSWORD` | `<strong-password>` |
+
+### Optional for Production
+
+| Variable | Default |
+|----------|---------|
+| `CORS_ORIGIN` | `http://localhost:3000` |
+| `PORT` | 3001 (ingestion) / 3002 (dashboard) |
+| `NODE_ENV` | `development` |
+| `LOG_LEVEL` | `info` |
+
+---
+
+## Database Migrations
+
+Migrations are SQL files in `apps/ingestion-api/src/database/migrations/`.
+
+```bash
+# Run all pending migrations
+npm run api:migrate
+
+# Or manually
+psql $DATABASE_URL -f apps/ingestion-api/src/database/migrations/001_initial_schema.sql
+# ... repeat for each migration
+```
+
+Migration order:
+1. `001_initial_schema.sql` — organizations, users, machines, providers
+2. `002_sessions_events.sql` — sessions, events
+3. `003_sync_tracking.sql` — sync_sources, sync_state
+4. `004_aggregation_runs.sql` — aggregation_runs
+5. `005_daily_usage.sql` — daily_usage
+6. `006_daily_provider_usage.sql` — daily_provider_usage
+7. `007_daily_model_usage.sql` — daily_model_usage
+8. `008_daily_user_usage.sql` — daily_user_usage
+9. `009_daily_project_usage.sql` — daily_project_usage
+10. `010_auth.sql` — api_keys, refresh_tokens, user roles
+11. `011_phase3_schema.sql` — org settings, teams, invitations, enrollment keys
+12. `012_phase3.5_auth.sql` — email_verifications, password_resets
+13. `013_agent_tokens.sql` — agent_tokens
+14. `014_sessions_indexes.sql` — optimized indexes
+
+---
+
+## Backup
+
+```bash
+# Backup
+pg_dump $DATABASE_URL > backup.sql
+
+# Restore
+psql $DATABASE_URL < backup.sql
+```
+
+---
+
+## Scaling Considerations
+
+| Component | Scaling Strategy |
+|-----------|-----------------|
+| PostgreSQL | Vertical (more RAM/CPU) or read replicas |
+| Ingestion API | Horizontal (stateless, rate limited by API key) |
+| Dashboard API | Horizontal (stateless, JWT auth) |
+| Dashboard Web | Horizontal (stateless, static build) |
+
+---
+
+## Monitoring
+
+### Health Endpoints
+
+```bash
+# Ingestion API
+curl http://localhost:3001/api/v1/health
+
+# Dashboard API
+curl http://localhost:3002/api/v1/health
+
+# Version
+curl http://localhost:3002/api/v1/version
+```
+
+### Logs
+
+All services use Pino for structured JSON logging.
+
+```bash
+# Docker logs
+docker compose logs -f ingestion-api
+docker compose logs -f dashboard-api
+docker compose logs -f dashboard-web
+```

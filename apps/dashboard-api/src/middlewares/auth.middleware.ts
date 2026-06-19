@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 import { getUserById, getApiKeyByPrefix } from '../repositories/dashboard.repository.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'aiinsight-dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 export interface AuthUser {
   userId: string;
@@ -33,13 +36,13 @@ export function signToken(user: { id: string; email: string; name: string | null
       role: user.role,
       machineId: user.machineId,
     },
-    JWT_SECRET,
+    JWT_SECRET as string,
     { expiresIn: '24h' }
   );
 }
 
 export function verifyToken(token: string): jwt.JwtPayload {
-  return jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+  return jwt.verify(token, JWT_SECRET as string) as jwt.JwtPayload;
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
@@ -80,7 +83,7 @@ async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, nex
       return;
     }
 
-    const isValid = await bcrypt.compare(apiKey, keyRecord.key_hash);
+    const isValid = await argon2.verify(keyRecord.key_hash, apiKey);
     if (!isValid) {
       res.status(401).json({ error: 'Invalid API key' });
       return;

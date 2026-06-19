@@ -336,6 +336,24 @@ export async function getApiKeyByPrefix(prefix: string): Promise<{ id: string; o
   );
 }
 
+export async function listApiKeys(orgId: string): Promise<{ id: string; name: string; prefix: string; role: string; created_at: string; last_used_at: string | null; expires_at: string | null }[]> {
+  return query<{ id: string; name: string; prefix: string; role: string; created_at: string; last_used_at: string | null; expires_at: string | null }>(
+    `SELECT id, name, prefix, role, created_at, last_used_at, expires_at FROM api_keys WHERE organization_id = $1 ORDER BY created_at DESC`,
+    [orgId]
+  );
+}
+
+export async function createApiKey(orgId: string, name: string, keyHash: string, prefix: string, role: string, expiresAt: Date | null): Promise<{ id: string; name: string; prefix: string; role: string; created_at: string }> {
+  return (await queryOne<{ id: string; name: string; prefix: string; role: string; created_at: string }>(
+    `INSERT INTO api_keys (organization_id, name, key_hash, prefix, role, expires_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, prefix, role, created_at`,
+    [orgId, name, keyHash, prefix, role, expiresAt]
+  ))!;
+}
+
+export async function deleteApiKey(orgId: string, keyId: string): Promise<void> {
+  await query(`DELETE FROM api_keys WHERE organization_id = $1 AND id = $2`, [orgId, keyId]);
+}
+
 export async function updateUserLastLogin(userId: string): Promise<void> {
   await query(`UPDATE users SET last_login_at = NOW() WHERE id = $1`, [userId]);
 }

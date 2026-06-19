@@ -47,6 +47,7 @@ export interface SyncStateRecord {
   sourceIdentifier: string;
   lastProcessedAt?: Date;
   lastHash?: string;
+  lastCallTimestamp?: string;
   updatedAt: Date;
 }
 

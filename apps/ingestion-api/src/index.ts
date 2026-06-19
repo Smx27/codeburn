@@ -1,19 +1,22 @@
 import express from 'express';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import helmet from 'helmet';
 import ingestionRoutes from './routes/ingestion.routes.js';
 import healthRoutes from './routes/health.route.js';
 import openapiRoutes from './routes/openapi.route.js';
 import { closePool } from './database/pool.js';
 import { ingestAuthMiddleware } from './middlewares/auth.middleware.js';
+import { ingestRateLimit } from './middlewares/rateLimit.middleware.js';
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const app = express();
 
+app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
 app.use(pinoHttp({ logger }));
 
-app.use('/api/v1/ingest', ingestAuthMiddleware, ingestionRoutes);
+app.use('/api/v1/ingest', ingestRateLimit, ingestAuthMiddleware, ingestionRoutes);
 app.use('/api/v1', healthRoutes);
 app.use('/api', openapiRoutes);
 

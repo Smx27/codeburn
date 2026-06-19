@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getProviderId } from '../repositories/provider.repository.js';
-import { findOrCreateOrganization } from '../repositories/organization.repository.js';
+import { findOrganizationById } from '../repositories/organization.repository.js';
 import { findOrCreateUser } from '../repositories/user.repository.js';
 import { findOrCreateMachine } from '../repositories/machine.repository.js';
 import { upsertSession } from '../repositories/session.repository.js';
@@ -11,8 +11,8 @@ export async function ingestBatch(req: Request, res: Response): Promise<void> {
   try {
     const payload = req.body as BatchUpload;
     
-    // Validate organization exists
-    const org = await findOrCreateOrganization(payload.organizationId);
+    // Validate organization exists by ID
+    const org = await findOrganizationById(payload.organizationId);
     if (!org) {
       res.status(404).json({ error: 'Organization not found' });
       return;
@@ -91,7 +91,11 @@ export async function ingestSessions(req: Request, res: Response): Promise<void>
       sessions: SyncSession[];
     };
 
-    const org = await findOrCreateOrganization(organizationId);
+    const org = await findOrganizationById(organizationId);
+    if (!org) {
+      res.status(404).json({ error: 'Organization not found' });
+      return;
+    }
     const user = await findOrCreateUser(org.id, `machine-${machineId}@system`, 'Sync Engine');
     const machine = await findOrCreateMachine(org.id, user.id, machineId);
     const providerId = await getProviderId(provider);
@@ -128,7 +132,11 @@ export async function ingestEvents(req: Request, res: Response): Promise<void> {
       events: SyncEvent[];
     };
 
-    const org = await findOrCreateOrganization(organizationId);
+    const org = await findOrganizationById(organizationId);
+    if (!org) {
+      res.status(404).json({ error: 'Organization not found' });
+      return;
+    }
     const user = await findOrCreateUser(org.id, `machine-${machineId}@system`, 'Sync Engine');
     const machine = await findOrCreateMachine(org.id, user.id, machineId);
     const providerId = await getProviderId(provider);

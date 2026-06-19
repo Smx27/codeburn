@@ -20,6 +20,7 @@ import {
   Moon,
   ChevronLeft,
   ChevronRight,
+  Activity,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -34,6 +35,7 @@ const navSections: { title: string; items: NavItem[] }[] = [
     title: 'OVERVIEW',
     items: [
       { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { label: 'Sessions', href: '/sessions', icon: Activity },
     ],
   },
   {

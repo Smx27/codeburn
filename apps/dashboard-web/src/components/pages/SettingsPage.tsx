@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Settings,
@@ -14,46 +14,11 @@ import {
   Check,
   Moon,
   Sun,
-  Eye,
-  EyeOff,
   Shield,
+  Loader2,
 } from 'lucide-react';
-
-interface ApiKey {
-  id: string;
-  name: string;
-  key: string;
-  createdAt: string;
-  lastUsed: string;
-  active: boolean;
-}
-
-const PLACEHOLDER_API_KEYS: ApiKey[] = [
-  {
-    id: 'key_1',
-    name: 'Production',
-    key: 'cb_prod_••••••••••••••••••••••••',
-    createdAt: '2025-01-15',
-    lastUsed: '2 hours ago',
-    active: true,
-  },
-  {
-    id: 'key_2',
-    name: 'Staging',
-    key: 'cb_stg_••••••••••••••••••••••••',
-    createdAt: '2025-02-20',
-    lastUsed: '3 days ago',
-    active: true,
-  },
-  {
-    id: 'key_3',
-    name: 'Development',
-    key: 'cb_dev_••••••••••••••••••••••••',
-    createdAt: '2025-03-10',
-    lastUsed: '1 week ago',
-    active: false,
-  },
-];
+import { listApiKeys, createApiKey, deleteApiKey } from '@/lib/api';
+import type { ApiKey } from '@/types/dashboard';
 
 function Toggle({
   checked,
@@ -84,11 +49,13 @@ function Toggle({
 
 export function SettingsPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [orgName] = useState('AiInsight Cloud');
-  const [apiKeys, setApiKeys] = useState(PLACEHOLDER_API_KEYS);
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [loading, setLoading] = useState(true);
   const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
   const [showNewKeyForm, setShowNewKeyForm] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyResult, setNewKeyResult] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
   const [notifications, setNotifications] = useState({
     emailAlerts: true,
     weeklyDigest: false,
@@ -96,28 +63,82 @@ export function SettingsPage() {
     usageWarnings: true,
   });
 
+  useEffect(() => {
+    loadApiKeys();
+  }, []);
+
+  async function loadApiKeys() {
+    try {
+      setLoading(true);
+      const keys = await listApiKeys();
+      setApiKeys(keys);
+    } catch (error) {
+      console.error('Failed to load API keys:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleCopyKey = (keyId: string) => {
     setCopiedKeyId(keyId);
     setTimeout(() => setCopiedKeyId(null), 2000);
   };
 
-  const handleDeleteKey = (keyId: string) => {
-    setApiKeys((prev) => prev.filter((k) => k.id !== keyId));
+  const handleCopyNewKey = () => {
+    if (newKeyResult) {
+      navigator.clipboard.writeText(newKeyResult);
+      setCopiedKeyId('new');
+      setTimeout(() => setCopiedKeyId(null), 2000);
+    }
   };
 
-  const handleCreateKey = () => {
+  const handleDeleteKey = async (keyId: string) => {
+    if (!confirm('Are you sure you want to revoke this API key? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      await deleteApiKey(keyId);
+      setApiKeys((prev) => prev.filter((k) => k.id !== keyId));
+    } catch (error) {
+      console.error('Failed to delete API key:', error);
+    }
+  };
+
+  const handleCreateKey = async () => {
     if (!newKeyName.trim()) return;
-    const newKey: ApiKey = {
-      id: `key_${Date.now()}`,
-      name: newKeyName.trim(),
-      key: `cb_${Math.random().toString(36).slice(2, 6)}_••••••••••••••••••••••••`,
-      createdAt: new Date().toISOString().split('T')[0],
-      lastUsed: 'Never',
-      active: true,
-    };
-    setApiKeys((prev) => [...prev, newKey]);
-    setNewKeyName('');
-    setShowNewKeyForm(false);
+    try {
+      setCreating(true);
+      const result = await createApiKey({ name: newKeyName.trim() });
+      setNewKeyResult(result.key);
+      setApiKeys((prev) => [result, ...prev]);
+      setNewKeyName('');
+    } catch (error) {
+      console.error('Failed to create API key:', error);
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const formatLastUsed = (dateStr: string | null) => {
+    if (!dateStr) return 'Never';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
   };
 
   return (
@@ -185,21 +206,6 @@ export function SettingsPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Organization Name</p>
-                <p className="text-xs text-muted-foreground">
-                  Displayed across the dashboard
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">{orgName}</span>
-                <button className="rounded-md border border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors">
-                  Edit
-                </button>
-              </div>
-            </div>
-            <div className="h-px bg-border/50" />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
                 <p className="text-sm font-medium">Plan</p>
                 <p className="text-xs text-muted-foreground">Current subscription tier</p>
               </div>
@@ -225,7 +231,10 @@ export function SettingsPage() {
               </CardDescription>
             </div>
             <button
-              onClick={() => setShowNewKeyForm(!showNewKeyForm)}
+              onClick={() => {
+                setShowNewKeyForm(!showNewKeyForm);
+                setNewKeyResult(null);
+              }}
               className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -236,82 +245,130 @@ export function SettingsPage() {
         <CardContent>
           {showNewKeyForm && (
             <div className="mb-4 rounded-lg border border-border/50 bg-muted/30 p-4 space-y-3">
-              <p className="text-xs font-medium text-muted-foreground">Create new API key</p>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Key name (e.g., Production)"
-                  value={newKeyName}
-                  onChange={(e) => setNewKeyName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
-                  className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-                <button
-                  onClick={handleCreateKey}
-                  disabled={!newKeyName.trim()}
-                  className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                >
-                  Create
-                </button>
-                <button
-                  onClick={() => {
-                    setShowNewKeyForm(false);
-                    setNewKeyName('');
-                  }}
-                  className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
+              {newKeyResult ? (
+                <div className="space-y-3">
+                  <p className="text-xs font-medium text-emerald-500">
+                    API key created successfully. Copy it now - it won&apos;t be shown again.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono break-all">
+                      {newKeyResult}
+                    </code>
+                    <button
+                      onClick={handleCopyNewKey}
+                      className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
+                    >
+                      {copiedKeyId === 'new' ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowNewKeyForm(false);
+                      setNewKeyResult(null);
+                    }}
+                    className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-xs font-medium text-muted-foreground">Create new API key</p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Key name (e.g., Production)"
+                      value={newKeyName}
+                      onChange={(e) => setNewKeyName(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
+                      className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                    <button
+                      onClick={handleCreateKey}
+                      disabled={!newKeyName.trim() || creating}
+                      className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                    >
+                      {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Create'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowNewKeyForm(false);
+                        setNewKeyName('');
+                      }}
+                      className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
-          <div className="space-y-2">
-            {apiKeys.map((apiKey) => (
-              <div
-                key={apiKey.id}
-                className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className={`h-2 w-2 rounded-full shrink-0 ${
-                      apiKey.active ? 'bg-emerald-500' : 'bg-muted-foreground'
-                    }`}
-                  />
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">{apiKey.name}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <code className="font-mono">{apiKey.key}</code>
-                      <span>&middot;</span>
-                      <span>Created {apiKey.createdAt}</span>
-                      <span>&middot;</span>
-                      <span>Last used {apiKey.lastUsed}</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : apiKeys.length === 0 ? (
+            <div className="text-center py-8 text-sm text-muted-foreground">
+              No API keys yet. Create one to get started.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {apiKeys.map((apiKey) => (
+                <div
+                  key={apiKey.id}
+                  className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`h-2 w-2 rounded-full shrink-0 ${
+                        !apiKey.expires_at || new Date(apiKey.expires_at) > new Date()
+                          ? 'bg-emerald-500'
+                          : 'bg-muted-foreground'
+                      }`}
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">{apiKey.name}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <code className="font-mono">{apiKey.prefix}••••••••</code>
+                        <span>&middot;</span>
+                        <span>{apiKey.role}</span>
+                        <span>&middot;</span>
+                        <span>Created {formatDate(apiKey.created_at)}</span>
+                        <span>&middot;</span>
+                        <span>Last used {formatLastUsed(apiKey.last_used_at)}</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => handleCopyKey(apiKey.id)}
+                      className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                      title="Copy key prefix"
+                    >
+                      {copiedKeyId === apiKey.id ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteKey(apiKey.id)}
+                      className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      title="Revoke key"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => handleCopyKey(apiKey.id)}
-                    className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                    title="Copy key"
-                  >
-                    {copiedKeyId === apiKey.id ? (
-                      <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="h-3.5 w-3.5" />
-                    )}
-                  </button>
-                  <button
-                    onClick={() => handleDeleteKey(apiKey.id)}
-                    className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                    title="Delete key"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

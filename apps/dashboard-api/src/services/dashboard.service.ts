@@ -320,8 +320,8 @@ export async function createInvitation(orgId: string, email: string, role: strin
 }
 
 export async function listInvitations(orgId: string) {
-  return query<{ id: string; email: string; role: string; token: string; expires_at: string; accepted_at: string | null; created_at: string }>(
-    `SELECT id, email, role, token, expires_at, accepted_at, created_at FROM organization_invitations WHERE organization_id = $1 ORDER BY created_at DESC`,
+  return query<{ id: string; email: string; role: string; expires_at: string; accepted_at: string | null; created_at: string }>(
+    `SELECT id, email, role, expires_at, accepted_at, created_at FROM organization_invitations WHERE organization_id = $1 ORDER BY created_at DESC`,
     [orgId]
   );
 }
@@ -376,10 +376,34 @@ export async function resendInvitation(orgId: string, invitationId: string) {
   const newExpiresAt = new Date();
   newExpiresAt.setDate(newExpiresAt.getDate() + 7);
 
-  return queryOne<{ id: string; email: string; token: string; expires_at: string }>(
+  const invitation = await queryOne<{ id: string; email: string; token: string; expires_at: string }>(
     `UPDATE organization_invitations SET expires_at = $1 WHERE organization_id = $2 AND id = $3 AND accepted_at IS NULL RETURNING id, email, token, expires_at`,
     [newExpiresAt, orgId, invitationId]
   );
+
+  if (invitation) {
+    try {
+      const org = await dashboardRepo.getOrganizationById(orgId);
+      if (org) {
+        const mail = await getMailProvider();
+        const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+        await mail.send({
+          to: invitation.email,
+          ...templates.invite({
+            inviterName: 'Your team',
+            organizationName: org.name,
+            role: 'member',
+            invitationUrl: `${baseUrl}/login?invitation=${invitation.token}`,
+            expiresIn: '7 days',
+          }),
+        });
+      }
+    } catch {
+      // Don't fail resend if email fails
+    }
+  }
+
+  return invitation;
 }
 
 export async function generateEnrollmentKey(orgId: string, name: string, expiresAt?: string) {
@@ -706,6 +730,28 @@ export async function resetPassword(token: string, newPassword: string): Promise
   await dashboardRepo.deleteRefreshTokensForUser(record.user_id);
 
   return { success: true };
+}
+
+// --- API Key Management ---
+
+export async function listApiKeys(orgId: string) {
+  return dashboardRepo.listApiKeys(orgId);
+}
+
+export async function createApiKey(orgId: string, name: string, role: string = 'write', expiresAt?: string) {
+  const prefix = `cb_${crypto.randomBytes(4).toString('hex')}`;
+  const fullKey = `${prefix}_${crypto.randomBytes(24).toString('hex')}`;
+  const keyHash = await argon2.hash(fullKey);
+
+  const expiry = expiresAt ? new Date(expiresAt) : null;
+
+  const key = await dashboardRepo.createApiKey(orgId, name, keyHash, prefix, role, expiry);
+
+  return { ...key, key: fullKey };
+}
+
+export async function deleteApiKey(orgId: string, keyId: string) {
+  await dashboardRepo.deleteApiKey(orgId, keyId);
 }
 
 export async function changePassword(userId: string, currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {

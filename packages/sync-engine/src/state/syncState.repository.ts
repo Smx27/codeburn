@@ -14,6 +14,7 @@ interface LocalSyncStateRecord {
   sourcePath: string;
   lastProcessedAt?: string;
   lastHash?: string;
+  lastCallTimestamp?: string;
   updatedAt: string;
 }
 
@@ -44,6 +45,7 @@ export async function getSyncState(
       sourceIdentifier: record.sourceIdentifier,
       lastProcessedAt: record.lastProcessedAt ? new Date(record.lastProcessedAt) : undefined,
       lastHash: record.lastHash,
+      lastCallTimestamp: record.lastCallTimestamp,
       updatedAt: new Date(record.updatedAt),
     };
   } catch {
@@ -63,6 +65,7 @@ export async function upsertSyncState(record: SyncStateRecord): Promise<void> {
     sourcePath: record.sourceIdentifier,
     lastProcessedAt: record.lastProcessedAt instanceof Date ? record.lastProcessedAt.toISOString() : record.lastProcessedAt,
     lastHash: record.lastHash,
+    lastCallTimestamp: record.lastCallTimestamp,
     updatedAt: record.updatedAt instanceof Date ? record.updatedAt.toISOString() : record.updatedAt,
   };
   
@@ -74,7 +77,8 @@ export async function markSynced(
   machineId: string,
   provider: string,
   sourceIdentifier: string,
-  hash: string
+  hash: string,
+  lastCallTimestamp?: string
 ): Promise<void> {
   const existing = await getSyncState(orgId, machineId, provider, sourceIdentifier);
   await upsertSyncState({
@@ -84,6 +88,7 @@ export async function markSynced(
     sourceIdentifier,
     lastProcessedAt: new Date(),
     lastHash: hash,
+    lastCallTimestamp: lastCallTimestamp ?? existing?.lastCallTimestamp,
     updatedAt: new Date(),
   });
 }

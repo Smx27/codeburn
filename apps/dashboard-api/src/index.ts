@@ -2,6 +2,7 @@ import express from 'express';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import cors from 'cors';
+import helmet from 'helmet';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import organizationRoutes from './routes/organization.routes.js';
@@ -10,8 +11,13 @@ import invitationRoutes from './routes/invitation.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
 import agentRoutes from './routes/agent.routes.js';
 import onboardingRoutes from './routes/onboarding.routes.js';
+import sessionRoutes from './routes/session.routes.js';
+import machineRoutes from './routes/machine.routes.js';
+import apiKeyRoutes from './routes/apiKey.routes.js';
 import healthRoutes from './routes/health.route.js';
 import { closePool } from './database/pool.js';
+import { authRateLimit } from './middlewares/rateLimit.middleware.js';
+import { startOfflineDetection } from './jobs/offlineDetection.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,18 +25,25 @@ dotenv.config();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const app = express();
 
-app.use(cors());
+app.use(helmet());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : undefined,
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(pinoHttp({ logger }));
 
+app.use('/api/v1/auth', authRateLimit, authRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
-app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/organizations', organizationRoutes);
 app.use('/api/v1/teams', teamRoutes);
 app.use('/api/v1/invitations', invitationRoutes);
 app.use('/api/v1/enrollment-keys', enrollmentRoutes);
 app.use('/api/v1/agents', agentRoutes);
 app.use('/api/v1/onboarding', onboardingRoutes);
+app.use('/api/v1/sessions', sessionRoutes);
+app.use('/api/v1/machines', machineRoutes);
+app.use('/api/v1/api-keys', apiKeyRoutes);
 app.use('/api/v1', healthRoutes);
 
 app.get('/', (req, res) => {
@@ -50,6 +63,7 @@ const PORT = process.env.PORT || 3002;
 
 const server = app.listen(PORT, () => {
   logger.info(`🚀 Dashboard API listening on port ${PORT}`);
+  startOfflineDetection();
 });
 
 async function shutdown() {

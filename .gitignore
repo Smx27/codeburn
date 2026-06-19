@@ -20,7 +20,6 @@ docs/superpowers/
 
 # Config / secrets
 .env
-.env.*
 *.pem
 *.key
 

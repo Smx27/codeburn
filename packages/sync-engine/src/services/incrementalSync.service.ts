@@ -133,7 +133,7 @@ export class IncrementalSyncService {
           continue;
         }
 
-        const newCalls = this.filterNewCalls(calls, state?.lastHash);
+        const newCalls = this.filterNewCalls(calls, state?.lastCallTimestamp);
         
         if (newCalls.length === 0) {
           sourceLogger.debug({ event: 'no_new_calls_after_filter' }, 'No new calls after filtering');
@@ -166,12 +166,14 @@ export class IncrementalSyncService {
         sourcesSynced++;
         eventsSynced += events.length;
 
+        const lastTimestamp = newCalls[newCalls.length - 1]?.timestamp;
         await markSynced(
           this.config.organizationId,
           this.config.machineId,
           provider.name,
           source.path,
-          stats.checksum
+          stats.checksum,
+          lastTimestamp
         );
         logSyncStateUpdated(sourceLogger, source.path, stats.checksum);
 
@@ -184,9 +186,9 @@ export class IncrementalSyncService {
     return { sourcesChecked, sourcesSynced, eventsSynced };
   }
 
-  private filterNewCalls(calls: ParsedProviderCall[], lastHash?: string): ParsedProviderCall[] {
-    if (!lastHash) return calls;
-    return calls;
+  private filterNewCalls(calls: ParsedProviderCall[], lastCallTimestamp?: string): ParsedProviderCall[] {
+    if (!lastCallTimestamp) return calls;
+    return calls.filter(call => call.timestamp > lastCallTimestamp);
   }
 
   private buildSyncPayload(

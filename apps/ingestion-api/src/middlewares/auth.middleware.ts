@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'aiinsight-dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 const REQUIRE_INGEST_AUTH = process.env.REQUIRE_INGEST_AUTH !== 'false';
 
 interface IngestUser {
@@ -83,7 +86,7 @@ async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, nex
 
 async function handleJwtAuth(token: string, req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+    const payload = jwt.verify(token, JWT_SECRET as string) as jwt.JwtPayload;
     const userId = payload.sub;
 
     if (!userId) {
