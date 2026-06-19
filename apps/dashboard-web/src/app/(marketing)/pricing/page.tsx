@@ -1,42 +1,62 @@
 'use client';
 
 import Link from 'next/link';
-import { Check, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Check, ArrowRight, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/Badge';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
 
 const plans = [
   {
-    name: 'Free',
+    name: 'Free Beta',
     price: '$0',
     period: '/month',
-    description: 'For individual developers exploring AI usage tracking.',
+    description: 'For individual developers getting started',
     features: [
       'Basic usage analytics',
       '1 user',
       '5 machines',
       '7-day data retention',
       'Community support',
-      'Single provider tracking',
+      'Standard providers',
     ],
-    cta: 'Get Started',
+    cta: 'Get Started Free',
     highlighted: false,
   },
   {
-    name: 'Pro',
+    name: 'Team',
     price: '$19',
-    period: '/month',
-    description: 'For teams that need full visibility into AI usage.',
+    period: '/user/month',
+    description: 'For teams that need full visibility',
     features: [
       'Full usage analytics',
       'Unlimited users',
       'Unlimited machines',
       '90-day data retention',
+      'Historical sync (90 days)',
       'Priority support',
-      'Historical data sync',
-      'Multi-provider tracking',
-      'Team insights',
-      'Cost breakdowns',
+      'Advanced charts',
+      'Export data',
     ],
     cta: 'Start Free Trial',
     highlighted: true,
@@ -45,17 +65,16 @@ const plans = [
     name: 'Enterprise',
     price: 'Custom',
     period: '',
-    description: 'For large organizations with advanced requirements.',
+    description: 'For large organizations with compliance needs',
     features: [
-      'Everything in Pro',
+      'Everything in Team',
       'Unlimited data retention',
-      'Dedicated support engineer',
-      'Custom integrations',
       'SSO & SAML',
+      'Custom integrations',
+      'Dedicated support',
       'SLA guarantee',
-      'On-premise deployment',
       'Audit logs',
-      'Custom dashboards',
+      'Custom retention policies',
     ],
     cta: 'Contact Sales',
     highlighted: false,
@@ -64,157 +83,175 @@ const plans = [
 
 const faqs = [
   {
-    q: 'Can I try Pro for free?',
-    a: 'Yes. All paid plans include a 14-day free trial with no credit card required.',
+    question: 'Is there a free tier?',
+    answer: 'Yes! Our Free Beta plan is completely free and includes basic analytics, 1 user, and 5 machines. No credit card required to get started.',
   },
   {
-    q: 'What AI providers do you support?',
-    a: 'We currently support Claude, Codex, Gemini, Cursor, OpenCode, and Warp. More providers are added regularly.',
+    question: 'How does the Team plan billing work?',
+    answer: 'The Team plan is billed per user per month. Each user gets full access to all features. You can add or remove users at any time, and billing is prorated.',
   },
   {
-    q: 'How does historical data sync work?',
-    a: 'Our CLI agent can backfill up to 6 months of historical usage data from supported providers.',
+    question: 'Can I try the Team plan before committing?',
+    answer: 'Absolutely. Start a free 14-day trial of the Team plan with full access to all features. No credit card required.',
   },
   {
-    q: 'Is my data secure?',
-    a: 'Yes. We use end-to-end encryption and SOC 2 compliant infrastructure. Your code never leaves your machines.',
+    question: 'What payment methods do you accept?',
+    answer: 'We accept all major credit cards (Visa, Mastercard, Amex) and ACH bank transfers for annual plans. Enterprise customers can also pay via invoice.',
+  },
+  {
+    question: 'How do I upgrade or downgrade?',
+    answer: 'You can change your plan at any time from your account settings. Upgrades take effect immediately with prorated billing. Downgrades take effect at the end of your current billing period.',
+  },
+  {
+    question: 'Do you offer discounts for startups?',
+    answer: 'Yes! We offer special pricing for early-stage startups. Contact our sales team to learn more about our startup program.',
   },
 ];
 
 export default function PricingPage() {
   return (
     <div className="relative">
-      {/* ── Header ────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 sm:py-28">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -right-40 h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
-        </div>
-        <div className="container-wide relative text-center">
-          <Badge variant="info" className="mb-6">
-            Simple Pricing
-          </Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-            Plans for every team size
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Start free and scale as your team grows. All plans include core
-            features.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Plans ─────────────────────────────────────────── */}
-      <section className="pb-20 sm:pb-28">
-        <div className="container-wide">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto stagger-children">
-            {plans.map((plan) => (
-              <Card
-                key={plan.name}
-                className={`relative flex flex-col ${
-                  plan.highlighted
-                    ? 'border-primary shadow-glow ring-1 ring-primary/20'
-                    : 'border-border/50'
-                }`}
-              >
-                {plan.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge variant="info">Most Popular</Badge>
-                  </div>
-                )}
-                <CardContent className="p-6 flex flex-col flex-1">
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {plan.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {plan.description}
-                    </p>
-                    <div className="mt-4 flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-foreground">
-                        {plan.price}
-                      </span>
-                      {plan.period && (
-                        <span className="text-sm text-muted-foreground">
-                          {plan.period}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-sm">
-                        <Check className="h-4 w-4 text-success mt-0.5 shrink-0" />
-                        <span className="text-foreground">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={plan.name === 'Enterprise' ? '/docs' : '/register'}
-                    className={`inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                      plan.highlighted
-                        ? 'bg-primary text-primary-foreground shadow-sm hover:bg-primary-hover hover:shadow-glow'
-                        : 'border border-border bg-card text-foreground hover:bg-muted hover:shadow-sm'
-                    }`}
-                  >
-                    {plan.cta}
-                    {plan.highlighted && (
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    )}
-                  </Link>
-                  <Badge variant="warning" className="mt-3 justify-center">
-                    Coming Soon
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ───────────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 bg-background-subtle">
-        <div className="container-narrow">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-              Frequently asked questions
-            </h2>
-          </div>
-          <div className="space-y-6">
-            {faqs.map((faq) => (
-              <Card key={faq.q} className="border-border/50">
-                <CardContent className="p-6">
-                  <h3 className="text-base font-semibold text-foreground mb-2">
-                    {faq.q}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {faq.a}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ───────────────────────────────────────────── */}
-      <section className="py-20 sm:py-28">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-            Ready to get started?
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-            Start tracking your AI usage in minutes. No credit card required.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-md transition-all hover:bg-primary-hover hover:shadow-glow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      {/* Hero */}
+      <section className="section-padding">
+        <div className="container-marketing">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center mb-16"
+          >
+            <motion.div variants={fadeInUp}>
+              <Badge variant="info" className="mb-6 px-4 py-1.5">
+                Pricing
+              </Badge>
+            </motion.div>
+            <motion.h1
+              variants={fadeInUp}
+              className="text-4xl sm:text-5xl font-bold tracking-tight"
             >
-              Start Free
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
+              Simple, transparent{' '}
+              <span className="text-gradient">pricing</span>
+            </motion.h1>
+            <motion.p
+              variants={fadeInUp}
+              className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
+            >
+              Start free, scale as you grow. No surprises, no hidden fees.
+            </motion.p>
+          </motion.div>
+
+          {/* Plans */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+          >
+            {plans.map((plan) => (
+              <motion.div key={plan.name} variants={fadeInUp}>
+                <Card
+                  className={`relative flex flex-col h-full ${
+                    plan.highlighted
+                      ? 'border-primary/50 shadow-glow ring-1 ring-primary/20'
+                      : 'border-border/30 glass-card'
+                  }`}
+                >
+                  {plan.highlighted && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <Badge variant="default" className="px-3">Most Popular</Badge>
+                    </div>
+                  )}
+                  <CardContent className="p-6 flex flex-col flex-1">
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {plan.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {plan.description}
+                      </p>
+                      <div className="mt-4 flex items-baseline gap-1">
+                        <span className="text-4xl font-bold text-foreground">
+                          {plan.price}
+                        </span>
+                        {plan.period && (
+                          <span className="text-sm text-muted-foreground">
+                            {plan.period}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <ul className="space-y-3 mb-8 flex-1">
+                      {plan.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2.5 text-sm">
+                          <Check className="h-4 w-4 text-success mt-0.5 shrink-0" />
+                          <span className="text-foreground">{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      variant={plan.highlighted ? 'default' : 'outline'}
+                      className="w-full"
+                      asChild
+                    >
+                      <Link href={plan.name === 'Enterprise' ? '/contact' : '/register'}>
+                        {plan.cta}
+                        <ArrowRight className="ml-1 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <p className="text-center text-sm text-muted-foreground mt-8">
+            <Lock className="inline h-3.5 w-3.5 mr-1" />
+            We never store your prompts or responses. Only usage metadata for analytics.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section-padding bg-background-subtle/30">
+        <div className="container-narrow">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="text-center mb-14"
+          >
+            <motion.h2
+              variants={fadeInUp}
+              className="text-3xl sm:text-4xl font-bold tracking-tight"
+            >
+              Frequently asked questions
+            </motion.h2>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <Accordion type="single" collapsible className="space-y-2">
+              {faqs.map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`item-${i}`}
+                  className="glass-card border-border/30 px-4"
+                >
+                  <AccordionTrigger className="text-sm font-medium text-foreground hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
         </div>
       </section>
     </div>

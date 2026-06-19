@@ -24,7 +24,7 @@ import {
   Monitor,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PeriodSelector } from '@/components/PeriodSelector';
+import { PeriodSelector } from '@/components/layout/PeriodSelector';
 import { AreaChart } from '@/components/charts/AreaChart';
 import { DonutChart } from '@/components/charts/DonutChart';
 import { StackedBarChart } from '@/components/charts/StackedBarChart';

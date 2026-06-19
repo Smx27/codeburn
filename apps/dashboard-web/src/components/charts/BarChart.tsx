@@ -45,8 +45,6 @@ function defaultFormatYAxis(value: number): string {
   return formatTokens(value);
 }
 
-let barCounter = 0;
-
 export function BarChart({
   data,
   series,

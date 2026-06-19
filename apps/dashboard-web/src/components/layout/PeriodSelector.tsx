@@ -1,7 +1,7 @@
 'use client';
 
-import type { Period } from '@/types/dashboard';
 import { cn } from '@/lib/utils';
+import type { Period } from '@/types/dashboard';
 
 interface PeriodSelectorProps {
   value: Period;
@@ -19,21 +19,16 @@ const periods: { value: Period; label: string }[] = [
 
 export function PeriodSelector({ value, onChange, className }: PeriodSelectorProps) {
   return (
-    <div
-      className={cn(
-        'inline-flex items-center rounded-lg border border-border bg-muted/50 p-0.5',
-        className
-      )}
-    >
+    <div className={cn('flex items-center rounded-lg border border-border bg-card p-0.5', className)}>
       {periods.map((period) => (
         <button
           key={period.value}
           onClick={() => onChange(period.value)}
           className={cn(
-            'relative px-3 py-1 text-xs font-medium rounded-md transition-all duration-fast',
+            'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
             value === period.value
-              ? 'bg-background text-foreground shadow-sm'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-primary text-primary-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
           {period.label}

@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
@@ -18,11 +21,18 @@ import healthRoutes from './routes/health.route.js';
 import { closePool } from './database/pool.js';
 import { authRateLimit } from './middlewares/rateLimit.middleware.js';
 import { startOfflineDetection } from './jobs/offlineDetection.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  ...(process.env.NODE_ENV !== 'production' && {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'SYS:standard'
+      }
+    }
+  })
+});
 const app = express();
 
 app.use(helmet());

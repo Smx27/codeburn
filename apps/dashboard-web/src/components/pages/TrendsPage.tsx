@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PeriodSelector } from '@/components/PeriodSelector';
+import { PeriodSelector } from '@/components/layout/PeriodSelector';
 import { AreaChart } from '@/components/charts/AreaChart';
 import { useTrends } from '@/hooks/useDashboard';
 import { formatCurrency, formatTokens, formatNumber } from '@/lib/utils';

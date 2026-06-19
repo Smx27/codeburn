@@ -110,7 +110,7 @@ export function SettingsPage() {
       setCreating(true);
       const result = await createApiKey({ name: newKeyName.trim() });
       setNewKeyResult(result.key);
-      setApiKeys((prev) => [result, ...prev]);
+      setApiKeys((prev) => [{ ...result, last_used_at: null, expires_at: null } as ApiKey, ...prev]);
       setNewKeyName('');
     } catch (error) {
       console.error('Failed to create API key:', error);

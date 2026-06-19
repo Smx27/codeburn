@@ -1,13 +1,11 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 
 export const authRateLimit = rateLimit({
   windowMs: 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => {
-    return req.ip ?? req.socket.remoteAddress ?? 'unknown';
-  },
+
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
   },
@@ -24,7 +22,7 @@ export const ingestRateLimit = rateLimit({
   keyGenerator: (req) => {
     const apiKey = req.headers['x-api-key'] as string | undefined;
     if (apiKey) return `apikey:${apiKey}`;
-    return req.ip ?? req.socket.remoteAddress ?? 'unknown';
+    return ipKeyGenerator(req.ip || req.socket.remoteAddress || 'unknown');
   },
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
@@ -44,7 +42,7 @@ export const generalRateLimit = rateLimit({
     if (apiKey && (apiKey.startsWith('cb_') || apiKey.startsWith('ai_'))) {
       return `apikey:${apiKey}`;
     }
-    return req.ip ?? req.socket.remoteAddress ?? 'unknown';
+    return ipKeyGenerator(req.ip || req.socket.remoteAddress || 'unknown');
   },
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });

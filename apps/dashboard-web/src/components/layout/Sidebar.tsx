@@ -4,15 +4,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useTheme } from '@/lib/theme-context';
-import { cn } from '@/lib/utils';
-import { getInitials } from '@/lib/utils';
+import { cn, getInitials } from '@/lib/utils';
 import {
   Flame,
   LayoutDashboard,
+  Activity,
   Cpu,
   Box,
   Users,
-  FolderKanban,
   TrendingUp,
   Settings,
   LogOut,
@@ -20,9 +19,16 @@ import {
   Moon,
   ChevronLeft,
   ChevronRight,
-  Activity,
+  Key,
 } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface NavItem {
   label: string;
@@ -44,15 +50,14 @@ const navSections: { title: string; items: NavItem[] }[] = [
       { label: 'Providers', href: '/providers', icon: Cpu },
       { label: 'Models', href: '/models', icon: Box },
       { label: 'Users', href: '/users', icon: Users },
-      { label: 'Projects', href: '/projects', icon: FolderKanban },
       { label: 'Trends', href: '/trends', icon: TrendingUp },
     ],
   },
   {
     title: 'SETTINGS',
     items: [
+      { label: 'API Keys', href: '/settings/api-keys', icon: Key },
       { label: 'Settings', href: '/settings', icon: Settings },
-      { label: 'Agents', href: '/settings/agents', icon: Cpu },
     ],
   },
 ];
@@ -72,12 +77,14 @@ export function Sidebar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-4 h-14 shrink-0 border-b border-sidebar-border">
-        <Flame className="h-6 w-6 text-primary shrink-0" />
-        {!collapsed && (
-          <span className="text-sm font-semibold tracking-tight text-foreground whitespace-nowrap">
-            AiInsight Cloud
-          </span>
-        )}
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <Flame className="h-5 w-5 text-primary shrink-0" />
+          {!collapsed && (
+            <span className="text-sm font-semibold tracking-tight text-foreground whitespace-nowrap">
+              AIInsight
+            </span>
+          )}
+        </Link>
       </div>
 
       {/* Navigation */}
@@ -92,12 +99,12 @@ export function Sidebar() {
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const isActive = pathname === item.href;
-                return (
+                const link = (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'group relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors duration-fast',
+                      'group relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition-colors',
                       isActive
                         ? 'bg-primary/10 text-primary'
                         : 'text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground'
@@ -110,6 +117,17 @@ export function Sidebar() {
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </Link>
                 );
+
+                if (collapsed) {
+                  return (
+                    <Tooltip key={item.href} delayDuration={0}>
+                      <TooltipTrigger asChild>{link}</TooltipTrigger>
+                      <TooltipContent side="right">{item.label}</TooltipContent>
+                    </Tooltip>
+                  );
+                }
+
+                return link;
               })}
             </div>
           </div>
@@ -120,7 +138,7 @@ export function Sidebar() {
       <div className="shrink-0 border-t border-sidebar-border p-2 space-y-1">
         <button
           onClick={toggleTheme}
-          className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground transition-colors duration-fast w-full"
+          className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-hover hover:text-sidebar-foreground transition-colors w-full"
         >
           {resolved === 'dark' ? (
             <Sun className="h-4 w-4 shrink-0" />
@@ -153,7 +171,7 @@ export function Sidebar() {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center justify-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-sidebar-hover hover:text-sidebar-foreground transition-colors duration-fast w-full"
+          className="flex items-center justify-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-sidebar-hover hover:text-sidebar-foreground transition-colors w-full"
         >
           {collapsed ? (
             <ChevronRight className="h-4 w-4" />
