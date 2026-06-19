@@ -9,7 +9,7 @@ import { HeatmapChart } from '@/components/charts/HeatmapChart';
 import { CHART_COLORS } from '@/components/charts/chart-colors';
 import { useUsers, useTrends, useProviders } from '@/hooks/useDashboard';
 import { formatCurrency, formatTokens, formatNumber, getInitials, cn } from '@/lib/utils';
-import type { Period, UserAnalytics, TrendPoint } from '@/types/dashboard';
+import type { Period, TrendPoint } from '@/types/dashboard';
 import { Users, Crown, Trophy, BarChart3, Medal, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
 
 const USERS_PER_PAGE = 20;
@@ -118,7 +118,7 @@ export function UsersPage() {
     return data;
   }, []);
 
-  const SortArrow = ({ active, dir }: { active: boolean; dir: 'asc' | 'desc' }) => (
+  const SortArrow = ({ active }: { active: boolean; dir: 'asc' | 'desc' }) => (
     <ArrowUpDown className={cn('h-3 w-3 inline-block ml-1', active ? 'text-foreground' : 'text-muted-foreground/30')} />
   );
 

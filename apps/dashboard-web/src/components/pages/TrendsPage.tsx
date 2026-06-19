@@ -10,7 +10,6 @@ import { CHART_COLORS } from '@/components/charts/chart-colors';
 import type { Period, TrendPoint } from '@/types/dashboard';
 import {
   TrendingUp,
-  TrendingDown,
   Minus,
   Users,
   Coins,
@@ -48,16 +47,6 @@ function TrendArrow({ value }: { value: number }) {
   if (value > 0) return <ArrowUpRight className="h-3.5 w-3.5 text-emerald-400" />;
   if (value < 0) return <ArrowDownRight className="h-3.5 w-3.5 text-red-400" />;
   return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
-}
-
-function SkeletonCard() {
-  return (
-    <div className="rounded-lg border bg-card p-4 space-y-3 animate-pulse">
-      <div className="h-3 bg-muted rounded w-20" />
-      <div className="h-7 bg-muted rounded w-28" />
-      <div className="h-3 bg-muted rounded w-16" />
-    </div>
-  );
 }
 
 function SkeletonChart() {

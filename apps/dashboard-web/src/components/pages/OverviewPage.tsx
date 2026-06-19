@@ -232,7 +232,7 @@ export function OverviewPage() {
   const { data: trends, isLoading: trendsLoading } = useTrends(period, 'daily');
   const { data: models, isLoading: modelsLoading } = useModels(period, 10);
   const { data: users, isLoading: usersLoading } = useUsers(period, 50);
-  const { data: projects, isLoading: projectsLoading } = useProjects(period, 20);
+  const { data: projects } = useProjects(period, 20);
   const { data: agents, isLoading: agentsLoading } = useAgents();
 
   // ── Derived data ─────────────────────────────────────
@@ -276,9 +276,7 @@ export function OverviewPage() {
   // Stacked bar data for cost by provider over time
   const costByProviderData = useMemo(() => {
     if (!trends?.data || !providers) return [];
-    const providerNames = providers.map((p) => p.providerName);
     return trends.data.map((point) => {
-      const totalTokens = point.tokens || 1;
       const entry: Record<string, unknown> = { date: point.date };
       providers.forEach((p) => {
         entry[p.providerName] = Math.round((p.percentageOfTotal / 100) * point.cost * 100) / 100;
@@ -361,7 +359,6 @@ export function OverviewPage() {
 
   const isAnyLoading = overviewLoading || providersLoading || trendsLoading;
   const hasAgents = !agentsLoading && (agents?.length ?? 0) > 0;
-  const hasData = !overviewLoading && (overview?.totalSessions ?? 0) > 0;
 
   // ── Render ───────────────────────────────────────────
 

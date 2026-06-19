@@ -11,7 +11,7 @@ import { CHART_COLORS } from '@/components/charts/chart-colors';
 import { useProviders, useTrends, useModels } from '@/hooks/useDashboard';
 import { formatCurrency, formatTokens, formatNumber, cn } from '@/lib/utils';
 import type { Period, ProviderAnalytics, TrendPoint, ModelAnalytics } from '@/types/dashboard';
-import { Activity, Coins, BarChart3, Zap, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Coins, BarChart3, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const PROVIDER_COLORS: Record<string, string> = {
   claude: CHART_COLORS.providers.claude,
@@ -35,7 +35,7 @@ function getStatusFromData(p: ProviderAnalytics): { label: string; color: string
   return { label: 'Low', color: 'text-amber-500' };
 }
 
-function ProviderHealthCard({ provider, totalCost }: { provider: ProviderAnalytics; totalCost: number }) {
+function ProviderHealthCard({ provider }: { provider: ProviderAnalytics; totalCost: number }) {
   const color = getProviderColor(provider.providerName);
   const status = getStatusFromData(provider);
   const costPerSession = provider.totalSessions > 0 ? provider.totalCost / provider.totalSessions : 0;

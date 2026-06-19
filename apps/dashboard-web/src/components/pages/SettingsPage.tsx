@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
 import {
-  Settings,
   Palette,
   Building2,
   Key,
   Bell,
+  Users,
+  CreditCard,
   Copy,
   Plus,
   Trash2,
@@ -16,6 +19,7 @@ import {
   Sun,
   Shield,
   Loader2,
+  Clock,
 } from 'lucide-react';
 import { listApiKeys, createApiKey, deleteApiKey } from '@/lib/api';
 import type { ApiKey } from '@/types/dashboard';
@@ -47,6 +51,26 @@ function Toggle({
   );
 }
 
+function ComingSoonCard({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) {
+  return (
+    <Card>
+      <CardContent className="py-12">
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-4 rounded-full bg-muted p-3">
+            <Icon className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold">{title}</h3>
+          <p className="mt-1 text-sm text-muted-foreground max-w-sm">{description}</p>
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+            <Clock className="h-3 w-3" />
+            Coming Soon
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function SettingsPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -74,6 +98,7 @@ export function SettingsPage() {
       setApiKeys(keys);
     } catch (error) {
       console.error('Failed to load API keys:', error);
+      toast.error('Failed to load API keys');
     } finally {
       setLoading(false);
     }
@@ -81,6 +106,7 @@ export function SettingsPage() {
 
   const handleCopyKey = (keyId: string) => {
     setCopiedKeyId(keyId);
+    toast.success('API key prefix copied');
     setTimeout(() => setCopiedKeyId(null), 2000);
   };
 
@@ -88,6 +114,7 @@ export function SettingsPage() {
     if (newKeyResult) {
       navigator.clipboard.writeText(newKeyResult);
       setCopiedKeyId('new');
+      toast.success('API key copied to clipboard');
       setTimeout(() => setCopiedKeyId(null), 2000);
     }
   };
@@ -99,8 +126,10 @@ export function SettingsPage() {
     try {
       await deleteApiKey(keyId);
       setApiKeys((prev) => prev.filter((k) => k.id !== keyId));
+      toast.success('API key revoked');
     } catch (error) {
       console.error('Failed to delete API key:', error);
+      toast.error('Failed to revoke API key');
     }
   };
 
@@ -110,10 +139,12 @@ export function SettingsPage() {
       setCreating(true);
       const result = await createApiKey({ name: newKeyName.trim() });
       setNewKeyResult(result.key);
-      setApiKeys((prev) => [{ ...result, last_used_at: null, expires_at: null } as ApiKey, ...prev]);
+      setApiKeys((prev) => [{ ...result, last_used_at: result.last_used_at ?? null, expires_at: result.expires_at ?? null }, ...prev]);
       setNewKeyName('');
+      toast.success('API key created successfully');
     } catch (error) {
       console.error('Failed to create API key:', error);
+      toast.error('Failed to create API key');
     } finally {
       setCreating(false);
     }
@@ -150,279 +181,326 @@ export function SettingsPage() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Palette className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base">Appearance</CardTitle>
-          </div>
-          <CardDescription>Customize the look and feel of your dashboard</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <p className="text-sm font-medium">Theme</p>
-              <p className="text-xs text-muted-foreground">
-                Switch between dark and light mode
-              </p>
-            </div>
-            <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
-              <button
-                onClick={() => setTheme('dark')}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
-                  theme === 'dark'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Moon className="h-3.5 w-3.5" />
-                Dark
-              </button>
-              <button
-                onClick={() => setTheme('light')}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
-                  theme === 'light'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <Sun className="h-3.5 w-3.5" />
-                Light
-              </button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="profile" className="gap-2">
+            <Palette className="h-4 w-4" />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="organization" className="gap-2">
+            <Building2 className="h-4 w-4" />
+            Organization
+          </TabsTrigger>
+          <TabsTrigger value="api-keys" className="gap-2">
+            <Key className="h-4 w-4" />
+            API Keys
+          </TabsTrigger>
+          <TabsTrigger value="members" className="gap-2">
+            <Users className="h-4 w-4" />
+            Members
+          </TabsTrigger>
+          <TabsTrigger value="billing" className="gap-2">
+            <CreditCard className="h-4 w-4" />
+            Billing
+          </TabsTrigger>
+        </TabsList>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base">Organization</CardTitle>
-          </div>
-          <CardDescription>Your organization details</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-sm font-medium">Plan</p>
-                <p className="text-xs text-muted-foreground">Current subscription tier</p>
-              </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-                <Shield className="h-3 w-3" />
-                Pro
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
+        <TabsContent value="profile" className="space-y-6">
+          <Card>
+            <CardHeader>
               <div className="flex items-center gap-2">
-                <Key className="h-4 w-4 text-muted-foreground" />
-                <CardTitle className="text-base">API Keys</CardTitle>
+                <Palette className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-base">Appearance</CardTitle>
               </div>
-              <CardDescription className="mt-1">
-                Manage API keys for programmatic access to your data
-              </CardDescription>
-            </div>
-            <button
-              onClick={() => {
-                setShowNewKeyForm(!showNewKeyForm);
-                setNewKeyResult(null);
-              }}
-              className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              New Key
-            </button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {showNewKeyForm && (
-            <div className="mb-4 rounded-lg border border-border/50 bg-muted/30 p-4 space-y-3">
-              {newKeyResult ? (
-                <div className="space-y-3">
-                  <p className="text-xs font-medium text-emerald-500">
-                    API key created successfully. Copy it now - it won&apos;t be shown again.
+              <CardDescription>Customize the look and feel of your dashboard</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium">Theme</p>
+                  <p className="text-xs text-muted-foreground">
+                    Switch between dark and light mode
                   </p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono break-all">
-                      {newKeyResult}
-                    </code>
-                    <button
-                      onClick={handleCopyNewKey}
-                      className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-                    >
-                      {copiedKeyId === 'new' ? (
-                        <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                    </button>
-                  </div>
+                </div>
+                <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
                   <button
-                    onClick={() => {
-                      setShowNewKeyForm(false);
-                      setNewKeyResult(null);
-                    }}
-                    className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                    onClick={() => setTheme('dark')}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                      theme === 'dark'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
                   >
-                    Done
+                    <Moon className="h-3.5 w-3.5" />
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                      theme === 'light'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <Sun className="h-3.5 w-3.5" />
+                    Light
                   </button>
                 </div>
-              ) : (
-                <>
-                  <p className="text-xs font-medium text-muted-foreground">Create new API key</p>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="Key name (e.g., Production)"
-                      value={newKeyName}
-                      onChange={(e) => setNewKeyName(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
-                      className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                    <button
-                      onClick={handleCreateKey}
-                      disabled={!newKeyName.trim() || creating}
-                      className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                    >
-                      {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Create'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowNewKeyForm(false);
-                        setNewKeyName('');
-                      }}
-                      className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+              </div>
+            </CardContent>
+          </Card>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            </div>
-          ) : apiKeys.length === 0 ? (
-            <div className="text-center py-8 text-sm text-muted-foreground">
-              No API keys yet. Create one to get started.
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {apiKeys.map((apiKey) => (
-                <div
-                  key={apiKey.id}
-                  className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className={`h-2 w-2 rounded-full shrink-0 ${
-                        !apiKey.expires_at || new Date(apiKey.expires_at) > new Date()
-                          ? 'bg-emerald-500'
-                          : 'bg-muted-foreground'
-                      }`}
-                    />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium">{apiKey.name}</p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <code className="font-mono">{apiKey.prefix}••••••••</code>
-                        <span>&middot;</span>
-                        <span>{apiKey.role}</span>
-                        <span>&middot;</span>
-                        <span>Created {formatDate(apiKey.created_at)}</span>
-                        <span>&middot;</span>
-                        <span>Last used {formatLastUsed(apiKey.last_used_at)}</span>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Bell className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-base">Notifications</CardTitle>
+              </div>
+              <CardDescription>Configure what alerts and updates you receive</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  {
+                    key: 'emailAlerts' as const,
+                    label: 'Email Alerts',
+                    description: 'Receive email notifications for critical events',
+                  },
+                  {
+                    key: 'weeklyDigest' as const,
+                    label: 'Weekly Digest',
+                    description: 'Get a weekly summary of your usage and costs',
+                  },
+                  {
+                    key: 'costAlerts' as const,
+                    label: 'Cost Alerts',
+                    description: 'Alert when daily spending exceeds your threshold',
+                  },
+                  {
+                    key: 'usageWarnings' as const,
+                    label: 'Usage Warnings',
+                    description: 'Warnings when approaching rate limits or quotas',
+                  },
+                ].map((item, i) => (
+                  <div key={item.key}>
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium">{item.label}</p>
+                        <p className="text-xs text-muted-foreground">{item.description}</p>
                       </div>
+                      <Toggle
+                        checked={notifications[item.key]}
+                        onChange={(v) =>
+                          setNotifications((prev) => ({ ...prev, [item.key]: v }))
+                        }
+                      />
                     </div>
+                    {i < 3 && <div className="h-px bg-border/50 mt-4" />}
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      onClick={() => handleCopyKey(apiKey.id)}
-                      className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                      title="Copy key prefix"
-                    >
-                      {copiedKeyId === apiKey.id ? (
-                        <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteKey(apiKey.id)}
-                      className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                      title="Revoke key"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Bell className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base">Notifications</CardTitle>
-          </div>
-          <CardDescription>Configure what alerts and updates you receive</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[
-              {
-                key: 'emailAlerts' as const,
-                label: 'Email Alerts',
-                description: 'Receive email notifications for critical events',
-              },
-              {
-                key: 'weeklyDigest' as const,
-                label: 'Weekly Digest',
-                description: 'Get a weekly summary of your usage and costs',
-              },
-              {
-                key: 'costAlerts' as const,
-                label: 'Cost Alerts',
-                description: 'Alert when daily spending exceeds your threshold',
-              },
-              {
-                key: 'usageWarnings' as const,
-                label: 'Usage Warnings',
-                description: 'Warnings when approaching rate limits or quotas',
-              },
-            ].map((item, i) => (
-              <div key={item.key}>
+        <TabsContent value="organization" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-base">Organization</CardTitle>
+              </div>
+              <CardDescription>Your organization details</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium">{item.label}</p>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                    <p className="text-sm font-medium">Plan</p>
+                    <p className="text-xs text-muted-foreground">Current subscription tier</p>
                   </div>
-                  <Toggle
-                    checked={notifications[item.key]}
-                    onChange={(v) =>
-                      setNotifications((prev) => ({ ...prev, [item.key]: v }))
-                    }
-                  />
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                    <Shield className="h-3 w-3" />
+                    Pro
+                  </span>
                 </div>
-                {i < 3 && <div className="h-px bg-border/50 mt-4" />}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="api-keys" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Key className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-base">API Keys</CardTitle>
+                  </div>
+                  <CardDescription className="mt-1">
+                    Manage API keys for programmatic access to your data
+                  </CardDescription>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowNewKeyForm(!showNewKeyForm);
+                    setNewKeyResult(null);
+                  }}
+                  className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  New Key
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {showNewKeyForm && (
+                <div className="mb-4 rounded-lg border border-border/50 bg-muted/30 p-4 space-y-3">
+                  {newKeyResult ? (
+                    <div className="space-y-3">
+                      <p className="text-xs font-medium text-emerald-500">
+                        API key created successfully. Copy it now - it won&apos;t be shown again.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <code className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono break-all">
+                          {newKeyResult}
+                        </code>
+                        <button
+                          onClick={handleCopyNewKey}
+                          className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
+                        >
+                          {copiedKeyId === 'new' ? (
+                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setShowNewKeyForm(false);
+                          setNewKeyResult(null);
+                        }}
+                        className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs font-medium text-muted-foreground">Create new API key</p>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          placeholder="Key name (e.g., Production)"
+                          value={newKeyName}
+                          onChange={(e) => setNewKeyName(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
+                          className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                        <button
+                          onClick={handleCreateKey}
+                          disabled={!newKeyName.trim() || creating}
+                          className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                        >
+                          {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Create'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowNewKeyForm(false);
+                            setNewKeyName('');
+                          }}
+                          className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : apiKeys.length === 0 ? (
+                <div className="text-center py-8 text-sm text-muted-foreground">
+                  No API keys yet. Create one to get started.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {apiKeys.map((apiKey) => (
+                    <div
+                      key={apiKey.id}
+                      className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={`h-2 w-2 rounded-full shrink-0 ${
+                            !apiKey.expires_at || new Date(apiKey.expires_at) > new Date()
+                              ? 'bg-emerald-500'
+                              : 'bg-muted-foreground'
+                          }`}
+                        />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{apiKey.name}</p>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <code className="font-mono">{apiKey.prefix}••••••••</code>
+                            <span>&middot;</span>
+                            <span>{apiKey.role}</span>
+                            <span>&middot;</span>
+                            <span>Created {formatDate(apiKey.created_at)}</span>
+                            <span>&middot;</span>
+                            <span>Last used {formatLastUsed(apiKey.last_used_at)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => handleCopyKey(apiKey.id)}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                          title="Copy key prefix"
+                        >
+                          {copiedKeyId === apiKey.id ? (
+                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteKey(apiKey.id)}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                          title="Revoke key"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="members" className="space-y-6">
+          <ComingSoonCard
+            icon={Users}
+            title="Team Members"
+            description="Invite and manage team members, roles, and permissions for your organization."
+          />
+        </TabsContent>
+
+        <TabsContent value="billing" className="space-y-6">
+          <ComingSoonCard
+            icon={CreditCard}
+            title="Billing & Subscription"
+            description="Manage your subscription plan, payment methods, and view invoices."
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

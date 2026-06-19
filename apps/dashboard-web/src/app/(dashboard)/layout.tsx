@@ -2,10 +2,10 @@
 
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function DashboardLayout({
   children,
@@ -13,18 +13,12 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, isLoading, router]);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   if (isLoading) {
     return (
       <div className="flex h-screen bg-background">
-        <div className="w-[240px] border-r border-border bg-sidebar flex flex-col p-4 space-y-4">
+        <div className="hidden md:flex w-[240px] border-r border-border bg-sidebar flex-col p-4 space-y-4">
           <Skeleton className="h-8 w-8 rounded-lg" />
           <Skeleton className="h-4 w-32" />
           <div className="space-y-3 mt-4">
@@ -54,9 +48,12 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar />
+      <div className="hidden md:flex">
+        <Sidebar />
+      </div>
+      <MobileSidebar open={mobileOpen} onOpenChange={setMobileOpen} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
+        <TopBar onMobileMenuToggle={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto p-6 scrollbar-thin">
           {children}
         </main>

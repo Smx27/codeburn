@@ -2,16 +2,15 @@
 
 import { useAuth } from '@/lib/auth-context';
 import { useTheme } from '@/lib/theme-context';
-import { cn, getInitials } from '@/lib/utils';
+import { getInitials } from '@/lib/utils';
 import {
   LogOut,
   ChevronDown,
   Sun,
   Moon,
   Search,
-  Command,
+  Menu,
 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,16 +24,27 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 interface TopBarProps {
   title?: string;
   children?: React.ReactNode;
+  onMobileMenuToggle?: () => void;
 }
 
-export function TopBar({ title = 'Dashboard', children }: TopBarProps) {
+export function TopBar({ title = 'Dashboard', children, onMobileMenuToggle }: TopBarProps) {
   const { user, logout } = useAuth();
   const { resolved, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center h-14 px-6 border-b border-border bg-background/80 backdrop-blur-md shrink-0">
-      {/* Left: Title */}
+    <header className="sticky top-0 z-30 flex items-center h-14 px-4 md:px-6 border-b border-border bg-background/80 backdrop-blur-md shrink-0">
+      {/* Left: Mobile menu + Title */}
       <div className="flex items-center gap-2 min-w-0">
+        {onMobileMenuToggle && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 md:hidden text-muted-foreground"
+            onClick={onMobileMenuToggle}
+          >
+            <Menu className="h-4 w-4" />
+          </Button>
+        )}
         <h1 className="text-sm font-semibold text-foreground truncate">{title}</h1>
       </div>
 
@@ -45,14 +55,19 @@ export function TopBar({ title = 'Dashboard', children }: TopBarProps) {
 
       {/* Right: Search + Theme toggle + User menu */}
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground"
+          onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+        >
           <Search className="h-4 w-4" />
         </Button>
 
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-muted-foreground"
+          className="h-8 w-8 text-muted-foreground hidden sm:flex"
           onClick={toggleTheme}
         >
           {resolved === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -66,7 +81,7 @@ export function TopBar({ title = 'Dashboard', children }: TopBarProps) {
                   {user ? getInitials(user.email) : '??'}
                 </AvatarFallback>
               </Avatar>
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground hidden sm:block" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">

@@ -5,21 +5,46 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { listSessions } from '@/lib/api';
 import type { SessionListFilters } from '@/types/dashboard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/ui/empty-state';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { formatCurrency, formatTokens, formatRelativeTime } from '@/lib/utils';
 import {
   Search,
   Activity,
-  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  X,
 } from 'lucide-react';
+
+const PROVIDER_OPTIONS = [
+  { value: 'all', label: 'All Providers' },
+  { value: 'claude', label: 'Claude' },
+  { value: 'codex', label: 'Codex' },
+  { value: 'cursor', label: 'Cursor' },
+  { value: 'gemini', label: 'Gemini' },
+  { value: 'opencode', label: 'OpenCode' },
+  { value: 'warp', label: 'Warp' },
+];
+
+const SORT_OPTIONS = [
+  { value: 'startedAt:desc', label: 'Newest First' },
+  { value: 'startedAt:asc', label: 'Oldest First' },
+  { value: 'totalTokens:desc', label: 'Most Tokens' },
+  { value: 'estimatedCost:desc', label: 'Highest Cost' },
+  { value: 'durationSeconds:desc', label: 'Longest Duration' },
+];
 
 export default function SessionsPage() {
   const [filters, setFilters] = useState<SessionListFilters>({
@@ -27,11 +52,29 @@ export default function SessionsPage() {
     limit: 20,
     search: '',
   });
+  const [provider, setProvider] = useState('all');
+  const [sort, setSort] = useState('startedAt:desc');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['sessions', filters],
-    queryFn: () => listSessions(filters),
+    queryKey: ['sessions', filters, provider, sort],
+    queryFn: () => {
+      const [sortBy, sortDir] = sort.split(':');
+      return listSessions({
+        ...filters,
+        provider: provider === 'all' ? undefined : provider,
+        sortBy,
+        sortDir: sortDir as 'asc' | 'desc',
+      });
+    },
   });
+
+  const activeFilterCount = [provider !== 'all'].filter(Boolean).length;
+
+  const clearFilters = () => {
+    setProvider('all');
+    setSort('startedAt:desc');
+    setFilters({ page: 1, limit: 20, search: '' });
+  };
 
   return (
     <div className="space-y-6">
@@ -44,9 +87,9 @@ export default function SessionsPage() {
         </div>
       </div>
 
-      {/* Search */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1 max-w-sm">
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search sessions..."
@@ -55,7 +98,53 @@ export default function SessionsPage() {
             onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
           />
         </div>
+
+        <Select value={provider} onValueChange={(v) => { setProvider(v); setFilters({ ...filters, page: 1 }); }}>
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="Provider" />
+          </SelectTrigger>
+          <SelectContent>
+            {PROVIDER_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={sort} onValueChange={setSort}>
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {activeFilterCount > 0 && (
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1.5">
+            <X className="h-3.5 w-3.5" />
+            Clear filters
+          </Button>
+        )}
       </div>
+
+      {/* Active filter badges */}
+      {provider !== 'all' && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">Filters:</span>
+          <Badge variant="secondary" className="gap-1">
+            Provider: {provider}
+            <button onClick={() => setProvider('all')} className="ml-1 hover:text-foreground">
+              <X className="h-3 w-3" />
+            </button>
+          </Badge>
+        </div>
+      )}
 
       {/* Table */}
       <Card>
@@ -82,14 +171,14 @@ export default function SessionsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Provider</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">User</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Machine</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Tokens</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Cost</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Duration</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Time</th>
-                    <th className="w-10 px-4 py-3"></th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Provider</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">User</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Machine</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Tokens</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Cost</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Duration</th>
+                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Time</th>
+                    <th scope="col" className="w-10 px-4 py-3"></th>
                   </tr>
                 </thead>
                 <tbody>

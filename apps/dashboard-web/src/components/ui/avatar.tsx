@@ -18,11 +18,13 @@ function Avatar({
 
 function AvatarImage({
   className,
+  alt = '',
   ...props
 }: React.ImgHTMLAttributes<HTMLImageElement>) {
   return (
     <img
       className={cn("aspect-square h-full w-full", className)}
+      alt={alt}
       {...props}
     />
   )

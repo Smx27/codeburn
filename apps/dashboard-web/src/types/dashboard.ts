@@ -271,6 +271,8 @@ export interface CreateApiKeyResponse {
   role: string;
   created_at: string;
   key: string;
+  last_used_at: string | null;
+  expires_at: string | null;
 }
 
 // ── Session Types ────────────────────────────────────────
