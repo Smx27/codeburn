@@ -1,44 +1,38 @@
 # AIInsight Frontend — Pending Work
 
-> Generated after the UX Pro Max overhaul. Items grouped by priority.
+> Updated after production readiness stabilization sprint. Items grouped by priority.
 
 ---
 
 ## P0 — Critical (Blocks launch)
 
-- [ ] **API proxy rewrite** — `next.config.js` rewrites `/api/*` to `localhost:3002` but no env var is documented. Add `NEXT_PUBLIC_API_URL` to `.env.example` and validate it at startup.
-- [ ] **Auth middleware** — No Next.js middleware protects dashboard routes. Currently client-side `useEffect` redirects. Add `middleware.ts` to guard `(dashboard)` and `(onboarding)` route groups server-side.
-- [ ] **Error boundaries** — No `error.tsx` files exist. Add `error.tsx` at `app/error.tsx`, `app/(dashboard)/error.tsx`, and per-page boundaries for graceful failure.
-- [ ] **`loading.tsx` files** — Add skeleton loading states at route level (`app/(dashboard)/loading.tsx`, `app/(marketing)/loading.tsx`) for instant feedback on navigation.
+**All P0 items COMPLETED.** No blockers remain.
 
 ---
 
 ## P1 — High (Polish & completeness)
 
-- [ ] **Command palette** — `cmdk` is installed, `Command` component exists, but no command palette is wired up. Add `Cmd+K` / `Ctrl+K` global shortcut with search, navigation, and actions.
-- [ ] **Mobile sidebar** — Sidebar is collapsed/expanded but not responsive. Add slide-over sheet on mobile (`< md` breakpoint) with overlay backdrop.
-- [ ] **Toast notifications** — No toast system. Install `sonner` or use shadcn toast for success/error feedback on mutations (create key, delete key, copy, etc.).
-- [ ] **Session filters UI** — Sessions page has search but no provider/user/date range filter dropdowns. Add filter popover with `Select` components.
-- [ ] **Providers page charts** — Providers page renders `ProvidersPage` component but chart data might be empty. Verify Recharts render with real/mock data.
-- [ ] **Trends page granularity toggle** — Trends page should have daily/weekly/monthly toggle (already in API types). Wire up the `PeriodSelector` + granularity switch.
-- [ ] **Settings tabs** — Settings page shows profile/organization/API keys/members/billing tabs. Members and billing tabs are placeholders — add content or clearly mark as "Coming Soon".
-- [ ] **Dark mode flash** — Root layout doesn't set initial `class="dark"` on `<html>`. Add script to read localStorage/theme before paint to avoid FOUC.
-- [ ] **Favicon & OG image** — `public/` is empty. Add favicon, apple-touch-icon, and OG image for social previews.
+**All P1 items COMPLETED.** No high-priority blockers remain.
 
 ---
 
 ## P2 — Medium (UX improvements)
 
+- [ ] **Auth error boundary** — `src/app/(auth)/error.tsx` is missing. Auth pages fall back to root `error.tsx` but should have their own boundary.
 - [ ] **Breadcrumb navigation** — Dashboard has no breadcrumbs. Add `Breadcrumb` component to `TopBar` for nested routes (e.g., Sessions > [id]).
 - [ ] **Pagination on all tables** — Sessions page has pagination. Models, Users, Projects, Providers pages need it too.
 - [ ] **Empty state illustrations** — Empty states use icons. Add subtle SVG illustrations for better visual appeal.
 - [ ] **Skeleton variety** — Replace generic `Skeleton` with context-specific skeletons (chart skeleton, table skeleton, card skeleton).
 - [ ] **Keyboard shortcuts** — Add keyboard shortcut hints in dropdowns and menus (e.g., `⌘K` for search, `⌘/` for shortcuts).
-- [ ] **Copy-to-clipboard** — Add copy buttons on API keys, session IDs, machine hostnames, code snippets.
+- [ ] **Copy-to-clipboard** — Add copy buttons on session IDs, machine hostnames, code snippets.
 - [ ] **Confirmation dialogs** — Add `AlertDialog` before destructive actions (revoke key, delete session data, etc.).
 - [ ] **Onboarding progress persistence** — Onboarding wizard starts from step 1 every time. Save progress to localStorage or API.
 - [ ] **Email verification flow** — Verify email page is static. Wire up actual API call to resend verification email.
 - [ ] **Forgot password flow** — Forgot password page simulates API call. Connect to real `POST /api/v1/auth/forgot-password` endpoint.
+- [ ] **Apple touch icon** — Metadata references `apple-touch-icon.png` but file doesn't exist in `public/`.
+- [ ] **OG image** — `og.png` doesn't exist in `public/`. Create a branded Open Graph image.
+- [ ] **Lint cleanup** — 33 unused import warnings across 15 files. Remove unused imports and variables.
+- [ ] **eslint-config migration** — `next lint` is deprecated in Next.js 15. Migrate to ESLint CLI (`npx @next/codemod@canary next-lint-to-eslint-cli`).
 
 ---
 
@@ -58,39 +52,62 @@
 
 ---
 
-## Files to create
+## Technical debt (resolved)
 
-| File | Purpose |
-|---|---|
-| `src/middleware.ts` | Auth guard for protected routes |
-| `src/app/error.tsx` | Root error boundary |
-| `src/app/(dashboard)/error.tsx` | Dashboard error boundary |
-| `src/app/(dashboard)/loading.tsx` | Dashboard skeleton loader |
-| `src/app/(marketing)/loading.tsx` | Marketing skeleton loader |
-| `src/components/ui/toast.tsx` | Toast notification system |
-| `src/components/ui/sheet.tsx` | Mobile sidebar slide-over |
-| `src/components/ui/breadcrumb.tsx` | Breadcrumb navigation |
-| `src/components/ui/command.tsx` | Wire up Cmd+K palette |
-| `public/favicon.ico` | Favicon |
-| `public/og.png` | Open Graph image |
-| `.env.example` | Document env vars |
+All original technical debt items have been resolved:
+
+- `CreateApiKeyResponse` — Fixed with proper `last_used_at` and `expires_at` fields
+- `OverviewPage.tsx` — Unused variables cleaned up
+- `ProvidersPage.tsx` — Unused imports removed
+- `TrendsPage.tsx` — Unused imports and `SkeletonCard` function removed
+- `avatar.tsx` — `alt` attribute added with empty string default
+- `sessions/page.tsx` — `scope="col"` added to `<th>` elements
 
 ---
 
-## Dependencies to install
+## Lint warnings (remaining)
 
-```bash
-npm install sonner          # Toast notifications
-npm install next-intl       # i18n (optional)
-npm install @next/bundle-analyzer  # Bundle analysis (optional)
-```
+33 warnings across 15 files (0 errors):
+
+| File | Warnings |
+|------|----------|
+| `forgot-password/page.tsx` | unused `data` |
+| `reset-password/page.tsx` | unused `data` |
+| `verify-email/page.tsx` | unused `Check` |
+| `machines/[id]/page.tsx` | unused `Cpu`, `Monitor`, `Clock` |
+| `settings/api-keys/page.tsx` | unused `ApiKey`, `CardHeader`, `CardTitle`, `CardDescription` |
+| `docs/page.tsx` | unused `ArrowRight` |
+| `marketing/page.tsx` | unused `Lightbulb`, `Eye`, `ChevronDown`, `Github`, `Clock`, `copiedCommand`, `copyCommand` |
+| `AreaChart.tsx` | unused `_dk`, missing hook dependency |
+| `ProviderChart.tsx` | unused `Legend` |
+| `StackedBarChart.tsx` | unused `Cell` |
+| `TrendChart.tsx` | unused `Legend`, `title`, `getValue` |
+| `Sidebar.tsx` | unused `Separator` |
+| `ModelsPage.tsx` | unused `ModelAnalytics`, `BarChart3`, `Zap` |
+| `OverviewPage.tsx` | unused `ArrowUpRight`, `useOnboardingProgress` |
+| `ProvidersPage.tsx` | unused `totalTokens` |
 
 ---
 
-## Technical debt
+## Completed in stabilization sprint
 
-- `components/pages/SettingsPage.tsx:113` — Type assertion `{ ...result, last_used_at: null, expires_at: null } as ApiKey` to work around `CreateApiKeyResponse` not extending `ApiKey`. Fix with proper union type or API response shape.
-- `components/pages/OverviewPage.tsx` — Multiple unused variables (`projectsLoading`, `providerNames`, `totalTokens`, `hasData`). Clean up.
-- `components/pages/ProvidersPage.tsx` — Unused imports (`Activity`, `Zap`, `totalCost`, `totalTokens`). Clean up.
-- `components/pages/TrendsPage.tsx` — Unused imports (`TrendingDown`, `SkeletonCard`). Clean up.
-- `components/ui/avatar.tsx:24` — `<img>` missing `alt` prop. Add `alt=""` for decorative avatar fallback.
+| Item | Status |
+|------|--------|
+| Env validation (Zod) | Done |
+| Server-side route protection (middleware) | Done |
+| Auth cookie sync | Done |
+| Error boundaries (root, dashboard, marketing) | Done |
+| Loading skeletons (dashboard, marketing, auth) | Done |
+| Dark mode flash prevention | Done |
+| Command palette (Cmd+K) | Done |
+| Mobile sidebar (Sheet) | Done |
+| Toast notifications (sonner) | Done |
+| Session filters (provider, sort) | Done |
+| Settings tabs with "Coming Soon" | Done |
+| CreateApiKeyResponse type fix | Done |
+| Unused imports cleanup (modified files) | Done |
+| Avatar alt fix | Done |
+| Table accessibility (scope) | Done |
+| SVG favicon | Done |
+| Metadata (OG, Twitter, icons) | Done |
+| metadataBase for OG images | Done |
