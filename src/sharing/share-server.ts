@@ -37,6 +37,11 @@ export class ShareServer {
         void this.handle(req, res)
       },
     )
+    // Swallow server-level socket/TLS errors (e.g. a malformed handshake from a
+    // LAN peer) so they can never crash the host process. `listen()` attaches
+    // its own one-time handler for bind failures.
+    this.server.on('error', () => {})
+    this.server.on('tlsClientError', () => {})
   }
 
   // Open a one-time pairing window and return the PIN to show the user.
@@ -72,6 +77,21 @@ export class ShareServer {
       res.writeHead(code, { 'content-type': 'application/json' })
       res.end(JSON.stringify(body))
     }
+    try {
+      await this.route(url, req, res, json)
+    } catch (err) {
+      // Never leave a request hanging (a hung peer makes the caller time out
+      // and drop this device); always answer, even on an internal error.
+      if (!res.headersSent) json(500, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  private async route(
+    url: URL,
+    req: IncomingMessage,
+    res: ServerResponse,
+    json: (code: number, body: unknown) => void,
+  ): Promise<void> {
 
     // Unauthenticated: just enough for a joiner to learn who this is and whether
     // pairing is currently open. No usage data here.

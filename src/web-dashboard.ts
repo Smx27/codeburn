@@ -11,7 +11,25 @@ import { hostname } from 'os'
 import { loadPricing } from './models.js'
 import { buildMenubarPayloadForRange } from './usage-aggregator.js'
 import { getDateRange, parseDateRangeFlags, formatDateRangeLabel, toPeriod } from './cli-date.js'
-import { pullDevices } from './sharing/host.js'
+import { pullDevices, linkRemote } from './sharing/host.js'
+import { browse } from './sharing/discovery.js'
+import { loadOrCreateIdentity } from './sharing/identity.js'
+import { pairingCode } from './sharing/pairing.js'
+import { getSharingDir, loadRemotes, loadShareAlways, saveShareAlways } from './sharing/store.js'
+import { ShareController } from './sharing/share-controller.js'
+import { sanitizeForSharing } from './sharing/sanitize.js'
+
+function readBody(req: import('http').IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let body = ''
+    req.on('data', (c) => {
+      body += c
+      if (body.length > 1_000_000) reject(new Error('request body too large'))
+    })
+    req.on('end', () => resolve(body))
+    req.on('error', reject)
+  })
+}
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 
@@ -73,9 +91,35 @@ export async function runWebDashboard(opts: {
   await loadPricing()
   const dashDir = resolveDashDir()
 
+  // Sharing this device serves the SANITIZED aggregate (no project names/paths
+  // or per-session detail), unlike the local /api/usage which shows everything.
+  const shareGetUsage = async (q: { period?: string; from?: string; to?: string }) => {
+    const customRange = parseDateRangeFlags(q.from, q.to)
+    const periodInfo = customRange
+      ? { range: customRange, label: formatDateRangeLabel(q.from, q.to) }
+      : getDateRange(toPeriod(q.period ?? opts.period))
+    return sanitizeForSharing(await buildMenubarPayloadForRange(periodInfo, { provider: 'all', optimize: false }))
+  }
+  const share = new ShareController(shareGetUsage)
+  if (await loadShareAlways()) await share.start(true).catch(() => {})
+
   const server = createServer(async (req, res) => {
     try {
       const url = new URL(req.url ?? '/', 'http://localhost')
+
+      // Loopback-only server. Reject any request not addressed to localhost
+      // (defeats DNS rebinding, which would otherwise let a website you visit
+      // read your local usage) and any cross-origin request (CSRF). The local
+      // payload is unsanitized, so this guard is what keeps it on your machine.
+      const reqHost = (req.headers.host ?? '').replace(/:\d+$/, '')
+      const loopback = reqHost === '127.0.0.1' || reqHost === 'localhost' || reqHost === '::1' || reqHost === '[::1]'
+      const origin = req.headers.origin
+      const originOk = !origin || /^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(origin)
+      if (!loopback || !originOk) {
+        res.writeHead(403, { 'content-type': 'text/plain' })
+        res.end('Forbidden')
+        return
+      }
 
       if (url.pathname === '/api/usage') {
         const period = url.searchParams.get('period') ?? opts.period
@@ -114,6 +158,92 @@ export async function runWebDashboard(opts: {
         const results = await pullDevices(localGetUsage, { period, from, to }, hostname(), {})
         res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
         res.end(JSON.stringify({ devices: results }))
+        return
+      }
+
+      // This device's own identity (name + fingerprint) for the pairing UI.
+      if (url.pathname === '/api/identity') {
+        const id = await loadOrCreateIdentity(getSharingDir())
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+        res.end(JSON.stringify({ name: id.name, fingerprint: id.fingerprint }))
+        return
+      }
+
+      // Discover devices currently sharing on the local network (mDNS). Each
+      // carries the confirm code to match, and whether it is already paired.
+      if (url.pathname === '/api/devices/scan') {
+        const dir = getSharingDir()
+        const id = await loadOrCreateIdentity(dir)
+        const pairedFps = new Set((await loadRemotes(dir)).map((r) => r.fingerprint))
+        const found = await browse(2500)
+        const list = found
+          .filter((d) => d.fingerprint !== id.fingerprint)
+          .map((d) => ({
+            name: d.name,
+            host: d.host,
+            port: d.port,
+            fingerprint: d.fingerprint,
+            code: pairingCode(id.fingerprint, d.fingerprint),
+            paired: pairedFps.has(d.fingerprint),
+          }))
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+        res.end(JSON.stringify({ found: list }))
+        return
+      }
+
+      // Pair with a chosen discovered device. Blocks until the other device
+      // approves (or declines / times out), then stores the link.
+      if (url.pathname === '/api/devices/pair' && req.method === 'POST') {
+        if (!(req.headers['content-type'] ?? '').includes('application/json')) {
+          res.writeHead(415, { 'content-type': 'application/json' })
+          res.end(JSON.stringify({ ok: false, error: 'content-type must be application/json' }))
+          return
+        }
+        const body = JSON.parse((await readBody(req)) || '{}') as { name: string; host: string; port: number; fingerprint: string }
+        try {
+          const device = await linkRemote(body)
+          res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+          res.end(JSON.stringify({ ok: true, name: device.name }))
+        } catch (err) {
+          res.writeHead(409, { 'content-type': 'application/json; charset=utf-8' })
+          res.end(JSON.stringify({ ok: false, error: err instanceof Error ? err.message : String(err) }))
+        }
+        return
+      }
+
+      // Share-this-device controls. Status carries the pending pairing requests
+      // so the SPA can poll one endpoint and surface approvals in the browser.
+      if (url.pathname === '/api/share/status') {
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+        res.end(JSON.stringify(await share.status()))
+        return
+      }
+      if (url.pathname === '/api/share/start' && req.method === 'POST') {
+        const body = JSON.parse((await readBody(req)) || '{}') as { always?: boolean }
+        let startError: string | undefined
+        try {
+          await share.start(!!body.always)
+          await saveShareAlways(!!body.always)
+        } catch (err) {
+          // e.g. EADDRINUSE when a CLI `codeburn share` already holds the port.
+          startError = err instanceof Error ? err.message : String(err)
+        }
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify({ ...(await share.status()), error: startError }))
+        return
+      }
+      if (url.pathname === '/api/share/stop' && req.method === 'POST') {
+        await share.stop()
+        await saveShareAlways(false)
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify(await share.status()))
+        return
+      }
+      if (url.pathname === '/api/share/approve' && req.method === 'POST') {
+        const body = JSON.parse((await readBody(req)) || '{}') as { id?: string; approve?: boolean }
+        const ok = typeof body.id === 'string' && share.resolvePending(body.id, !!body.approve)
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify({ ok }))
         return
       }
 
@@ -157,6 +287,8 @@ export async function runWebDashboard(opts: {
     })
     server.listen(opts.port, '127.0.0.1', () => resolve((server.address() as AddressInfo).port))
   })
+  // Durable handler so a post-bind socket error never crashes the process.
+  server.on('error', () => {})
 
   const url = `http://127.0.0.1:${port}`
   if (!dashDir) {
@@ -164,6 +296,11 @@ export async function runWebDashboard(opts: {
   }
   process.stdout.write(`\n  CodeBurn dashboard at ${url}\n  Press Ctrl+C to stop.\n\n`)
   if (opts.open) openBrowser(url)
+
+  // Withdraw the mDNS advertisement and close the share server cleanly on exit.
+  process.on('SIGINT', () => {
+    void share.stop().finally(() => process.exit(0))
+  })
 
   await new Promise<never>(() => {
     /* run until interrupted */
