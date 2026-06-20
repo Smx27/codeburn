@@ -21,6 +21,8 @@ No. AIInsight only sends token counts, model names, costs, and metadata. Prompts
 | Warp | ✅ | ❌ (CLI only) |
 | OpenCode | ✅ | ❌ (CLI only) |
 
+See [Provider Docs](../providers/README.md) for the full list of 30+ providers.
+
 ### Is this self-hosted?
 
 Yes. You run your own PostgreSQL database and APIs. No data leaves your infrastructure.
@@ -180,3 +182,12 @@ The Ingestion API allows 1000 requests/minute. If you hit this limit, wait a min
 ### Agent shows "OFFLINE"
 
 The agent hasn't sent a heartbeat in 5 minutes. Check that the agent is running and can reach the Dashboard API.
+
+---
+
+## Related Documentation
+
+- [Getting Started](getting-started.md) — Initial setup walkthrough
+- [Install Agent](install-agent.md) — Platform-specific install details
+- [Troubleshooting](troubleshooting.md) — Common issues and solutions
+- [CLI Reference](../cli/command-reference.md) — All CLI commands

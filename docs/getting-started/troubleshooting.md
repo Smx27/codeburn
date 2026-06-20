@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Common issues and solutions for AiInsight Cloud and the CLI agent.
+Common issues and solutions for AIInsight Cloud and the CLI agent.
 
 ## Agent Won't Connect
 
@@ -26,7 +26,7 @@ curl -I https://api.aiinsight.dev/health
 aiinsight login
 ```
 
-Check the key status in **Settings → Agents** in the dashboard.
+Check the key status in **Settings → API Keys** in the dashboard.
 
 **3. Check firewall/proxy settings**
 
@@ -53,10 +53,10 @@ npm update -g aiinsight
 
 ```bash
 # Enable verbose logging
-aiinsight login
+aiinsight login --verbose
 ```
 
-See [Agent Installation](agent-installation.md) for detailed setup instructions.
+See [Install Agent](install-agent.md) for detailed setup instructions.
 
 ## Sync Not Starting
 
@@ -89,9 +89,9 @@ aiinsight status
 
 The output should show the agent is registered and connected.
 
-**3. Verify enrollment key permissions**
+**3. Verify API key permissions**
 
-Ensure the enrollment key has not been revoked or expired in **Settings → Agents**.
+Ensure the API key has not been revoked or expired in **Settings → API Keys**.
 
 **4. Check sync job status**
 
@@ -108,7 +108,7 @@ aiinsight sync --force
 
 ```bash
 # List detected providers
-aiinsight status --format json | jq '.providers'
+aiinsight providers
 ```
 
 ## Email Not Received
@@ -148,15 +148,7 @@ Ensure the email address is correct in your account settings.
 
 **4. Check SMTP configuration**
 
-If self-hosting, verify SMTP settings:
-
-```bash
-# Test SMTP connection
-curl -X POST http://localhost:3002/api/v1/test/smtp-verify \
-  -H "Authorization: Bearer $TOKEN"
-```
-
-See [Email Templates](email-templates.md#smtp-configuration) for SMTP setup details.
+If self-hosting, verify SMTP settings in your environment variables.
 
 **5. Check organization email settings**
 
@@ -217,11 +209,11 @@ curl http://localhost:3002/api/v1/auth/me \
 
 **1. Verify API key format**
 
-API keys must start with `cb_` or `aisk_`:
+API keys must start with `aisk_` or `cb_`:
 
 ```
-cb_your_api_key_here
 aisk_your_api_key_here
+cb_your_api_key_here
 ```
 
 **2. Check key prefix**
@@ -231,11 +223,11 @@ Ensure you're using the correct authentication header:
 ```bash
 # Using Authorization header
 curl http://localhost:3002/api/v1/dashboard/overview \
-  -H "Authorization: Bearer cb_your_key"
+  -H "Authorization: Bearer aisk_your_key"
 
 # Or using X-API-Key header
 curl http://localhost:3002/api/v1/dashboard/overview \
-  -H "X-API-Key cb_your_key"
+  -H "X-API-Key aisk_your_key"
 ```
 
 **3. Verify key is not revoked**
@@ -360,6 +352,6 @@ If your issue isn't resolved:
 ## Related Documentation
 
 - [Getting Started](getting-started.md) — Initial setup walkthrough
-- [Agent Installation](agent-installation.md) — Platform-specific install details
-- [Organization Onboarding](organization-onboarding.md) — Org configuration
-- [Email Templates](email-templates.md) — Email configuration
+- [Install Agent](install-agent.md) — Platform-specific install details
+- [CLI Reference](../cli/command-reference.md) — All CLI commands
+- [FAQ](faq.md) — Common questions

@@ -1,6 +1,6 @@
-# Team Invitations
+# Invite Team
 
-Invite team members to your AiInsight organization via email.
+Invite team members to your AIInsight organization via email.
 
 ## Sending Invitations
 
@@ -33,7 +33,7 @@ curl -X POST http://localhost:3002/api/v1/invitations \
 | **Member** | View dashboard, view analytics |
 | **Admin** | All Member permissions + manage teams, API keys, enrollment keys, org settings |
 
-See [Organization Onboarding](organization-onboarding.md#role-based-access-control) for the full permission matrix.
+See [Architecture: Organization Flow](../architecture/organization-flow.md) for the full permission matrix.
 
 ## Accepting Invitations
 
@@ -58,7 +58,6 @@ See [Organization Onboarding](organization-onboarding.md#role-based-access-contr
 Navigate to **Settings → Team → Invitations** to see all pending invitations.
 
 **Via API:**
-
 ```bash
 curl http://localhost:3002/api/v1/invitations \
   -H "Authorization: Bearer $TOKEN"
@@ -74,7 +73,6 @@ If an invitation hasn't been accepted, you can resend it:
 3. Click **Resend**
 
 **Via API:**
-
 ```bash
 curl -X POST http://localhost:3002/api/v1/invitations/{invitationId}/resend \
   -H "Authorization: Bearer $TOKEN"
@@ -92,7 +90,6 @@ To cancel a pending invitation:
 3. Click **Revoke**
 
 **Via API:**
-
 ```bash
 curl -X DELETE http://localhost:3002/api/v1/invitations/{invitationId} \
   -H "Authorization: Bearer $TOKEN"
@@ -157,6 +154,6 @@ The invitation link may be malformed or the invitation may have been revoked. Re
 
 ## Related Documentation
 
-- [Organization Onboarding](organization-onboarding.md) — Full org setup guide
-- [Email Templates](email-templates.md) — Customize invitation emails
+- [Organization Onboarding](../architecture/organization-flow.md) — Full org setup guide
+- [Email Templates](../support/email-templates.md) — Customize invitation emails
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions

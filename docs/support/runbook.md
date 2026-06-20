@@ -2,8 +2,6 @@
 
 Internal reference for diagnosing and resolving customer issues.
 
----
-
 ## Identifying Sync Failures
 
 ### Check sync_jobs Table
@@ -38,8 +36,6 @@ LIMIT 20;
 | Invalid data format | Corrupted local session files | Re-run sync after clearing cache |
 | Auth failure | Agent token expired | Re-register agent with fresh enrollment key |
 
----
-
 ## Identifying Ingestion Failures
 
 ### Check Ingestion API Logs
@@ -60,8 +56,6 @@ docker logs --since 1h ingestion-api 2>&1 | grep -i error
 | 413 | Payload too large | Split sync into smaller batches |
 | 429 | Rate limit exceeded | Reduce sync frequency, implement backoff |
 | 500 | Server error | Check ingestion API logs, restart if needed |
-
----
 
 ## Verifying Agent Registration
 
@@ -114,8 +108,6 @@ WHERE oek.organization_id = '<ORG_ID>'
 ORDER BY oek.created_at DESC;
 ```
 
----
-
 ## Inspecting Machine Health
 
 ### Machine Health Overview
@@ -157,8 +149,6 @@ GROUP BY m.id
 HAVING COUNT(sj.id) > 0
 ORDER BY failure_rate_pct DESC;
 ```
-
----
 
 ## Troubleshooting Invitations
 
@@ -204,8 +194,6 @@ WHERE organization_id = '<ORG_ID>'
   AND expires_at BETWEEN NOW() AND NOW() + INTERVAL '24 hours';
 ```
 
----
-
 ## Troubleshooting Onboarding
 
 ### Check Onboarding Progress
@@ -245,8 +233,6 @@ WHERE organization_id = '<ORG_ID>' AND accepted_at IS NULL;
 | Agent | `machines` has rows | Zero machines |
 | Sync | `sync_jobs` has completed rows | No completed syncs |
 | Team | `organization_invitations` has rows | No invitations sent |
-
----
 
 ## Customer Issue Resolution
 
@@ -291,8 +277,6 @@ WHERE machine_id IN (SELECT id FROM machines WHERE organization_id = '<ORG_ID>')
 ORDER BY started_at DESC LIMIT 10;
 ```
 
----
-
 ## Communication Templates
 
 ### Agent Offline Notification
@@ -303,3 +287,9 @@ ORDER BY started_at DESC LIMIT 10;
 
 ### Invitation Expiring
 > Your invitation to **{email}** expires on **{expires_at}**. If they haven't accepted, consider resending the invitation or generating a new one.
+
+## Related Documentation
+
+- [Common Problems](common-problems.md) — Common issues and solutions
+- [Incident Response](incident-response.md) — Incident handling procedures
+- [Email Templates](email-templates.md) — Communication templates

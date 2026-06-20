@@ -6,9 +6,9 @@ AIInsight tracks token usage across Claude, Codex, Cursor, and Gemini. It runs l
 
 ---
 
-## Features (Beta)
+## Features
 
-- **Multi-provider tracking** — Claude, Codex, Cursor, Gemini (Warp and OpenCode parsers exist but lack cloud adapters)
+- **Multi-provider tracking** — Claude, Codex, Cursor, Gemini, and 27+ more providers
 - **Per-task cost breakdown** — See cost by session, model, project, and user
 - **Incremental sync** — Watermark-based sync uploads only new calls; checksum deduplication prevents re-processing
 - **Self-hosted dashboard** — Next.js web app with real-time analytics
@@ -95,6 +95,22 @@ Open `http://localhost:3000/dashboard` to see your token usage analytics.
 
 ---
 
+## User Flow
+
+```
+Register
+    ↓
+Generate API Key
+    ↓
+aiinsight login
+    ↓
+aiinsight sync
+    ↓
+Dashboard
+```
+
+---
+
 ## Technology Stack
 
 | Layer | Technology |
@@ -127,24 +143,35 @@ aiinsight/
 └── scripts/                  # Build and dev scripts
 ```
 
-See [docs/architecture/repository-structure.md](docs/architecture/repository-structure.md) for detailed package descriptions.
-
 ---
 
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
-| [Architecture Overview](docs/architecture/overview.md) | High-level system design |
-| [Database Schema](docs/architecture/database.md) | All tables and relationships |
-| [Sync Engine](docs/architecture/sync-engine.md) | How sync works |
-| [Provider Model](docs/architecture/provider-model.md) | How providers are normalized |
-| [API Design](docs/architecture/api-design.md) | API conventions |
-| [Security](docs/architecture/security.md) | Auth, RBAC, rate limiting |
-| [Deployment](docs/architecture/deployment.md) | Docker and production setup |
-| [Configuration](docs/architecture/configuration.md) | Environment variables |
-| [Getting Started](docs/user/getting-started.md) | User onboarding guide |
-| [FAQ](docs/user/faq.md) | Common questions |
+| [Getting Started](docs/getting-started/getting-started.md) | User onboarding guide |
+| [Install Agent](docs/getting-started/install-agent.md) | Platform-specific install |
+| [CLI Reference](docs/cli/command-reference.md) | All CLI commands |
+| [Architecture](docs/architecture/overview.md) | System design |
+| [API Reference](docs/api/dashboard-api.md) | API documentation |
+| [Developer Setup](docs/developer/setup.md) | Local development |
+| [Operations](docs/operations/deployment.md) | Deployment guide |
+| [FAQ](docs/getting-started/faq.md) | Common questions |
+
+---
+
+## Supported Providers
+
+| Provider | Parser | Cloud Sync |
+|----------|--------|------------|
+| Claude Code | ✅ | ✅ |
+| Codex CLI | ✅ | ✅ |
+| Cursor | ✅ | ✅ |
+| Gemini CLI | ✅ | ✅ |
+| Warp | ✅ | ❌ (CLI only) |
+| OpenCode | ✅ | ❌ (CLI only) |
+
+See [Provider Docs](docs/providers/README.md) for the full list of 30+ providers.
 
 ---
 

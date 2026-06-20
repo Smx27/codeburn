@@ -1,13 +1,13 @@
-# Agent Installation
+# Install Agent
 
-Platform-specific installation instructions for the AiInsight CLI agent.
+Platform-specific installation instructions for the AIInsight CLI agent.
 
 ## Requirements
 
 | Requirement | Minimum Version |
 |-------------|-----------------|
-| Node.js | 20+ |
-| Supported AI coding tool | See [Providers](../README.md#supported-providers) |
+| Node.js | 22+ |
+| Supported AI coding tool | See [Providers](../providers/README.md) |
 | Disk access to session files | Read-only |
 
 ### Platform Support
@@ -28,7 +28,7 @@ Platform-specific installation instructions for the AiInsight CLI agent.
 # Add the tap
 brew tap aiinsight/tap
 
-# Install AiInsight
+# Install AIInsight
 brew install aiinsight
 ```
 
@@ -48,7 +48,7 @@ npm install -g aiinsight
 
 ```bash
 aiinsight --version
-# Expected: aiinsight v0.9.12 (or later)
+# Expected: aiinsight v1.0.0 (or later)
 ```
 
 ### Optional: macOS Menubar App
@@ -57,7 +57,7 @@ aiinsight --version
 aiinsight menubar
 ```
 
-This downloads and installs the native SwiftUI menubar app. See [README](../README.md#menu-bar) for details.
+This downloads and installs the native SwiftUI menubar app.
 
 ## Windows
 
@@ -110,7 +110,7 @@ sudo apt install aiinsight
 ```bash
 sudo tee /etc/yum.repos.d/aiinsight.repo <<EOF
 [aiinsight]
-name=AiInsight
+name=AIInsight
 baseurl=https://repo.aiinsight.dev/rpm
 enabled=1
 gpgcheck=1
@@ -132,15 +132,40 @@ npm install -g aiinsight
 aiinsight --version
 ```
 
+## Node SEA (Single Executable Application)
+
+AIInsight supports Node.js Single Executable Applications for environments without Node.js installed.
+
+### Download
+
+Download the latest SEA binary from [GitHub Releases](https://github.com/priya/aiinsight/releases).
+
+### Install
+
+```bash
+# macOS/Linux
+chmod +x aiinsight-sea
+sudo mv aiinsight-sea /usr/local/bin/aiinsight
+
+# Windows
+# Move aiinsight-sea.exe to a directory in your PATH
+```
+
+### Verify
+
+```bash
+aiinsight --version
+```
+
 ## Post-Installation: Connect Agent
 
-After installation, connect your agent to your AiInsight Cloud organization:
+After installation, connect your agent to your AIInsight Cloud organization:
 
 ```bash
 aiinsight login
 ```
 
-Paste your API key when prompted. See [Getting Started](getting-started.md#step-5-connect-agent) for details.
+Paste your API key when prompted. See [Getting Started](getting-started.md) for details.
 
 ## Updating
 
@@ -252,7 +277,7 @@ npm install -g windows-build-tools
 
 ### Agent won't register
 
-- Verify your enrollment key is valid: **Settings → Agents** in the dashboard
+- Verify your API key is valid: **Settings → API Keys** in the dashboard
 - Check network connectivity to `api.aiinsight.dev`
 - Ensure the key hasn't been revoked
 
@@ -261,5 +286,5 @@ See [Troubleshooting](troubleshooting.md) for more solutions.
 ## Next Steps
 
 - [Getting Started](getting-started.md) — Full walkthrough from signup to dashboard
-- [Organization Onboarding](organization-onboarding.md) — Configure your organization
+- [CLI Reference](../cli/command-reference.md) — All CLI commands
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions

@@ -1,18 +1,22 @@
-# Getting Started with AiInsight
+# Getting Started
 
-A step-by-step guide from signup to viewing your first dashboard.
-
-<!-- Screenshot: Registration page -->
+Complete onboarding guide from signup to viewing your first dashboard.
 
 ## Overview
 
-AiInsight Cloud helps teams track AI coding costs across multiple providers. This guide walks you through creating an account, connecting your first agent, and viewing your analytics dashboard.
+AIInsight helps teams track AI coding costs across multiple providers. This guide walks you through creating an account, connecting your first agent, and viewing your analytics dashboard.
 
 ## Prerequisites
 
 - A supported AI coding tool (Claude Code, Cursor, Codex, etc.)
-- Node.js 20+ (for agent installation)
+- Node.js 22+ (for agent installation)
 - A valid email address
+
+## Quick Start
+
+```
+Register → Generate API Key → aiinsight login → aiinsight sync → Dashboard
+```
 
 ## Step 1: Create Account
 
@@ -22,7 +26,7 @@ AiInsight Cloud helps teams track AI coding costs across multiple providers. Thi
 
 <!-- Screenshot: Registration form -->
 
-Your organization is created automatically during registration. See [Organization Onboarding](organization-onboarding.md) for configuration details.
+Your organization is created automatically during registration.
 
 ## Step 2: Verify Email
 
@@ -34,24 +38,20 @@ Your organization is created automatically during registration. See [Organizatio
 
 > **Note:** The verification link expires after 24 hours. If expired, log in and request a new link from Settings.
 
-## Step 3: Generate Enrollment Key
+## Step 3: Generate API Key
 
-Enrollment keys allow agents to register and sync data to your organization.
-
-1. Navigate to **Settings → Agents** in the dashboard
-2. Click **Generate Enrollment Key**
+1. Navigate to **Settings → API Keys** in the dashboard
+2. Click **Generate API Key**
 3. Give your key a descriptive name (e.g., `laptop-work`, `desktop-home`)
 4. Copy the key — you'll need it in the next step
 
-<!-- Screenshot: Enrollment key generation -->
+<!-- Screenshot: API key generation -->
 
-> **Security:** Enrollment keys grant access to your organization. Store them securely and never commit them to version control.
-
-See [Agent Installation](agent-installation.md) for platform-specific installation details.
+> **Security:** API keys grant access to your organization. Store them securely and never commit them to version control.
 
 ## Step 4: Install Agent
 
-Install the AiInsight agent on your machine:
+Install the AIInsight agent on your machine:
 
 **macOS:**
 ```bash
@@ -74,7 +74,7 @@ Verify the installation:
 aiinsight --version
 ```
 
-See [Agent Installation](agent-installation.md) for detailed instructions and troubleshooting.
+See [Install Agent](install-agent.md) for detailed instructions.
 
 ## Step 5: Connect Agent
 
@@ -96,14 +96,14 @@ After registration, the agent automatically:
 
 1. Scans your local AI coding tool session files
 2. Parses session data and token usage
-3. Uploads historical data to AiInsight Cloud
+3. Uploads historical data to AIInsight Cloud
 4. Triggers analytics aggregation
 
 This process may take several minutes depending on the amount of historical data. You can monitor progress in **Settings → Agents → Sync Status**.
 
 ## Step 7: Invite Team (Optional)
 
-Share AiInsight with your team:
+Share AIInsight with your team:
 
 1. Navigate to **Settings → Team**
 2. Click **Invite Member**
@@ -111,7 +111,7 @@ Share AiInsight with your team:
 4. Select a role (Admin or Member)
 5. Click **Send Invitation**
 
-See [Invitations](invitations.md) for the full invitation workflow.
+See [Invite Team](invite-team.md) for the full invitation workflow.
 
 ## Step 8: View Dashboard
 
@@ -130,15 +130,12 @@ Navigate to the **Dashboard** to see your analytics:
 
 ## Next Steps
 
-- [Architecture](architecture.md) — Understand the system design
-- [Agent Installation](agent-installation.md) — Platform-specific install details
-- [Organization Onboarding](organization-onboarding.md) — Configure your org settings
+- [Install Agent](install-agent.md) — Platform-specific install details
+- [CLI Reference](../cli/command-reference.md) — All CLI commands
+- [Architecture](../architecture/overview.md) — System design
+- [FAQ](faq.md) — Common questions
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions
-
-## API Reference
-
-For programmatic access, see the [Developer Setup](dev-setup.md) guide which includes API endpoint documentation.
 
 ## Self-Hosted Deployment
 
-If you prefer to run AiInsight on your own infrastructure, see the [Self-Hosted Deployment](architecture.md#self-hosted-deployment-docker) section in the Architecture doc.
+If you prefer to run AIInsight on your own infrastructure, see the [Deployment](../operations/deployment.md) guide.

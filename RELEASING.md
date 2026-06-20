@@ -1,10 +1,10 @@
-# Releasing CodeBurn
+# Releasing AIInsight
 
-This document describes the actual steps a maintainer takes to cut a CLI or macOS menubar release. CLI releases are run by hand with `npm publish`; macOS menubar releases are automated by `.github/workflows/release-menubar.yml` when a `mac-v*` tag is pushed.
+This document describes the steps a maintainer takes to cut a CLI or macOS menubar release. CLI releases are run by hand with `npm publish`; macOS menubar releases are automated by `.github/workflows/release-menubar.yml` when a `mac-v*` tag is pushed.
 
 ## Versioning
 
-CodeBurn uses semantic versioning (major.minor.patch). The CLI and macOS menubar share the same version number for clarity.
+AIInsight uses semantic versioning (major.minor.patch). The CLI and macOS menubar share the same version number for clarity.
 
 ## Before Every Release
 
@@ -30,7 +30,7 @@ Edit `package.json` to bump the version number. Update both the `version` field 
 npm version <version>
 ```
 
-For example, `npm version 0.9.8` updates both files and creates a commit.
+For example, `npm version 1.0.1` updates both files and creates a commit.
 
 Alternatively, edit `package.json` by hand and run `npm install` to regenerate the lockfile with the new version.
 
@@ -43,7 +43,7 @@ Edit `CHANGELOG.md`. Move all changes from the "Unreleased" section into a new s
 
 ### ...
 
-## 0.9.8 - 2026-05-10
+## 1.0.1 - 2026-06-20
 
 ### Added
 - Feature X
@@ -56,7 +56,7 @@ Commit these changes:
 
 ```bash
 git add CHANGELOG.md package.json package-lock.json
-git commit -m "chore: bump to 0.9.8"
+git commit -m "chore: bump to 1.0.1"
 ```
 
 ### 3. Publish to npm
@@ -76,8 +76,8 @@ If publishing for the first time on a new machine, run `npm login` first.
 After npm accepts the publish, tag the commit and push:
 
 ```bash
-git tag v0.9.8
-git push origin v0.9.8
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 The tag is for human reference and to anchor the GitHub Release. No workflow runs on `v*` tags for the CLI today.
@@ -85,7 +85,7 @@ The tag is for human reference and to anchor the GitHub Release. No workflow run
 ### 5. Verify npm Publication
 
 ```bash
-npm view codeburn version
+npm view aiinsight version
 ```
 
 ### 6. Create a GitHub Release
@@ -93,7 +93,7 @@ npm view codeburn version
 Use the GitHub CLI to create a release with notes from the changelog:
 
 ```bash
-gh release create v0.9.8 --title v0.9.8 --notes "$(sed -n '/^## 0.9.8/,/^## /p' CHANGELOG.md | head -n -1)"
+gh release create v1.0.1 --title v1.0.1 --notes "$(sed -n '/^## 1.0.1/,/^## /p' CHANGELOG.md | head -n -1)"
 ```
 
 Or use the web interface to draft a release and copy the changelog section into the body.
@@ -111,8 +111,8 @@ Follow the same version bumping process as the CLI. Both `package.json` and `CHA
 After the CLI tag is published, create a separate tag for the menubar:
 
 ```bash
-git tag mac-v0.9.8
-git push origin mac-v0.9.8
+git tag mac-v1.0.1
+git push origin mac-v1.0.1
 ```
 
 ### 3. GitHub Actions Builds the Bundle
@@ -120,35 +120,45 @@ git push origin mac-v0.9.8
 The `.github/workflows/release-menubar.yml` workflow automatically detects the `mac-v*` tag and:
 
 1. Checks out the repo
-2. Runs `mac/Scripts/package-app.sh v0.9.8`
+2. Runs `mac/Scripts/package-app.sh v1.0.1`
 3. Signs the app bundle (ad-hoc signing)
-4. Creates a zip file: `CodeBurnMenubar-v0.9.8.zip`
-5. Computes a SHA-256 checksum: `CodeBurnMenubar-v0.9.8.zip.sha256`
-6. Uploads both to a GitHub Release named "Menubar v0.9.8"
-
-The script output on the build machine shows:
-
-```
-✓ Built /path/mac/.build/dist/CodeBurnMenubar-v0.9.8.zip
-✓ Checksum /path/mac/.build/dist/CodeBurnMenubar-v0.9.8.zip.sha256
-<sha256-hash>  CodeBurnMenubar-v0.9.8.zip
-```
+4. Creates a zip file: `AIInsightMenubar-v1.0.1.zip`
+5. Computes a SHA-256 checksum: `AIInsightMenubar-v1.0.1.zip.sha256`
+6. Uploads both to a GitHub Release named "Menubar v1.0.1"
 
 No manual action is needed; the workflow handles everything.
 
 ### 4. Verify the Release
 
-After the workflow completes, the GitHub Release page shows the zip and sha256 files. The installed CLI command `codeburn menubar --force` fetches the newest `mac-v*` menubar release that includes both assets, verifies the checksum and bundle identity, and installs it into `~/Applications`.
+After the workflow completes, the GitHub Release page shows the zip and sha256 files. The installed CLI command `aiinsight menubar --force` fetches the newest `mac-v*` menubar release that includes both assets, verifies the checksum and bundle identity, and installs it into `~/Applications`.
+
+## Node SEA Release Process
+
+### 1. Build SEA
+
+```bash
+npm run build:sea
+```
+
+### 2. Test SEA
+
+```bash
+./dist/aiinsight-sea --version
+```
+
+### 3. Upload to Release
+
+Upload the SEA binary to the GitHub Release created in the CLI release process.
 
 ## Homebrew Core
 
-CodeBurn is in homebrew-core. After publishing a new CLI version to npm, the homebrew-core formula is updated automatically by Homebrew's bot or can be bumped manually:
+AIInsight is in homebrew-core. After publishing a new CLI version to npm, the homebrew-core formula is updated automatically by Homebrew's bot or can be bumped manually:
 
 ```bash
-brew bump-formula-pr codeburn --url "https://registry.npmjs.org/codeburn/-/codeburn-<VERSION>.tgz"
+brew bump-formula-pr aiinsight --url "https://registry.npmjs.org/aiinsight/-/aiinsight-<VERSION>.tgz"
 ```
 
-Users install with `brew install codeburn` and upgrade with `brew upgrade codeburn`.
+Users install with `brew install aiinsight` and upgrade with `brew upgrade aiinsight`.
 
 ## Replacing Assets on an Existing Release
 
@@ -157,25 +167,25 @@ If a release is published with broken assets (e.g., a menubar zip with a build e
 Use `gh release upload` with the `--clobber` flag to overwrite existing files:
 
 ```bash
-# After re-running mac/Scripts/package-app.sh v0.9.8 to regenerate the zip and sha256
-gh release upload mac-v0.9.8 mac/.build/dist/CodeBurnMenubar-v0.9.8.zip --clobber
-gh release upload mac-v0.9.8 mac/.build/dist/CodeBurnMenubar-v0.9.8.zip.sha256 --clobber
+# After re-running mac/Scripts/package-app.sh v1.0.1 to regenerate the zip and sha256
+gh release upload mac-v1.0.1 mac/.build/dist/AIInsightMenubar-v1.0.1.zip --clobber
+gh release upload mac-v1.0.1 mac/.build/dist/AIInsightMenubar-v1.0.1.zip.sha256 --clobber
 ```
 
-The GitHub Release page will now serve the fixed assets. The menubar installer selects the newest `mac-v*` release with `CodeBurnMenubar-v*.zip` plus its checksum, so users who run `codeburn menubar --force` after the replacement get the fixed version automatically.
+The GitHub Release page will now serve the fixed assets. The menubar installer selects the newest `mac-v*` release with `AIInsightMenubar-v*.zip` plus its checksum, so users who run `aiinsight menubar --force` after the replacement get the fixed version automatically.
 
 ## Rollback
 
-If a released version has a critical bug, the fastest path is to fix the bug and cut a new patch release (e.g., 0.9.8 -> 0.9.9). Delete the broken tag locally and on GitHub if it has not yet been widely distributed:
+If a released version has a critical bug, the fastest path is to fix the bug and cut a new patch release (e.g., 1.0.1 -> 1.0.2). Delete the broken tag locally and on GitHub if it has not yet been widely distributed:
 
 ```bash
-git tag -d v0.9.8
-git push origin --delete v0.9.8
+git tag -d v1.0.1
+git push origin --delete v1.0.1
 ```
 
-npm does not allow republishing to the same version. If you must unpublish from npm, use `npm unpublish codeburn@0.9.8 --force` (requires Owner role), but this is discouraged and all users who installed that version retain it.
+npm does not allow republishing to the same version. If you must unpublish from npm, use `npm unpublish aiinsight@1.0.1 --force` (requires Owner role), but this is discouraged and all users who installed that version retain it.
 
-For the menubar, tag a new mac-v0.9.9 and let the workflow build and upload it. Users will see the update pill in the menubar settings and upgrade automatically (or manually via `codeburn menubar --force`).
+For the menubar, tag a new mac-v1.0.2 and let the workflow build and upload it. Users will see the update pill in the menubar settings and upgrade automatically (or manually via `aiinsight menubar --force`).
 
 ## Summary
 
