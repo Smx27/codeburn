@@ -181,7 +181,7 @@ packages/analytics-engine/src/
 
 ## src/ (Root)
 
-**Purpose**: CLI entry point for the open-source agent. Provides `aiinsight init`, `aiinsight sync`, and `aiinsight status` commands.
+**Purpose**: CLI entry point for the open-source agent. Provides `aiinsight login`, `aiinsight sync`, and `aiinsight status` commands.
 
 ```
 src/

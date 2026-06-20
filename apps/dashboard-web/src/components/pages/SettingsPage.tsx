@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AUTH_TOKEN_STORAGE_KEY } from '@/lib/storage-keys';
 
 function Toggle({
   checked,
@@ -106,7 +107,7 @@ export function SettingsPage() {
     queryKey: ['members'],
     queryFn: async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       const response = await fetch(`${apiUrl}/api/v1/teams`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -131,7 +132,7 @@ export function SettingsPage() {
     queryKey: ['invitations'],
     queryFn: async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       const response = await fetch(`${apiUrl}/api/v1/invitations`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -147,7 +148,7 @@ export function SettingsPage() {
     setInviteLoading(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       const response = await fetch(`${apiUrl}/api/v1/invitations`, {
         method: 'POST',
         headers: {
@@ -177,7 +178,7 @@ export function SettingsPage() {
   const handleResendInvitation = async (invitationId: string) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       await fetch(`${apiUrl}/api/v1/invitations/${invitationId}/resend`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
@@ -192,7 +193,7 @@ export function SettingsPage() {
     if (!confirm('Are you sure you want to revoke this invitation?')) return;
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       await fetch(`${apiUrl}/api/v1/invitations/${invitationId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },

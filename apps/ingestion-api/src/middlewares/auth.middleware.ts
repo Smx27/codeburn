@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import { isApiKey, extractApiKeyPrefix } from '@aiinsight/auth-shared';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -38,7 +39,7 @@ export function ingestAuthMiddleware(req: Request, res: Response, next: NextFunc
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
 
-    if (token.startsWith('ai_')) {
+    if (isApiKey(token)) {
       handleApiKeyAuth(token, req, res, next);
     } else {
       handleJwtAuth(token, req, res, next);
@@ -54,7 +55,7 @@ export function ingestAuthMiddleware(req: Request, res: Response, next: NextFunc
 async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { queryOne } = await import('../database/pool.js');
-    const prefix = apiKey.slice(0, 8);
+    const prefix = extractApiKeyPrefix(apiKey);
 
     const keyRecord = await queryOne<{ id: string; organization_id: string; key_hash: string; role: string }>(
       `SELECT id, organization_id, key_hash, role FROM api_keys WHERE prefix = $1 AND (expires_at IS NULL OR expires_at > NOW())`,
@@ -66,7 +67,7 @@ async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, nex
       return;
     }
 
-    const isValid = await bcrypt.compare(apiKey, keyRecord.key_hash);
+    const isValid = await argon2.verify(keyRecord.key_hash, apiKey);
     if (!isValid) {
       res.status(401).json({ error: 'Invalid API key' });
       return;

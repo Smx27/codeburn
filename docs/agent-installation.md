@@ -132,15 +132,15 @@ npm install -g aiinsight
 aiinsight --version
 ```
 
-## Post-Installation: Register Agent
+## Post-Installation: Connect Agent
 
-After installation, register your agent with your AiInsight Cloud organization:
+After installation, connect your agent to your AiInsight Cloud organization:
 
 ```bash
-aiinsight register --key ai_live_xxxxx_your_enrollment_key
+aiinsight login
 ```
 
-See [Getting Started](getting-started.md#step-5-register-agent) for details.
+Paste your API key when prompted. See [Getting Started](getting-started.md#step-5-connect-agent) for details.
 
 ## Updating
 

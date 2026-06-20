@@ -85,7 +85,7 @@ Navigate to **Settings** in the dashboard and create an API key.
 
 ```bash
 npm install -g aiinsight
-aiinsight init                 # Follow prompts
+aiinsight login                # Paste your API key when prompted
 aiinsight sync                 # Run sync
 ```
 

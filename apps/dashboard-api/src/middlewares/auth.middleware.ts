@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import argon2 from 'argon2';
+import { isApiKey, extractApiKeyPrefix } from '@aiinsight/auth-shared';
 import { getUserById, getApiKeyByPrefix, updateApiKeyLastUsed } from '../repositories/dashboard.repository.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -56,7 +57,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
 
-    if (isApiKeyFormat(token)) {
+    if (isApiKey(token)) {
       handleApiKeyAuth(token, req, res, next);
     } else {
       handleJwtAuth(token, req, res, next);
@@ -69,13 +70,9 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
   }
 }
 
-function isApiKeyFormat(token: string): boolean {
-  return token.startsWith('cb_') || token.startsWith('aisk_');
-}
-
 async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const prefix = apiKey.slice(0, 8);
+    const prefix = extractApiKeyPrefix(apiKey);
     const keyRecord = await getApiKeyByPrefix(prefix);
 
     if (!keyRecord) {

@@ -137,23 +137,19 @@ Example:
 ai_live_a1b2c3d4_e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3
 ```
 
-## Agent Registration
+## Agent Connection
 
-### Registering a New Agent
+### Connecting a New Agent
 
 ```bash
-aiinsight register --key <YOUR_ENROLLMENT_KEY>
+aiinsight login
 ```
 
-Or interactively:
-```bash
-aiinsight register
-# Prompts for enrollment key
-```
+Paste your API key when prompted.
 
-### What Happens During Registration
+### What Happens During Connection
 
-1. The agent validates the enrollment key with the API
+1. The agent validates the API key with the API
 2. A machine record is created in the database
 3. An agent token is issued for ongoing authentication
 4. The token is stored at `~/.aiinsight/config.json`

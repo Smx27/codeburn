@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { AuthUser } from '@/types/dashboard';
 import { login as apiLogin } from '@/lib/api';
+import { AUTH_TOKEN_STORAGE_KEY, AUTH_REFRESH_TOKEN_STORAGE_KEY, AUTH_USER_STORAGE_KEY } from '@/lib/storage-keys';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -28,8 +29,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('aiinsight_token');
-    const storedUser = localStorage.getItem('aiinsight_user');
+    const storedToken = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    const storedUser = localStorage.getItem(AUTH_USER_STORAGE_KEY);
 
     if (storedToken && storedUser) {
       setToken(storedToken);
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'aiinsight_token' && !e.newValue) {
+      if (e.key === AUTH_TOKEN_STORAGE_KEY && !e.newValue) {
         setUser(null);
         setToken(null);
         removeCookie('aiinsight_token');
@@ -53,17 +54,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const result = await apiLogin({ email, password });
-    localStorage.setItem('aiinsight_token', result.token);
-    localStorage.setItem('aiinsight_user', JSON.stringify(result.user));
+    localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, result.token);
+    localStorage.setItem(AUTH_REFRESH_TOKEN_STORAGE_KEY, result.refreshToken);
+    localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(result.user));
     setCookie('aiinsight_token', result.token, 60 * 60 * 24 * 7);
     setToken(result.token);
     setUser(result.user);
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('aiinsight_token');
-    localStorage.removeItem('aiinsight_refresh_token');
-    localStorage.removeItem('aiinsight_user');
+    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(AUTH_REFRESH_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
     removeCookie('aiinsight_token');
     setToken(null);
     setUser(null);

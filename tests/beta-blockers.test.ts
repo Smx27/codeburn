@@ -72,16 +72,28 @@ describe('Incremental Sync - watermark persistence', () => {
 });
 
 describe('API Key Management', () => {
-  it('API key prefix format is correct', () => {
+  it('cb_ API key prefix format is correct', () => {
     const prefix = 'cb_' + 'a1b2c3d4';
     expect(prefix).toMatch(/^cb_[a-f0-9]{8}$/);
   });
 
-  it('API key full format is correct', () => {
+  it('cb_ API key full format is correct', () => {
     const prefix = 'cb_a1b2c3d4';
     const suffix = 'e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8';
     const fullKey = `${prefix}_${suffix}`;
     expect(fullKey).toMatch(/^cb_[a-f0-9]{8}_[a-f0-9]{48}$/);
+  });
+
+  it('aisk_ API key prefix format is correct', () => {
+    const prefix = 'aisk_' + 'a1b2c3d4';
+    expect(prefix).toMatch(/^aisk_[a-f0-9]{8}$/);
+  });
+
+  it('aisk_ API key full format is correct', () => {
+    const prefix = 'aisk_a1b2c3d4';
+    const suffix = 'e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8';
+    const fullKey = `${prefix}_${suffix}`;
+    expect(fullKey).toMatch(/^aisk_[a-f0-9]{8}_[a-f0-9]{48}$/);
   });
 });
 

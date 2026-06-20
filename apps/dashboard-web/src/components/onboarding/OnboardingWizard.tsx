@@ -24,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/lib/auth-context';
 import { cn } from '@/lib/utils';
+import { AUTH_TOKEN_STORAGE_KEY } from '@/lib/storage-keys';
 
 const steps = [
   {
@@ -75,7 +76,7 @@ export function OnboardingWizard() {
     setIsGenerating(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       const response = await fetch(`${apiUrl}/api/v1/enrollment-keys`, {
         method: 'POST',
         headers: {

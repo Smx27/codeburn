@@ -10,6 +10,7 @@ import { register as apiRegister } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { AUTH_TOKEN_STORAGE_KEY, AUTH_USER_STORAGE_KEY } from '@/lib/storage-keys';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -64,8 +65,8 @@ export function RegisterPage() {
         password: data.password,
         organizationName: data.organizationName,
       });
-      localStorage.setItem('aiinsight_token', result.token);
-      localStorage.setItem('aiinsight_user', JSON.stringify(result.user));
+      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, result.token);
+      localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(result.user));
       router.push('/getting-started');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Registration failed';

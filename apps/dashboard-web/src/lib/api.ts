@@ -1,9 +1,10 @@
 import type { DashboardOverview, ProviderAnalytics, ModelAnalytics, UserAnalytics, ProjectAnalytics, TrendsResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Period, EnrollmentKey, GenerateEnrollmentKeyRequest, GenerateEnrollmentKeyResponse, Agent, OnboardingProgress, ApiKey, CreateApiKeyRequest, CreateApiKeyResponse, SessionListResponse, SessionListFilters, SessionDetail, MachineDetailResponse } from '@/types/dashboard';
+import { AUTH_TOKEN_STORAGE_KEY, AUTH_REFRESH_TOKEN_STORAGE_KEY } from '@/lib/storage-keys';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('aiinsight_token') : null;
+  const token = typeof window !== 'undefined' ? localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) : null;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -20,7 +21,7 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
   });
 
   if (response.status === 401 && token && typeof window !== 'undefined') {
-    const refreshToken = localStorage.getItem('aiinsight_refresh_token');
+    const refreshToken = localStorage.getItem(AUTH_REFRESH_TOKEN_STORAGE_KEY);
     if (refreshToken) {
       const refreshResponse = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
         method: 'POST',
@@ -29,20 +30,20 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
       });
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
-        localStorage.setItem('aiinsight_token', data.token);
-        localStorage.setItem('aiinsight_refresh_token', data.refreshToken);
+        localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, data.token);
+        localStorage.setItem(AUTH_REFRESH_TOKEN_STORAGE_KEY, data.refreshToken);
         headers['Authorization'] = `Bearer ${data.token}`;
         response = await fetch(`${API_BASE}${endpoint}`, {
           ...options,
           headers,
         });
       } else {
-        localStorage.removeItem('aiinsight_token');
-        localStorage.removeItem('aiinsight_refresh_token');
+        localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+        localStorage.removeItem(AUTH_REFRESH_TOKEN_STORAGE_KEY);
         window.location.href = '/login';
       }
     } else {
-      localStorage.removeItem('aiinsight_token');
+      localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
       window.location.href = '/login';
     }
   }

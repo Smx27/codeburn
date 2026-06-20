@@ -19,11 +19,11 @@ Common issues and solutions for AiInsight Cloud and the CLI agent.
 curl -I https://api.aiinsight.dev/health
 ```
 
-**2. Verify enrollment key**
+**2. Verify API key**
 
 ```bash
 # Ensure the key is valid and not revoked
-aiinsight register --key ai_live_xxxxx_your_key_here
+aiinsight login
 ```
 
 Check the key status in **Settings → Agents** in the dashboard.
@@ -53,7 +53,7 @@ npm update -g aiinsight
 
 ```bash
 # Enable verbose logging
-aiinsight register --key your_key --log-level debug
+aiinsight login
 ```
 
 See [Agent Installation](agent-installation.md) for detailed setup instructions.

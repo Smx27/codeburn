@@ -1,4 +1,5 @@
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
+import { isApiKey } from '@aiinsight/auth-shared';
 
 export const authRateLimit = rateLimit({
   windowMs: 60 * 1000,
@@ -39,7 +40,7 @@ export const generalRateLimit = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req, res) => {
     const apiKey = req.headers['authorization']?.replace('Bearer ', '');
-    if (apiKey && (apiKey.startsWith('cb_') || apiKey.startsWith('ai_'))) {
+    if (apiKey && isApiKey(apiKey)) {
       return `apikey:${apiKey}`;
     }
     return ipKeyGenerator(req, res);

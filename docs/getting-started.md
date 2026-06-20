@@ -76,17 +76,17 @@ aiinsight --version
 
 See [Agent Installation](agent-installation.md) for detailed instructions and troubleshooting.
 
-## Step 5: Register Agent
+## Step 5: Connect Agent
 
 1. Open your terminal
-2. Run the registration command with your enrollment key:
+2. Run the login command and paste your API key when prompted:
 
 ```bash
-aiinsight register --key ai_live_xxxxx_your_key_here
+aiinsight login
 ```
 
-3. Confirm the organization name when prompted
-4. The agent will start syncing automatically
+3. The agent connects to your organization automatically
+4. Run `aiinsight sync` to start syncing
 
 <!-- Screenshot: Terminal showing registration success -->
 

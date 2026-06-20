@@ -8,6 +8,7 @@ import { Monitor, Wifi, WifiOff, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AUTH_TOKEN_STORAGE_KEY } from '@/lib/storage-keys';
 import {
   Table,
   TableBody,
@@ -32,7 +33,7 @@ export default function MachinesPage() {
     queryKey: ['machines'],
     queryFn: async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
       const response = await fetch(`${apiUrl}/api/v1/machines`, {
         headers: { Authorization: `Bearer ${token}` },
       });

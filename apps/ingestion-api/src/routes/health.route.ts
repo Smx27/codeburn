@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { queryOne, query } from '../database/pool.js';
+import { ingestAuthMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
@@ -24,13 +25,21 @@ router.get('/version', (req: Request, res: Response) => {
   });
 });
 
-router.post('/heartbeat', async (req: Request, res: Response) => {
+router.post('/heartbeat', ingestAuthMiddleware, async (req: Request, res: Response) => {
   try {
-    const { machineId, organizationId } = req.body;
-    if (!machineId || !organizationId) {
-      res.status(400).json({ error: 'machineId and organizationId required' });
+    const { machineId } = req.body;
+    const organizationId = req.ingestUser?.organizationId;
+
+    if (!machineId) {
+      res.status(400).json({ error: 'machineId required' });
       return;
     }
+
+    if (!organizationId) {
+      res.status(401).json({ error: 'Authentication required' });
+      return;
+    }
+
     await query(
       'UPDATE machines SET last_seen = NOW(), status = $1 WHERE id = $2 AND organization_id = $3',
       ['ONLINE', machineId, organizationId]

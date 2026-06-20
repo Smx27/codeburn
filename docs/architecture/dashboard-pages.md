@@ -208,7 +208,7 @@ The dashboard is a Next.js 15 application with 9 analytics pages plus settings.
 
 | Section | Data |
 |---------|------|
-| Installation Steps | `aiinsight init`, `aiinsight sync` |
+| Installation Steps | `aiinsight login`, `aiinsight sync` |
 | Enrollment Keys | List with name, prefix, created, last used |
 
 **Actions**:

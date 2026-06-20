@@ -19,7 +19,7 @@ import machineRoutes from './routes/machine.routes.js';
 import apiKeyRoutes from './routes/apiKey.routes.js';
 import healthRoutes from './routes/health.route.js';
 import { closePool } from './database/pool.js';
-import { authRateLimit } from './middlewares/rateLimit.middleware.js';
+import { authRateLimit, generalRateLimit } from './middlewares/rateLimit.middleware.js';
 import { startOfflineDetection } from './jobs/offlineDetection.js';
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
@@ -44,16 +44,16 @@ app.use(express.json({ limit: '10mb' }));
 app.use(pinoHttp({ logger }));
 
 app.use('/api/v1/auth', authRateLimit, authRoutes);
-app.use('/api/v1/dashboard', dashboardRoutes);
-app.use('/api/v1/organizations', organizationRoutes);
-app.use('/api/v1/teams', teamRoutes);
-app.use('/api/v1/invitations', invitationRoutes);
-app.use('/api/v1/enrollment-keys', enrollmentRoutes);
-app.use('/api/v1/agents', agentRoutes);
-app.use('/api/v1/onboarding', onboardingRoutes);
-app.use('/api/v1/sessions', sessionRoutes);
-app.use('/api/v1/machines', machineRoutes);
-app.use('/api/v1/api-keys', apiKeyRoutes);
+app.use('/api/v1/dashboard', generalRateLimit, dashboardRoutes);
+app.use('/api/v1/organizations', generalRateLimit, organizationRoutes);
+app.use('/api/v1/teams', generalRateLimit, teamRoutes);
+app.use('/api/v1/invitations', generalRateLimit, invitationRoutes);
+app.use('/api/v1/enrollment-keys', generalRateLimit, enrollmentRoutes);
+app.use('/api/v1/agents', generalRateLimit, agentRoutes);
+app.use('/api/v1/onboarding', generalRateLimit, onboardingRoutes);
+app.use('/api/v1/sessions', generalRateLimit, sessionRoutes);
+app.use('/api/v1/machines', generalRateLimit, machineRoutes);
+app.use('/api/v1/api-keys', generalRateLimit, apiKeyRoutes);
 app.use('/api/v1', healthRoutes);
 
 app.get('/', (req, res) => {

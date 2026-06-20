@@ -46,16 +46,13 @@ npm install -g aiinsight
 
 ---
 
-## Step 5: Configure the Agent
+## Step 5: Connect the Agent
 
 ```bash
-aiinsight init
+aiinsight login
 ```
 
-Follow the prompts:
-1. Enter your API URL (default: `http://localhost:3001`)
-2. Enter your API key (from Step 3)
-3. Select your providers (Claude, Codex, Cursor, Gemini)
+When prompted, paste your API key from Step 3. The agent will connect to your organization automatically.
 
 ---
 
@@ -99,7 +96,7 @@ Repeat Steps 4-6 on each developer machine:
 
 ```bash
 npm install -g aiinsight
-aiinsight init
+aiinsight login
 aiinsight sync
 ```
 

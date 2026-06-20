@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { AUTH_TOKEN_STORAGE_KEY, AUTH_USER_STORAGE_KEY } from '@/lib/storage-keys';
 
 const acceptSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -69,9 +70,9 @@ export default function AcceptInvitationPage() {
         const result = await response.json();
         // Store the JWT token
         if (result.token) {
-          localStorage.setItem('token', result.token);
+          localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, result.token);
           if (result.user) {
-            localStorage.setItem('user', JSON.stringify(result.user));
+            localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(result.user));
           }
         }
         setStatus('success');

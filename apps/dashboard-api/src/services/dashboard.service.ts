@@ -644,7 +644,8 @@ export async function agentLogin(
   agentToken: string;
 } | null> {
   // Validate API key - supports both cb_ and aisk_ prefixes
-  const prefix = apiKey.slice(0, 8);
+  const { extractApiKeyPrefix } = await import('@aiinsight/auth-shared');
+  const prefix = extractApiKeyPrefix(apiKey);
   const keyRecord = await queryOne<{ id: string; organization_id: string; key_hash: string; role: string }>(
     `SELECT id, organization_id, key_hash, role FROM api_keys WHERE prefix = $1 AND (expires_at IS NULL OR expires_at > NOW())`,
     [prefix]

@@ -33,10 +33,12 @@ export class SyncLoop {
       const url = `${this.config.apiUrl}/heartbeat`;
       await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.config.apiKey}`,
+        },
         body: JSON.stringify({
           machineId: this.config.machineId,
-          organizationId: this.config.organizationId,
         }),
       });
     } catch {
