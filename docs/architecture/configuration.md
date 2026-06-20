@@ -48,9 +48,10 @@
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NEXT_PUBLIC_API_URL` | No | `http://localhost:3002` | Dashboard API URL (client-side) |
-| `FRONTEND_URL` | No | `http://localhost:3000` | Frontend URL (for email links) |
-| `DASHBOARD_URL` | No | `http://localhost:3000` | Dashboard URL (for invitation links) |
-| `API_URL` | No | `http://localhost:3002` | API URL (for agent config) |
+| `APP_URL` | No | `http://localhost:3000` | Frontend URL (for email links) |
+| `DASHBOARD_URL` | No | `http://localhost:3000` | Dashboard URL (deprecated, use APP_URL) |
+| `FRONTEND_URL` | No | `http://localhost:3000` | Frontend URL (deprecated, use APP_URL) |
+| `INGESTION_API_URL` | No | `http://localhost:3001` | Ingestion API URL (for agent sync) |
 
 ### Sync
 
@@ -104,7 +105,7 @@ services:
 
 | Key Type | Prefix | Purpose |
 |----------|--------|---------|
-| Dashboard API Key | `cb_XXXXXXXX_...` | User authentication for sync engine |
+| Dashboard API Key | `aisk_XXXXXXXX_...` (new) or `cb_...` (legacy) | User authentication for sync engine |
 | Enrollment Key | `ai_live_XXXXXXXX_...` | Agent registration |
 
 ---

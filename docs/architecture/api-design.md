@@ -62,7 +62,7 @@ or
 X-API-Key: <api-key>
 ```
 
-API key format: `cb_XXXXXXXX_YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY` (8 hex + 48 hex).
+API key format: `aisk_XXXXXXXX_YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY` (8 hex + 48 hex). Legacy keys use `cb_` prefix.
 
 ### Pagination
 

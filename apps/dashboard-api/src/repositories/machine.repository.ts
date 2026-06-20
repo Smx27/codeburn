@@ -1,6 +1,18 @@
 import { query, queryOne } from '../database/pool.js';
 import type { MachineDetail, MachineStats, MachineDailyActivity, MachineProviderBreakdown, MachineModelBreakdown, SessionListItem } from '../types/session.types.js';
 
+export async function listMachines(
+  orgId: string
+): Promise<{ id: string; hostname: string; os: string | null; architecture: string | null; agent_version: string | null; status: string; last_seen: string }[]> {
+  return query<{ id: string; hostname: string; os: string | null; architecture: string | null; agent_version: string | null; status: string; last_seen: string }>(
+    `SELECT id, hostname, os, architecture, agent_version, status, last_seen
+     FROM machines
+     WHERE organization_id = $1
+     ORDER BY last_seen DESC`,
+    [orgId]
+  );
+}
+
 export async function getMachineById(
   orgId: string,
   machineId: string

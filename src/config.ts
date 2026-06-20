@@ -56,9 +56,12 @@ export type AiInsightConfig = {
   // Cloud sync configuration
   sync?: {
     organizationId?: string
+    organizationName?: string
     machineId?: string
     apiUrl?: string
     apiKey?: string
+    agentToken?: string
+    syncInterval?: number
     enabled?: boolean
   }
 }
@@ -191,18 +194,42 @@ export async function getOrCreateMachineId(): Promise<string> {
 
 export async function getSyncConfig(): Promise<{
   organizationId: string | undefined
+  organizationName: string | undefined
   machineId: string
   apiUrl: string | undefined
   apiKey: string | undefined
+  agentToken: string | undefined
+  syncInterval: number
   enabled: boolean
 }> {
   const config = await readConfig()
   const machineId = await getOrCreateMachineId()
   return {
     organizationId: config.sync?.organizationId,
+    organizationName: config.sync?.organizationName,
     machineId,
     apiUrl: config.sync?.apiUrl,
     apiKey: config.sync?.apiKey,
+    agentToken: config.sync?.agentToken,
+    syncInterval: config.sync?.syncInterval ?? 300,
     enabled: config.sync?.enabled ?? false,
   }
+}
+
+export async function saveSyncConfig(syncConfig: {
+  organizationId?: string
+  organizationName?: string
+  machineId?: string
+  apiUrl?: string
+  apiKey?: string
+  agentToken?: string
+  syncInterval?: number
+  enabled?: boolean
+}): Promise<void> {
+  const config = await readConfig()
+  config.sync = {
+    ...config.sync,
+    ...syncConfig,
+  }
+  await saveConfig(config)
 }

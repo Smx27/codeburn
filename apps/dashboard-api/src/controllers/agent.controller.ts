@@ -22,6 +22,56 @@ export async function registerAgent(req: Request, res: Response): Promise<void> 
   }
 }
 
+export async function agentLogin(req: Request, res: Response): Promise<void> {
+  try {
+    const { apiKey, hostname, os, architecture, agentVersion } = req.body;
+
+    if (!apiKey || !hostname) {
+      res.status(400).json({ error: 'API key and hostname are required' });
+      return;
+    }
+
+    const result = await dashboardService.agentLogin(apiKey, hostname, os, architecture, agentVersion);
+    if (!result) {
+      res.status(401).json({ error: 'Invalid API key' });
+      return;
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function reportSyncComplete(req: Request, res: Response): Promise<void> {
+  try {
+    const { agentToken, machineId, sessionsImported, providersDetected } = req.body;
+
+    if (!agentToken || !machineId) {
+      res.status(400).json({ error: 'Agent token and machine ID are required' });
+      return;
+    }
+
+    // Validate agent token to get org ID
+    const tokenValidation = await dashboardService.validateAgentToken(agentToken);
+    if (!tokenValidation) {
+      res.status(401).json({ error: 'Invalid agent token' });
+      return;
+    }
+
+    // Send sync completed email (fire-and-forget)
+    dashboardService.sendSyncCompletedEmail(
+      tokenValidation.organizationId,
+      sessionsImported || 0,
+      providersDetected || []
+    ).catch(() => {});
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 export async function getAgentConfig(req: Request, res: Response): Promise<void> {
   try {
     const machineId = req.user?.machineId;

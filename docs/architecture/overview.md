@@ -142,7 +142,7 @@ sequenceDiagram
 - **External → Dashboard API**: JWT or API key auth required (except `/auth/register`, `/auth/login`, `/auth/refresh`, `/invitations/accept`)
 - **External → Ingestion API**: JWT or `ai_` API key auth required
 - **Dashboard Web → Dashboard API**: JWT in Authorization header
-- **Sync Engine → Ingestion API**: `cb_` API key in Authorization header
+- **Sync Engine → Ingestion API**: `aisk_` API key (or `cb_` legacy) in Authorization header
 - **Agent → Dashboard API**: Enrollment key for registration, JWT for subsequent calls
 
 ---

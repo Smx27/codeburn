@@ -217,10 +217,11 @@ curl http://localhost:3002/api/v1/auth/me \
 
 **1. Verify API key format**
 
-API keys must start with `cb_`:
+API keys must start with `cb_` or `aisk_`:
 
 ```
 cb_your_api_key_here
+aisk_your_api_key_here
 ```
 
 **2. Check key prefix**

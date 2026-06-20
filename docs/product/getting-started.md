@@ -111,13 +111,12 @@ Check your inbox for a verification email from AIInsight. Click the link to veri
 
 Your organization is created automatically during registration. You can update the name, timezone, and currency in **Settings**.
 
-### Step 4: Generate an Enrollment Key
+### Step 4: Generate an API Key
 
-1. Go to **Settings → Agents**
-2. Click **Generate New Key**
+1. Go to **Settings → API Keys**
+2. Click **Create API Key**
 3. Enter a descriptive name (e.g., "My MacBook Pro")
-4. Optionally set an expiration date
-5. Copy and save the key — it won't be shown again
+4. Copy and save the key — it won't be shown again
 
 ### Step 5: Install the Agent
 
@@ -136,24 +135,34 @@ curl -fsSL https://get.aiinsight.dev/install.sh | bash
 winget install AIInsight.CLI
 ```
 
+**npm (all platforms):**
+```bash
+npm install -g aiinsight
+```
+
 Verify installation:
 ```bash
 aiinsight --version
 ```
 
-### Step 6: Register Your Agent
+### Step 6: Login and Sync
 
-Run the agent and paste your enrollment key when prompted:
+Run the login command and paste your API key when prompted:
 
 ```bash
-aiinsight register --key <YOUR_ENROLLMENT_KEY>
+aiinsight login
+```
+
+Then start syncing:
+
+```bash
+aiinsight sync
 ```
 
 The agent will:
-1. Validate the enrollment key
+1. Validate your API key
 2. Register your machine with the organization
-3. Receive an agent token for ongoing authentication
-4. Begin historical sync automatically
+3. Begin historical sync automatically
 
 ### Step 7: Wait for Historical Sync
 

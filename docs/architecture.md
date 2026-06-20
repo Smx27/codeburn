@@ -89,6 +89,12 @@ Commander.js + Ink (React for terminals) command-line interface.
 | `optimize` | Runs all 14 waste detectors |
 | `compare` | Compares two models side by side |
 | `yield` | Tracks sessions shipped vs reverted (experimental) |
+| `sync` | Sync usage data to AIInsight Cloud |
+| `login` | Connect to AIInsight Cloud with API key |
+| `logout` | Disconnect from AIInsight Cloud |
+| `config` | View or manage configuration |
+| `providers` | List detected AI coding providers |
+| `doctor` | Run diagnostics to check configuration |
 | `menubar` | Downloads and launches macOS menubar bundle |
 | `currency` | Sets display currency |
 | `model-alias` | Maps unknown model names for pricing |

@@ -1,6 +1,10 @@
 import * as machineRepo from '../repositories/machine.repository.js';
 import type { MachineDetailResponse } from '../types/session.types.js';
 
+export async function listMachines(orgId: string) {
+  return machineRepo.listMachines(orgId);
+}
+
 export async function getMachineDetail(
   orgId: string,
   machineId: string

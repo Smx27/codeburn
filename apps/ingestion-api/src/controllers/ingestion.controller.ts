@@ -10,9 +10,16 @@ import { BatchUpload, SyncSession, SyncEvent } from '../validators/ingestion.val
 export async function ingestBatch(req: Request, res: Response): Promise<void> {
   try {
     const payload = req.body as BatchUpload;
+
+    // Use authenticated organization ID from middleware, not from request body
+    const organizationId = req.ingestUser?.organizationId;
+    if (!organizationId) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
     
     // Validate organization exists by ID
-    const org = await findOrganizationById(payload.organizationId);
+    const org = await findOrganizationById(organizationId);
     if (!org) {
       res.status(404).json({ error: 'Organization not found' });
       return;
@@ -84,12 +91,18 @@ export async function ingestBatch(req: Request, res: Response): Promise<void> {
 
 export async function ingestSessions(req: Request, res: Response): Promise<void> {
   try {
-    const { organizationId, machineId, provider, sessions } = req.body as {
-      organizationId: string;
+    const { machineId, provider, sessions } = req.body as {
       machineId: string;
       provider: string;
       sessions: SyncSession[];
     };
+
+    // Use authenticated organization ID from middleware
+    const organizationId = req.ingestUser?.organizationId;
+    if (!organizationId) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
 
     const org = await findOrganizationById(organizationId);
     if (!org) {
@@ -125,12 +138,18 @@ export async function ingestSessions(req: Request, res: Response): Promise<void>
 
 export async function ingestEvents(req: Request, res: Response): Promise<void> {
   try {
-    const { organizationId, machineId, provider, events } = req.body as {
-      organizationId: string;
+    const { machineId, provider, events } = req.body as {
       machineId: string;
       provider: string;
       events: SyncEvent[];
     };
+
+    // Use authenticated organization ID from middleware
+    const organizationId = req.ingestUser?.organizationId;
+    if (!organizationId) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
 
     const org = await findOrganizationById(organizationId);
     if (!org) {

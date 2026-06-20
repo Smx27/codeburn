@@ -1,18 +1,19 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Lock, ArrowLeft, Check } from 'lucide-react';
+import { Loader2, Lock, User, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 
-const resetSchema = z.object({
+const acceptSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -20,80 +21,116 @@ const resetSchema = z.object({
   path: ["confirmPassword"],
 });
 
-type ResetForm = z.infer<typeof resetSchema>;
+type AcceptForm = z.infer<typeof acceptSchema>;
 
-function ResetPasswordForm() {
+export default function AcceptInvitationPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const token = searchParams.get('token');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState<'loading' | 'form' | 'success' | 'error'>('loading');
+  const [invitationInfo, setInvitationInfo] = useState<{ email?: string; organization?: string; role?: string }>({});
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResetForm>({
-    resolver: zodResolver(resetSchema),
+  } = useForm<AcceptForm>({
+    resolver: zodResolver(acceptSchema),
   });
 
-  const onSubmit = async (data: ResetForm) => {
+  useEffect(() => {
+    if (!token) {
+      setStatus('error');
+      return;
+    }
+
+    // Token is valid, show the form
+    setStatus('form');
+  }, [token]);
+
+  const onSubmit = async (data: AcceptForm) => {
     if (!token) return;
-    
+
     setIsSubmitting(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-      const response = await fetch(`${apiUrl}/api/v1/auth/reset-password`, {
+      const response = await fetch(`${apiUrl}/api/v1/invitations/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, newPassword: data.password }),
+        body: JSON.stringify({ 
+          token, 
+          password: data.password,
+          name: data.name,
+        }),
       });
 
       if (response.ok) {
-        setSuccess(true);
+        const result = await response.json();
+        // Store the JWT token
+        if (result.token) {
+          localStorage.setItem('token', result.token);
+          if (result.user) {
+            localStorage.setItem('user', JSON.stringify(result.user));
+          }
+        }
+        setStatus('success');
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
       } else {
-        // Handle error - could show toast
+        setStatus('error');
       }
     } catch {
-      // Handle error
+      setStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!token) {
+  if (status === 'loading') {
+    return (
+      <Card className="border-border/50 shadow-lg">
+        <CardContent className="p-6 text-center space-y-4">
+          <Loader2 className="h-6 w-6 animate-spin text-primary mx-auto" />
+          <p className="text-sm text-muted-foreground">Loading invitation...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (status === 'error') {
     return (
       <Card className="border-border/50 shadow-lg">
         <CardContent className="p-6 text-center space-y-4">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Invalid reset link</h2>
+            <h2 className="text-lg font-semibold text-foreground">Invalid invitation</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              This password reset link is invalid or has expired.
+              This invitation link is invalid or has expired.
             </p>
           </div>
           <Button variant="outline" asChild className="w-full">
-            <Link href="/forgot-password">Request a new link</Link>
+            <Link href="/login">Back to login</Link>
           </Button>
         </CardContent>
       </Card>
     );
   }
 
-  if (success) {
+  if (status === 'success') {
     return (
       <Card className="border-border/50 shadow-lg">
         <CardContent className="p-6 text-center space-y-4">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
-            <Check className="h-6 w-6 text-success" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
+            <Check className="h-6 w-6 text-green-500" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Password reset</h2>
+            <h2 className="text-lg font-semibold text-foreground">Welcome to the team!</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Your password has been reset successfully.
+              Your account has been created. Redirecting to dashboard...
             </p>
           </div>
-          <Button asChild className="w-full">
-            <Link href="/login">Sign in</Link>
-          </Button>
         </CardContent>
       </Card>
     );
@@ -103,15 +140,33 @@ function ResetPasswordForm() {
     <Card className="border-border/50 shadow-lg">
       <CardContent className="p-6">
         <div className="space-y-1 mb-6">
-          <h2 className="text-lg font-semibold text-foreground">Reset password</h2>
+          <h2 className="text-lg font-semibold text-foreground">Accept invitation</h2>
           <p className="text-sm text-muted-foreground">
-            Enter your new password below
+            Set your name and password to join the team
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="password">New Password</Label>
+            <Label htmlFor="name">Name</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                {...register('name')}
+                type="text"
+                id="name"
+                autoComplete="name"
+                className="pl-10"
+                placeholder="Your name"
+              />
+            </div>
+            {errors.name && (
+              <p className="text-xs text-destructive">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -150,10 +205,13 @@ function ResetPasswordForm() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Resetting...
+                Creating account...
               </>
             ) : (
-              'Reset password'
+              <>
+                Join team
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
             )}
           </Button>
         </form>
@@ -161,25 +219,12 @@ function ResetPasswordForm() {
         <div className="mt-6 text-center">
           <Link
             href="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to login
+            Already have an account? Sign in
           </Link>
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    }>
-      <ResetPasswordForm />
-    </Suspense>
   );
 }

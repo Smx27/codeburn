@@ -263,7 +263,7 @@ Machine-to-machine authentication keys. Hashed with Argon2.
 | organization_id | UUID | NOT NULL, FK |
 | name | TEXT | NOT NULL |
 | key_hash | TEXT | NOT NULL |
-| prefix | TEXT | NOT NULL — format: `cb_XXXXXXXX` (8 hex chars) |
+| prefix | TEXT | NOT NULL — format: `aisk_XXXXXXXX` (8 hex chars, new keys) or `cb_XXXXXXXX` (legacy) |
 | role | TEXT | NOT NULL, DEFAULT `write` — `read`, `write`, `admin` |
 | expires_at | TIMESTAMPTZ | |
 | created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() |

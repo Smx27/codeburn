@@ -31,10 +31,20 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = async (data: ForgotForm) => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1000));
-    setSent(true);
-    setIsSubmitting(false);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      await fetch(`${apiUrl}/api/v1/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email }),
+      });
+      setSent(true);
+    } catch {
+      // Silently handle error - don't reveal if email exists
+      setSent(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (sent) {

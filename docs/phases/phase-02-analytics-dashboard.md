@@ -828,9 +828,9 @@ The Dashboard API supports two authentication methods:
 
 #### API Keys
 - **Use case:** Machine-to-machine (sync engine, CLI)
-- **Prefix:** `cb_` (first 8 characters stored for lookup)
-- **Hash:** bcrypt hash stored in database
-- **Header:** `Authorization: Bearer cb_<key>` or `X-API-Key cb_<key>`
+- **Prefix:** `aisk_` (new keys) or `cb_` (legacy, first 8 characters stored for lookup)
+- **Hash:** Argon2 hash stored in database
+- **Header:** `Authorization: Bearer aisk_<key>` or `X-API-Key aisk_<key>`
 
 ### Authentication Flow
 

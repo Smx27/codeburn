@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import argon2 from 'argon2';
-import { getUserById, getApiKeyByPrefix } from '../repositories/dashboard.repository.js';
+import { getUserById, getApiKeyByPrefix, updateApiKeyLastUsed } from '../repositories/dashboard.repository.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -70,7 +70,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
 }
 
 function isApiKeyFormat(token: string): boolean {
-  return token.startsWith('cb_');
+  return token.startsWith('cb_') || token.startsWith('aisk_');
 }
 
 async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -97,6 +97,9 @@ async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, nex
       role: keyRecord.role,
     };
     req.authMethod = 'api_key';
+
+    // Update last_used_at (fire-and-forget, debounced to once per 60s)
+    updateApiKeyLastUsed(keyRecord.id).catch(() => {});
 
     next();
   } catch (error) {

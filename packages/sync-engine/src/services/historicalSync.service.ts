@@ -1,5 +1,5 @@
 import type { Provider, SessionSource, SessionParser, ParsedProviderCall } from '../providers/oss-types.js';
-import { getAdapter } from '../providers/index.js';
+import { getAdapter, discoverClaudeSessions, parseClaudeSession } from '../providers/index.js';
 import { getSyncState, markSynced, getSourceStats, isSourceUnchanged } from '../state/syncState.repository.js';
 import { BatchUploader } from '../uploader/batchUploader.js';
 import type { SyncConfig, HistoricalSyncResult, SyncSession, SyncEvent } from '../types/sync.types.js';
@@ -20,10 +20,10 @@ export class HistoricalSyncService {
   private config: SyncConfig;
   private providers: Provider[];
 
-  constructor(config: SyncConfig, providers: Provider[]) {
+  constructor(config: SyncConfig, providers: Provider[], uploader?: BatchUploader) {
     this.config = config;
     this.providers = providers;
-    this.uploader = new BatchUploader(config);
+    this.uploader = uploader ?? new BatchUploader(config);
   }
 
   async initialize(): Promise<void> {
@@ -47,7 +47,7 @@ export class HistoricalSyncService {
     };
 
     try {
-      const providerFilter = ['claude', 'codex', 'cursor', 'gemini'];
+      const providerFilter = ['claude', 'codex', 'cursor', 'gemini', 'warp', 'opencode'];
       const filteredProviders = this.providers.filter(p => providerFilter.includes(p.name));
 
       for (const provider of filteredProviders) {
@@ -109,11 +109,16 @@ export class HistoricalSyncService {
         }
 
         const seenKeys = new Set<string>();
-        const parser = provider.createSessionParser(source, seenKeys);
-        
-        const calls: ParsedProviderCall[] = [];
-        for await (const call of parser.parse()) {
-          calls.push(call);
+        let calls: ParsedProviderCall[] = [];
+
+        // Use Claude-specific parsing if available
+        if (provider.name === 'claude') {
+          calls = await parseClaudeSession(source.path, source.project);
+        } else {
+          const parser = provider.createSessionParser(source, seenKeys);
+          for await (const call of parser.parse()) {
+            calls.push(call);
+          }
         }
 
         if (calls.length === 0) {

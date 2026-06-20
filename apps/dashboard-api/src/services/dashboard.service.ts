@@ -147,7 +147,7 @@ export async function register(email: string, password: string, name: string | n
 
   try {
     const mail = await getMailProvider();
-    const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+    const baseUrl = process.env.APP_URL || process.env.DASHBOARD_URL || 'http://localhost:3000';
     await mail.send({
       to: email,
       ...templates.welcome({
@@ -278,7 +278,7 @@ export async function removeTeamMember(orgId: string, teamId: string, userId: st
   await query(`DELETE FROM team_members WHERE team_id = $1 AND user_id = $2`, [teamId, userId]);
 }
 
-export async function createInvitation(orgId: string, email: string, role: string = 'member') {
+export async function createInvitation(orgId: string, email: string, role: string = 'member', inviterName?: string) {
   const existing = await queryOne<{ id: string }>(
     `SELECT id FROM organization_invitations WHERE organization_id = $1 AND email = $2 AND accepted_at IS NULL AND expires_at > NOW()`,
     [orgId, email]
@@ -299,14 +299,14 @@ export async function createInvitation(orgId: string, email: string, role: strin
       const org = await dashboardRepo.getOrganizationById(orgId);
       if (org) {
         const mail = await getMailProvider();
-        const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+        const baseUrl = process.env.APP_URL || process.env.DASHBOARD_URL || 'http://localhost:3000';
         await mail.send({
           to: email,
           ...templates.invite({
-            inviterName: 'Your team',
+            inviterName: inviterName || 'Your team',
             organizationName: org.name,
             role,
-            invitationUrl: `${baseUrl}/login?invitation=${token}`,
+            invitationUrl: `${baseUrl}/accept-invitation?token=${token}`,
             expiresIn: '7 days',
           }),
         });
@@ -326,7 +326,7 @@ export async function listInvitations(orgId: string) {
   );
 }
 
-export async function acceptInvitation(token: string) {
+export async function acceptInvitation(token: string, password?: string, name?: string) {
   const invitation = await queryOne<{ id: string; organization_id: string; email: string; role: string; expires_at: string }>(
     `SELECT id, organization_id, email, role, expires_at FROM organization_invitations WHERE token = $1 AND accepted_at IS NULL`,
     [token]
@@ -335,8 +335,12 @@ export async function acceptInvitation(token: string) {
   if (!invitation) return null;
   if (new Date(invitation.expires_at) < new Date()) return null;
 
-  const passwordHash = await argon2.hash('temporary-password-' + crypto.randomBytes(8).toString('hex'));
-  const user = await dashboardRepo.createUser(invitation.email, passwordHash, null, invitation.organization_id, invitation.role);
+  // Use provided password or generate a temporary one (backward compatible)
+  const passwordHash = password
+    ? await argon2.hash(password)
+    : await argon2.hash('temporary-password-' + crypto.randomBytes(8).toString('hex'));
+
+  const user = await dashboardRepo.createUser(invitation.email, passwordHash, name || null, invitation.organization_id, invitation.role);
 
   const defaultTeam = await queryOne<{ id: string }>(
     `SELECT id FROM teams WHERE organization_id = $1 AND name = 'General'`,
@@ -376,8 +380,8 @@ export async function resendInvitation(orgId: string, invitationId: string) {
   const newExpiresAt = new Date();
   newExpiresAt.setDate(newExpiresAt.getDate() + 7);
 
-  const invitation = await queryOne<{ id: string; email: string; token: string; expires_at: string }>(
-    `UPDATE organization_invitations SET expires_at = $1 WHERE organization_id = $2 AND id = $3 AND accepted_at IS NULL RETURNING id, email, token, expires_at`,
+  const invitation = await queryOne<{ id: string; email: string; token: string; role: string; expires_at: string }>(
+    `UPDATE organization_invitations SET expires_at = $1 WHERE organization_id = $2 AND id = $3 AND accepted_at IS NULL RETURNING id, email, token, role, expires_at`,
     [newExpiresAt, orgId, invitationId]
   );
 
@@ -386,14 +390,14 @@ export async function resendInvitation(orgId: string, invitationId: string) {
       const org = await dashboardRepo.getOrganizationById(orgId);
       if (org) {
         const mail = await getMailProvider();
-        const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+        const baseUrl = process.env.APP_URL || process.env.DASHBOARD_URL || 'http://localhost:3000';
         await mail.send({
           to: invitation.email,
           ...templates.invite({
             inviterName: 'Your team',
             organizationName: org.name,
-            role: 'member',
-            invitationUrl: `${baseUrl}/login?invitation=${invitation.token}`,
+            role: invitation.role,
+            invitationUrl: `${baseUrl}/accept-invitation?token=${invitation.token}`,
             expiresIn: '7 days',
           }),
         });
@@ -623,9 +627,75 @@ export async function registerAgentEnhanced(
   };
 }
 
+// --- Agent Login (API Key based) ---
+
+export async function agentLogin(
+  apiKey: string,
+  hostname: string,
+  os: string,
+  architecture: string,
+  agentVersion?: string
+): Promise<{
+  organizationId: string;
+  organizationName: string;
+  machineId: string;
+  apiUrl: string;
+  syncInterval: number;
+  agentToken: string;
+} | null> {
+  // Validate API key - supports both cb_ and aisk_ prefixes
+  const prefix = apiKey.slice(0, 8);
+  const keyRecord = await queryOne<{ id: string; organization_id: string; key_hash: string; role: string }>(
+    `SELECT id, organization_id, key_hash, role FROM api_keys WHERE prefix = $1 AND (expires_at IS NULL OR expires_at > NOW())`,
+    [prefix]
+  );
+
+  if (!keyRecord) return null;
+
+  const isValid = await argon2.verify(keyRecord.key_hash, apiKey);
+  if (!isValid) return null;
+
+  // Update last_used_at
+  await query(`UPDATE api_keys SET last_used_at = NOW() WHERE id = $1`, [keyRecord.id]);
+
+  // Get organization name
+  const org = await dashboardRepo.getOrganizationById(keyRecord.organization_id);
+  if (!org) return null;
+
+  // Upsert machine
+  const machine = await queryOne<{ id: string }>(
+    `INSERT INTO machines (organization_id, hostname, os, architecture, agent_version, status)
+     VALUES ($1, $2, $3, $4, $5, 'ONLINE')
+     ON CONFLICT (organization_id, hostname) DO UPDATE SET
+       os = EXCLUDED.os,
+       architecture = EXCLUDED.architecture,
+       agent_version = EXCLUDED.agent_version,
+       last_seen = NOW(),
+       status = 'ONLINE'
+     RETURNING id`,
+    [keyRecord.organization_id, hostname, os || null, architecture || null, agentVersion || null]
+  );
+
+  if (!machine) return null;
+
+  // Generate agent token
+  const agentToken = await generateAgentToken(machine.id);
+
+  const apiUrl = process.env.INGESTION_API_URL || process.env.API_URL || 'http://localhost:3001';
+
+  return {
+    organizationId: keyRecord.organization_id,
+    organizationName: org.name,
+    machineId: machine.id,
+    apiUrl,
+    syncInterval: 300,
+    agentToken,
+  };
+}
+
 // --- Email Verification ---
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const APP_BASE_URL = process.env.APP_URL || process.env.FRONTEND_URL || 'http://localhost:3000';
 
 export async function generateEmailVerification(userId: string): Promise<void> {
   const user = await dashboardRepo.getUserById(userId);
@@ -637,7 +707,7 @@ export async function generateEmailVerification(userId: string): Promise<void> {
 
   await dashboardRepo.createEmailVerification(userId, token, expiresAt);
 
-  const verificationUrl = `${FRONTEND_URL}/verify-email?token=${token}`;
+  const verificationUrl = `${APP_BASE_URL}/verify-email?token=${token}`;
   const template = templates.verifyEmail({
     userName: user.name || user.email,
     verificationUrl,
@@ -692,7 +762,7 @@ export async function generatePasswordReset(email: string): Promise<void> {
 
   await dashboardRepo.createPasswordReset(user.id, tokenHash, expiresAt);
 
-  const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
+  const resetUrl = `${APP_BASE_URL}/reset-password?token=${token}`;
   const template = templates.passwordReset({
     userName: user.name || user.email,
     resetUrl,
@@ -739,7 +809,7 @@ export async function listApiKeys(orgId: string) {
 }
 
 export async function createApiKey(orgId: string, name: string, role: string = 'write', expiresAt?: string) {
-  const prefix = `cb_${crypto.randomBytes(4).toString('hex')}`;
+  const prefix = `aisk_${crypto.randomBytes(4).toString('hex')}`;
   const fullKey = `${prefix}_${crypto.randomBytes(24).toString('hex')}`;
   const keyHash = await argon2.hash(fullKey);
 
@@ -776,4 +846,38 @@ export async function changePassword(userId: string, currentPassword: string, ne
   await dashboardRepo.deleteRefreshTokensForUser(userId);
 
   return { success: true };
+}
+
+// --- Sync Completed Email ---
+
+export async function sendSyncCompletedEmail(
+  orgId: string,
+  sessionsImported: number,
+  providersDetected: string[]
+): Promise<void> {
+  try {
+    const org = await dashboardRepo.getOrganizationById(orgId);
+    if (!org) return;
+
+    // Get the org owner to send the email to
+    const owner = await queryOne<{ email: string; name: string | null }>(
+      `SELECT email, name FROM users WHERE organization_id = $1 AND role = 'owner' LIMIT 1`,
+      [orgId]
+    );
+    if (!owner) return;
+
+    const mail = await getMailProvider();
+    const baseUrl = process.env.APP_URL || process.env.DASHBOARD_URL || 'http://localhost:3000';
+    await mail.send({
+      to: owner.email,
+      ...templates.syncCompleted({
+        userName: owner.name || owner.email,
+        sessionsImported,
+        providersDetected,
+        dashboardUrl: `${baseUrl}/dashboard`,
+      }),
+    });
+  } catch {
+    // Don't fail if email sending fails
+  }
 }

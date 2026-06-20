@@ -169,7 +169,7 @@ curl http://localhost:3002/api/v1/dashboard/overview \
 
 ### API Key Security
 
-- Keys are prefixed with `cb_` for identification
+- Keys are prefixed with `cb_` or `aisk_` for identification
 - Keys are shown only once at creation — store them securely
 - Keys can be revoked at any time from the dashboard or API
 - Use separate keys for different environments (dev, staging, production)

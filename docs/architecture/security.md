@@ -20,8 +20,8 @@
 
 ### API Keys
 
-- Format: `cb_XXXXXXXX_YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY`
-- Prefix: `cb_` + 8 hex characters (used for lookup)
+- Format: `aisk_XXXXXXXX_YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY` (new keys) or `cb_...` (legacy)
+- Prefix: `aisk_` or `cb_` + 8 hex characters (used for lookup)
 - Full key shown only on creation (one-time secret)
 - Stored as Argon2 hash
 - Role-based: `read`, `write`, `admin`

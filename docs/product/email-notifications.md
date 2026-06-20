@@ -168,9 +168,10 @@ EMAIL_FROM=AIInsight <notifications@aiinsight.dev>
 The base URL used in email links:
 
 ```env
-DASHBOARD_URL=https://dashboard.aiinsight.dev
-FRONTEND_URL=https://app.aiinsight.dev
+APP_URL=https://app.aiinsight.dev
 ```
+
+Note: `DASHBOARD_URL` and `FRONTEND_URL` are also supported for backward compatibility, but `APP_URL` is preferred.
 
 ---
 

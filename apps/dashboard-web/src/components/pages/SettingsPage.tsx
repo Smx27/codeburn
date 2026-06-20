@@ -20,9 +20,17 @@ import {
   Shield,
   Loader2,
   Clock,
+  UserPlus,
 } from 'lucide-react';
 import { listApiKeys, createApiKey, deleteApiKey } from '@/lib/api';
 import type { ApiKey } from '@/types/dashboard';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 function Toggle({
   checked,
@@ -86,6 +94,115 @@ export function SettingsPage() {
     costAlerts: true,
     usageWarnings: true,
   });
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('member');
+  const [inviteLoading, setInviteLoading] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // Members queries
+  const { data: members } = useQuery({
+    queryKey: ['members'],
+    queryFn: async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/api/v1/teams`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch teams');
+      const teams = await response.json();
+      // Extract members from teams
+      const allMembers: Array<{ id: string; name: string | null; email: string; role: string }> = [];
+      for (const team of teams) {
+        if (team.members) {
+          for (const member of team.members) {
+            if (!allMembers.find(m => m.id === member.id)) {
+              allMembers.push(member);
+            }
+          }
+        }
+      }
+      return allMembers;
+    },
+  });
+
+  const { data: invitations } = useQuery({
+    queryKey: ['invitations'],
+    queryFn: async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/api/v1/invitations`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch invitations');
+      return response.json();
+    },
+  });
+
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inviteEmail) return;
+
+    setInviteLoading(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/api/v1/invitations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
+      });
+
+      if (response.ok) {
+        toast.success('Invitation sent');
+        setIsInviteDialogOpen(false);
+        setInviteEmail('');
+        setInviteRole('member');
+        queryClient.invalidateQueries({ queryKey: ['invitations'] });
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to send invitation');
+      }
+    } catch {
+      toast.error('Failed to send invitation');
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
+  const handleResendInvitation = async (invitationId: string) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      await fetch(`${apiUrl}/api/v1/invitations/${invitationId}/resend`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toast.success('Invitation resent');
+    } catch {
+      toast.error('Failed to resend invitation');
+    }
+  };
+
+  const handleRevokeInvitation = async (invitationId: string) => {
+    if (!confirm('Are you sure you want to revoke this invitation?')) return;
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      await fetch(`${apiUrl}/api/v1/invitations/${invitationId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toast.success('Invitation revoked');
+      queryClient.invalidateQueries({ queryKey: ['invitations'] });
+    } catch {
+      toast.error('Failed to revoke invitation');
+    }
+  };
 
   useEffect(() => {
     loadApiKeys();
@@ -486,11 +603,140 @@ export function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="members" className="space-y-6">
-          <ComingSoonCard
-            icon={Users}
-            title="Team Members"
-            description="Invite and manage team members, roles, and permissions for your organization."
-          />
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Team Members</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Invite and manage team members for your organization
+                  </p>
+                </div>
+                <Button onClick={() => setIsInviteDialogOpen(true)}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Invite Member
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {invitations && invitations.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Pending Invitations</h4>
+                  <div className="space-y-2">
+                    {invitations.map((invitation) => (
+                      <div
+                        key={invitation.id}
+                        className="flex items-center justify-between p-3 rounded-lg border"
+                      >
+                        <div>
+                          <p className="font-medium">{invitation.email}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {invitation.role} • Expires {formatDistanceToNow(new Date(invitation.expires_at), { addSuffix: true })}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleResendInvitation(invitation.id)}
+                          >
+                            Resend
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRevokeInvitation(invitation.id)}
+                          >
+                            Revoke
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {members && members.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Members</h4>
+                  <div className="space-y-2">
+                    {members.map((member) => (
+                      <div
+                        key={member.id}
+                        className="flex items-center justify-between p-3 rounded-lg border"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-sm font-medium text-primary">
+                              {member.name?.[0] || member.email[0].toUpperCase()}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium">{member.name || member.email}</p>
+                            <p className="text-sm text-muted-foreground">{member.role}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(!members || members.length === 0) && (!invitations || invitations.length === 0) && (
+                <div className="text-center py-8">
+                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No team members yet</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Invite your first team member to get started
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Invite Team Member</DialogTitle>
+                <DialogDescription>
+                  Send an invitation to join your organization
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleInvite} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="invite-email">Email</Label>
+                  <Input
+                    id="invite-email"
+                    type="email"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="colleague@company.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="invite-role">Role</Label>
+                  <Select value={inviteRole} onValueChange={setInviteRole}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="member">Member</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setIsInviteDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={inviteLoading}>
+                    {inviteLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                    Send Invitation
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="billing" className="space-y-6">

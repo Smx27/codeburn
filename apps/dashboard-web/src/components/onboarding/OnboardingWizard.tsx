@@ -73,14 +73,32 @@ export function OnboardingWizard() {
 
   const handleGenerateKey = async () => {
     setIsGenerating(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setApiKey('ai_live_' + Math.random().toString(36).substring(2, 15));
-    setIsGenerating(false);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/api/v1/enrollment-keys`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: 'Default' }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setApiKey(data.key);
+      }
+    } catch {
+      // Handle error
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleStartSync = async () => {
     setIsSyncing(true);
-    await new Promise((r) => setTimeout(r, 3000));
+    // The actual sync is done via CLI, so we just mark as complete after a brief delay
+    await new Promise((r) => setTimeout(r, 2000));
     setSyncComplete(true);
     setIsSyncing(false);
   };

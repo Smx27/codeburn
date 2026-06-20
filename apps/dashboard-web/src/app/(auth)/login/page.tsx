@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,8 +25,17 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginRoute() {
   const { user, isLoading: authLoading, login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Redirect to accept-invitation if invitation token is present
+  useEffect(() => {
+    const invitationToken = searchParams.get('invitation');
+    if (invitationToken) {
+      router.push(`/accept-invitation?token=${invitationToken}`);
+    }
+  }, [searchParams, router]);
 
   const {
     register,

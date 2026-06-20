@@ -474,7 +474,7 @@ List API keys.
   {
     "id": "uuid",
     "name": "Sync Key",
-    "prefix": "cb_abc12345",
+    "prefix": "aisk_abc12345",
     "role": "write",
     "created_at": "2026-06-19T12:00:00Z",
     "last_used_at": "2026-06-19T12:00:00Z",
@@ -501,10 +501,10 @@ Create API key. Requires admin.
 {
   "id": "uuid",
   "name": "Sync Key",
-  "prefix": "cb_abc12345",
+  "prefix": "aisk_abc12345",
   "role": "write",
   "created_at": "2026-06-19T12:00:00Z",
-  "key": "cb_abc12345_678901234567890123456789012345678901234567890123"
+  "key": "aisk_abc12345_678901234567890123456789012345678901234567890123"
 }
 ```
 

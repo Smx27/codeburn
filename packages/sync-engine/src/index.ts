@@ -38,11 +38,11 @@ export class SyncEngine {
     };
 
     const providers = options.providers ?? [];
+    this.uploader = new BatchUploader(this.config);
     
     this.syncLoop = new SyncLoop(this.config, providers);
-    this.historicalSync = new HistoricalSyncService(this.config, providers);
-    this.incrementalSync = new IncrementalSyncService(this.config, providers);
-    this.uploader = new BatchUploader(this.config);
+    this.historicalSync = new HistoricalSyncService(this.config, providers, this.uploader);
+    this.incrementalSync = new IncrementalSyncService(this.config, providers, this.uploader);
     this.client = new IngestionClient(this.config);
   }
 
@@ -85,3 +85,5 @@ export function createSyncEngine(options: SyncEngineOptions): SyncEngine {
 export { SyncLoop, HistoricalSyncService, IncrementalSyncService, BatchUploader, IngestionClient };
 export * from './types/sync.types.js';
 export * from './logging/sync.logger.js';
+export { warpAdapter, createWarpAdapter } from './providers/warp.sync.js';
+export { opencodeAdapter, createOpenCodeAdapter } from './providers/opencode.sync.js';

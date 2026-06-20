@@ -1240,11 +1240,15 @@ program
     console.log(`  ${chalk.dim('Org')}     : ${organizationId}`)
     console.log('')
     
+    const { getAllProviders } = await import('./providers/index.js')
+    const providers = await getAllProviders()
+    
     const engine = createSyncEngine({
       organizationId,
       machineId,
       apiUrl,
       apiKey,
+      providers,
     })
     
     await engine.initialize()
@@ -1273,6 +1277,41 @@ program
     } finally {
       await engine.shutdown()
     }
+  })
+
+program
+  .command('login')
+  .description('Connect to AIInsight Cloud with your API key')
+  .option('--api-url <url>', 'API URL (default: http://localhost:3001)')
+  .action(async (opts) => {
+    const { runLogin } = await import('./commands/login.js')
+    await runLogin(opts.apiUrl)
+  })
+
+program
+  .command('logout')
+  .description('Disconnect from AIInsight Cloud and clear sync data')
+  .option('--force', 'Skip confirmation')
+  .action(async (opts) => {
+    const { runLogout } = await import('./commands/logout.js')
+    await runLogout(opts.force)
+  })
+
+program
+  .command('config')
+  .description('View or manage configuration')
+  .argument('[action]', 'Action: view (default), edit, reset')
+  .action(async (action) => {
+    const { runConfig } = await import('./commands/config.js')
+    await runConfig(action)
+  })
+
+program
+  .command('providers')
+  .description('List detected AI coding providers')
+  .action(async () => {
+    const { runProviders } = await import('./commands/providers.js')
+    await runProviders()
   })
 
 program

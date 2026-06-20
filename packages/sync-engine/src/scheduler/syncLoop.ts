@@ -9,13 +9,16 @@ export class SyncLoop {
   private incrementalSync: IncrementalSyncService;
   private config: SyncConfig;
   private intervalMs: number;
+  private heartbeatIntervalMs: number;
   private historicalCompleted = false;
   private running = false;
   private intervalId: NodeJS.Timeout | null = null;
+  private heartbeatId: NodeJS.Timeout | null = null;
 
   constructor(config: SyncConfig, providers: Provider[]) {
     this.config = config;
     this.intervalMs = 5 * 60 * 1000;
+    this.heartbeatIntervalMs = 60 * 1000; // 1 minute
     this.historicalSync = new HistoricalSyncService(config, providers);
     this.incrementalSync = new IncrementalSyncService(config, providers);
   }
@@ -23,6 +26,22 @@ export class SyncLoop {
   async initialize(): Promise<void> {
     await this.historicalSync.initialize();
     await this.incrementalSync.initialize();
+  }
+
+  private async sendHeartbeat(): Promise<void> {
+    try {
+      const url = `${this.config.apiUrl}/heartbeat`;
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          machineId: this.config.machineId,
+          organizationId: this.config.organizationId,
+        }),
+      });
+    } catch {
+      // Silent — heartbeat failures are non-critical
+    }
   }
 
   async start(): Promise<void> {
@@ -53,6 +72,9 @@ export class SyncLoop {
       logger.info('Running initial incremental sync...');
       await this.incrementalSync.runIncrementalSync();
 
+      // Send initial heartbeat
+      await this.sendHeartbeat();
+
       this.intervalId = setInterval(async () => {
         if (!this.running) return;
         
@@ -62,6 +84,11 @@ export class SyncLoop {
           logger.error({ error: (error as Error).message }, 'Incremental sync failed');
         }
       }, this.intervalMs);
+
+      this.heartbeatId = setInterval(async () => {
+        if (!this.running) return;
+        await this.sendHeartbeat();
+      }, this.heartbeatIntervalMs);
 
       logger.info('Sync loop started successfully');
     } catch (error) {
@@ -88,6 +115,7 @@ export class SyncLoop {
     }
 
     await this.incrementalSync.runIncrementalSync();
+    await this.sendHeartbeat();
     logger.info('One-time sync completed');
   }
 
@@ -97,6 +125,11 @@ export class SyncLoop {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
+    }
+
+    if (this.heartbeatId) {
+      clearInterval(this.heartbeatId);
+      this.heartbeatId = null;
     }
 
     await this.historicalSync.shutdown();

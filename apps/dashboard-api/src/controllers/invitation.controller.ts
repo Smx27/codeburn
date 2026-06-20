@@ -15,7 +15,8 @@ export async function createInvitation(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const invitation = await dashboardService.createInvitation(orgId, email, role || 'member');
+    const inviterName = req.user?.name || req.user?.email || 'Your team';
+    const invitation = await dashboardService.createInvitation(orgId, email, role || 'member', inviterName);
     if (!invitation) {
       res.status(409).json({ error: 'Invitation already exists for this email' });
       return;
@@ -44,13 +45,18 @@ export async function listInvitations(req: Request, res: Response): Promise<void
 
 export async function acceptInvitation(req: Request, res: Response): Promise<void> {
   try {
-    const { token } = req.body;
+    const { token, password, name } = req.body;
     if (!token) {
       res.status(400).json({ error: 'Invitation token is required' });
       return;
     }
 
-    const result = await dashboardService.acceptInvitation(token);
+    if (password && password.length < 8) {
+      res.status(400).json({ error: 'Password must be at least 8 characters' });
+      return;
+    }
+
+    const result = await dashboardService.acceptInvitation(token, password, name);
     if (!result) {
       res.status(404).json({ error: 'Invalid or expired invitation' });
       return;
@@ -89,13 +95,13 @@ export async function resendInvitation(req: Request, res: Response): Promise<voi
       return;
     }
 
-    const invitation = await dashboardService.resendInvitation(orgId, id);
-    if (!invitation) {
+    const result = await dashboardService.resendInvitation(orgId, id);
+    if (!result) {
       res.status(404).json({ error: 'Invitation not found' });
       return;
     }
 
-    res.json(invitation);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

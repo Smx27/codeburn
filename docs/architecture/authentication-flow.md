@@ -136,8 +136,8 @@ sequenceDiagram
     participant API as API
 
     Agent->>API: GET /api/v1/...
-    Note over Agent: Header: Authorization: Bearer cb_XXXXXXXX_...
-    API->>API: Detect cb_ prefix
+    Note over Agent: Header: Authorization: Bearer aisk_XXXXXXXX_...
+    API->>API: Detect aisk_ or cb_ prefix
     API->>DB: SELECT api_keys WHERE prefix
     API->>DB: Verify Argon2 hash
     API->>API: Set req.user from api_keys record

@@ -1,0 +1,117 @@
+import { createInterface } from 'readline'
+import { homedir } from 'os'
+import { platform } from 'os'
+import { arch } from 'os'
+import chalk from 'chalk'
+import { saveSyncConfig, getOrCreateMachineId } from '../config.js'
+import { fetchWithTimeout } from '../fetch-utils.js'
+import { renderSuccess, renderWelcome } from '../ui/success.js'
+import { renderError } from '../ui/errors.js'
+
+const BOLD = chalk.bold
+const GREEN = chalk.green
+const CYAN = chalk.cyan
+const DIM = chalk.dim
+
+interface AgentLoginResponse {
+  organizationId: string
+  organizationName: string
+  machineId: string
+  apiUrl: string
+  syncInterval: number
+  agentToken: string
+}
+
+export async function runLogin(apiUrl?: string): Promise<void> {
+  console.log(renderWelcome())
+
+  // Prompt for API key
+  const apiKey = await promptForApiKey()
+  if (!apiKey) {
+    console.error(renderError('API key is required'))
+    process.exit(1)
+  }
+
+  // Get system info
+  const hostname = homedir().split('/').pop() || 'unknown'
+  const os = platform()
+  const architecture = arch()
+
+  // Determine API URL
+  const baseUrl = apiUrl || 'http://localhost:3001'
+
+  console.log(`\n  ${CYAN('▸')} Connecting to AIInsight Cloud...`)
+
+  try {
+    const response = await fetchWithTimeout(`${baseUrl}/api/v1/agents/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey,
+        hostname,
+        os,
+        architecture,
+        agentVersion: '1.0.0',
+      }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Unknown error' }))
+      console.error(renderError(error.error || 'Login failed'))
+      process.exit(1)
+    }
+
+    const data: AgentLoginResponse = await response.json()
+
+    // Save config
+    await saveSyncConfig({
+      organizationId: data.organizationId,
+      organizationName: data.organizationName,
+      machineId: data.machineId,
+      apiUrl: data.apiUrl,
+      apiKey,
+      agentToken: data.agentToken,
+      syncInterval: data.syncInterval,
+      enabled: true,
+    })
+
+    // Also save machine ID to the separate file
+    const machineIdPath = await getOrCreateMachineId()
+
+    console.log(renderSuccess('Connected to AIInsight Cloud', {
+      'Organization': data.organizationName,
+      'Machine ID': data.machineId,
+      'API URL': data.apiUrl,
+      'Sync Interval': `${data.syncInterval} seconds`,
+    }))
+
+    console.log(`  ${DIM('Run')} ${BOLD.cyan('aiinsight sync')} ${DIM('to start syncing.')}\n`)
+  } catch (error) {
+    if ((error as Error).name === 'TimeoutError') {
+      console.error(renderError('Connection timed out. Check your network and API URL.'))
+    } else {
+      console.error(renderError((error as Error).message))
+    }
+    process.exit(1)
+  }
+}
+
+function promptForApiKey(): Promise<string | null> {
+  return new Promise((resolve) => {
+    const rl = createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    })
+
+    // Mask input for API key
+    rl.question(`  ${DIM('Paste your API key:')} `, (answer) => {
+      rl.close()
+      resolve(answer.trim() || null)
+    })
+
+    // Handle Ctrl+C
+    rl.on('close', () => {
+      resolve(null)
+    })
+  })
+}

@@ -82,18 +82,47 @@ sudo yum install aiinsight
 aiinsight --version
 ```
 
-## Enrollment
+## Quick Start
 
-### What Is an Enrollment Key?
+The fastest way to get started:
 
-An enrollment key is a one-time credential used to register a new agent with your organization. It's like a password for machines — it proves the agent is authorized to join your team.
+1. **Install the CLI:**
+   ```bash
+   npm install -g aiinsight
+   ```
 
-### How to Get One
+2. **Login with your API key:**
+   ```bash
+   aiinsight login
+   ```
 
-1. Log in to the AIInsight dashboard at [localhost:3000](http://localhost:3000)
+3. **Start syncing:**
+   ```bash
+   aiinsight sync
+   ```
+
+That's it! Your AI coding activity will start appearing on the dashboard.
+
+## Authentication
+
+### API Key Login (Recommended)
+
+The simplest way to connect your agent:
+
+1. Log in to the AIInsight dashboard
+2. Navigate to **Settings → API Keys**
+3. Click **Create API Key**
+4. Copy the key (it won't be shown again)
+5. Run `aiinsight login` and paste the key when prompted
+
+### Enrollment Key (Advanced)
+
+For automated deployments or CI/CD pipelines:
+
+1. Log in to the AIInsight dashboard
 2. Navigate to **Settings → Agents**
 3. Click **Generate New Key**
-4. Enter a name (e.g., "My MacBook Pro")
+4. Enter a name (e.g., "CI Pipeline")
 5. Optionally set an expiration date
 6. Copy the key immediately — it won't be shown again
 
