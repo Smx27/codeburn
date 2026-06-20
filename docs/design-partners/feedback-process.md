@@ -91,7 +91,7 @@ Your overall experience and impressions.
 
 ### GitHub Issues
 
-**Repository:** https://github.com/priya/aiinsight/issues
+**Repository:** https://github.com/getagentseal/codeburn/issues
 
 **Best for:**
 - Bug reports

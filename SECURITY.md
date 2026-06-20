@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-Please report security vulnerabilities via [GitHub's private vulnerability reporting](https://github.com/priya/aiinsight/security/advisories/new).
+Please report security vulnerabilities via [GitHub's private vulnerability reporting](https://github.com/getagentseal/codeburn/security/advisories/new).
 
 Do not open a public issue for security vulnerabilities.
 
@@ -59,7 +59,7 @@ We currently do not offer a bug bounty program. However, we appreciate security 
 
 For security inquiries:
 - Email: security@aiinsight.dev
-- GitHub: [Private vulnerability reporting](https://github.com/priya/aiinsight/security/advisories/new)
+- GitHub: [Private vulnerability reporting](https://github.com/getagentseal/codeburn/security/advisories/new)
 
 ## Related Documentation
 

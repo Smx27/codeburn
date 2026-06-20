@@ -1,14 +1,14 @@
 import { createHash, randomBytes } from 'node:crypto'
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { homedir } from 'node:os'
+import { getConfigDir } from '@aiinsight/platform'
 import type { MenubarPayload } from '../menubar-json.js'
 
 let salt: string | undefined
 
 function getSalt(): string {
   if (salt) return salt
-  const dir = join(homedir(), '.config', 'aiinsight')
+  const dir = getConfigDir()
   const saltPath = join(dir, '.mcp-salt')
   try {
     salt = readFileSync(saltPath, 'utf-8').trim()

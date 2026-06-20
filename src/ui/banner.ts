@@ -1,17 +1,27 @@
 import figlet from 'figlet'
 import chalk from 'chalk'
-import { createRequire } from 'node:module'
+import { BUILD_VERSION } from '../build-info.js'
 
-const require = createRequire(import.meta.url)
-const { version } = require('../../package.json')
+const version = BUILD_VERSION
 
 const BORDER = chalk.hex('#4a5568')
 
 export function renderBanner(): string {
-  const ascii = figlet.textSync('AIInsight', {
-    font: 'ANSI Shadow',
-    horizontalLayout: 'fitted',
-  })
+  let ascii: string
+  try {
+    ascii = figlet.textSync('AIInsight', {
+      font: 'ANSI Shadow',
+      horizontalLayout: 'fitted',
+    })
+  } catch {
+    try {
+      ascii = figlet.textSync('AIInsight', {
+        horizontalLayout: 'fitted',
+      })
+    } catch {
+      ascii = '  AIInsight'
+    }
+  }
 
   const lines = ascii.split('\n')
   const maxLen = Math.max(...lines.map(l => l.length))
@@ -21,7 +31,8 @@ export function renderBanner(): string {
   const bottom = `${BORDER('└')}${BORDER('─'.repeat(maxLen + 2))}${BORDER('┘')}`
 
   const tagline = chalk.hex('#a0aec0')('AI Usage Intelligence Platform')
-  const taglinePad = ' '.repeat(Math.floor((maxLen + 4 - tagline.length) / 2))
+  const rawTaglineLen = 'AI Usage Intelligence Platform'.length
+  const taglinePad = ' '.repeat(Math.max(0, Math.floor((maxLen + 4 - rawTaglineLen) / 2)))
 
   return [
     '',

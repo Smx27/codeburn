@@ -19,7 +19,7 @@ The recommended deployment method uses Docker Compose.
 
 ```bash
 # Clone and configure
-git clone https://github.com/priya/aiinsight.git
+git clone https://github.com/getagentseal/codeburn.git
 cd aiinsight
 cp .env.docker.example .env
 # Edit .env with production values

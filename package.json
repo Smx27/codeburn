@@ -17,6 +17,10 @@
   "scripts": {
     "bundle-litellm": "node scripts/bundle-litellm.mjs",
     "build": "node scripts/bundle-litellm.mjs && tsup && node -e \"const fs=require('fs'); fs.copyFileSync('src/cli.ts','dist/cli.js'); fs.chmodSync('dist/cli.js',0o755)\"",
+    "build:sea": "node scripts/bundle-litellm.mjs && npx tsup --config tsup.sea.config.ts && node -e \"const fs=require('fs'); fs.copyFileSync('src/cli.ts','dist/cli.js'); fs.chmodSync('dist/cli.js',0o755)\" && node scripts/build-sea.mjs",
+    "build:sea:windows": "npm run build:sea -- --platform win32",
+    "build:sea:linux": "npm run build:sea -- --platform linux",
+    "build:sea:darwin": "npm run build:sea -- --platform darwin",
     "dev": "tsx src/cli.ts",
     "test": "vitest",
     "prepublishOnly": "npm run build",
@@ -56,17 +60,19 @@
   "engines": {
     "node": ">=22.13.0"
   },
-  "author": "AgentSeal <hello@agentseal.org>",
+  "author": "Sumit Maiti",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/priya/aiinsight.git"
+    "url": "git+https://github.com/getagentseal/codeburn.git"
   },
   "bugs": {
-    "url": "https://github.com/priya/aiinsight/issues"
+    "url": "https://github.com/getagentseal/codeburn/issues"
   },
-  "homepage": "https://github.com/priya/aiinsight#readme",
+  "homepage": "https://github.com/getagentseal/codeburn#readme",
   "dependencies": {
+    "@aiinsight/distribution": "*",
+    "@aiinsight/platform": "*",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",

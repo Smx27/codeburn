@@ -1,10 +1,9 @@
-import { createInterface } from 'readline'
+import { createInterface } from 'node:readline'
 import { rm } from 'fs/promises'
 import { existsSync } from 'fs'
-import { join } from 'path'
-import { homedir } from 'os'
 import chalk from 'chalk'
 import { readConfig, saveConfig, getConfigFilePath } from '../config.js'
+import { getMachineIdPath, getSyncStatePath, getUploadQueuePath } from '@aiinsight/platform'
 import { renderSuccess } from '../ui/success.js'
 import { renderError } from '../ui/errors.js'
 
@@ -39,19 +38,19 @@ export async function runLogout(force?: boolean): Promise<void> {
   await saveConfig(config)
 
   // Remove machine-id file
-  const machineIdPath = join(homedir(), '.config', 'aiinsight', 'machine-id')
+  const machineIdPath = getMachineIdPath()
   if (existsSync(machineIdPath)) {
     await rm(machineIdPath).catch(() => {})
   }
 
   // Remove sync state directory
-  const syncStateDir = join(homedir(), '.config', 'aiinsight', 'sync-state')
+  const syncStateDir = getSyncStatePath()
   if (existsSync(syncStateDir)) {
     await rm(syncStateDir, { recursive: true }).catch(() => {})
   }
 
   // Remove upload queue directory
-  const uploadQueueDir = join(homedir(), '.config', 'aiinsight', 'upload-queue')
+  const uploadQueueDir = getUploadQueuePath()
   if (existsSync(uploadQueueDir)) {
     await rm(uploadQueueDir, { recursive: true }).catch(() => {})
   }

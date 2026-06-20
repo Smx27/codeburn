@@ -46,7 +46,7 @@ Design partners receive priority support. This document describes how to get hel
 
 ### GitHub Issues
 
-**Repository:** https://github.com/priya/aiinsight/issues
+**Repository:** https://github.com/getagentseal/codeburn/issues
 
 **Response time:** < 48 hours
 
@@ -184,7 +184,7 @@ Your feedback helps us improve:
 ### Community
 
 - **Discord:** [discord.gg/w2sw8mCqep](https://discord.gg/w2sw8mCqep)
-- **GitHub:** https://github.com/priya/aiinsight
+- **GitHub:** https://github.com/getagentseal/codeburn
 - **Twitter:** @aiinsight
 
 ### Contact

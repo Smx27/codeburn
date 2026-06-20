@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
-import { homedir } from 'os'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 import snapshotData from './data/litellm-snapshot.json'
 import fallbackData from './data/pricing-fallback.json'
 import { fetchWithTimeout } from './fetch-utils.js'
@@ -117,8 +117,7 @@ function getLowercasePricingIndex(): Map<string, ModelCosts> {
 }
 
 function getCacheDir(): string {
-  if (process.env['AIINSIGHT_CACHE_DIR']) return process.env['AIINSIGHT_CACHE_DIR']
-  return join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getCachePath(): string {

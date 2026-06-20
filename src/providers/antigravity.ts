@@ -1,10 +1,11 @@
 import { readdir, readFile, mkdir, stat, open, rename, unlink } from 'fs/promises'
 import { execFile } from 'child_process'
 import { randomBytes } from 'crypto'
-import { basename, join } from 'path'
 import { homedir } from 'os'
+import { basename, join } from 'path'
 import { fileURLToPath } from 'url'
 import https from 'https'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 
 import { calculateCost } from '../models.js'
 import { isSqliteAvailable, openDatabase } from '../sqlite.js'
@@ -153,7 +154,7 @@ function getAgent(): https.Agent {
 }
 
 function getCacheDir(): string {
-  return process.env['AIINSIGHT_CACHE_DIR'] ?? join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getCachePath(): string {

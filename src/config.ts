@@ -1,8 +1,7 @@
 import { readFile, writeFile, mkdir, rename } from 'fs/promises'
-import { join } from 'path'
-import { homedir } from 'os'
 import { randomBytes } from 'crypto'
 import { PLAN_PROVIDERS } from './plans.js'
+import { getConfigDir as getPlatformConfigDir, getConfigPath as getPlatformConfigPath, getMachineIdPath } from '@aiinsight/platform'
 
 export type PlanId = 'claude-pro' | 'claude-max' | 'claude-max-5x' | 'cursor-pro' | 'custom' | 'none'
 export type PlanProvider = 'claude' | 'codex' | 'cursor' | 'all'
@@ -20,6 +19,7 @@ export type PlanConfigMap = Partial<Record<PlanProvider, PlanConfig>>
 export type PlanMap = Partial<Record<PlanProvider, Plan>>
 
 export type AiInsightConfig = {
+  version?: number
   currency?: {
     code: string
     symbol?: string
@@ -66,12 +66,14 @@ export type AiInsightConfig = {
   }
 }
 
+export const CURRENT_CONFIG_VERSION = 1
+
 function getConfigDir(): string {
-  return join(homedir(), '.config', 'aiinsight')
+  return getPlatformConfigDir()
 }
 
 function getConfigPath(): string {
-  return join(getConfigDir(), 'config.json')
+  return getPlatformConfigPath()
 }
 
 export async function readConfig(): Promise<AiInsightConfig> {
@@ -84,6 +86,7 @@ export async function readConfig(): Promise<AiInsightConfig> {
 }
 
 export async function saveConfig(config: AiInsightConfig): Promise<void> {
+  const configWithVersion = { ...config, version: config.version ?? CURRENT_CONFIG_VERSION }
   await mkdir(getConfigDir(), { recursive: true })
   const configPath = getConfigPath()
   // Randomize the temp path so two simultaneous saveConfig calls (from
@@ -91,7 +94,7 @@ export async function saveConfig(config: AiInsightConfig): Promise<void> {
   // staging file. The previous fixed `.tmp` suffix could leave one
   // process reading partial bytes the other was mid-writing.
   const tmpPath = `${configPath}.${randomBytes(8).toString('hex')}.tmp`
-  await writeFile(tmpPath, JSON.stringify(config, null, 2) + '\n', 'utf-8')
+  await writeFile(tmpPath, JSON.stringify(configWithVersion, null, 2) + '\n', 'utf-8')
   await rename(tmpPath, configPath)
 }
 
@@ -176,7 +179,7 @@ export function getConfigFilePath(): string {
   return getConfigPath()
 }
 
-const MACHINE_ID_FILE = join(getConfigDir(), 'machine-id')
+const MACHINE_ID_FILE = getMachineIdPath()
 
 export async function getOrCreateMachineId(): Promise<string> {
   try {

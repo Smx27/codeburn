@@ -1,7 +1,7 @@
 import { mkdir, open, readFile, rename, unlink } from 'fs/promises'
 import { randomBytes } from 'crypto'
 import { dirname, join } from 'path'
-import { homedir } from 'os'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 
 import {
   recordAntigravityStatusLinePayload,
@@ -55,7 +55,7 @@ function settingsPath(): string {
 }
 
 function aiinsightCacheDir(): string {
-  return process.env['AIINSIGHT_CACHE_DIR'] ?? join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function previousStatusLinePath(): string {

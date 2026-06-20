@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, rename, stat, unlink } from 'fs/promises'
 import { join } from 'path'
-import { homedir } from 'os'
 import { randomBytes } from 'crypto'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 
 import type { ParsedProviderCall } from './providers/types.js'
 
@@ -24,7 +24,7 @@ type ResultCache = {
 const CACHE_FILE = 'cursor-results.json'
 
 function getCacheDir(): string {
-  return join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getCachePath(): string {

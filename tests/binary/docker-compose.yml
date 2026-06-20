@@ -1,0 +1,48 @@
+services:
+  ubuntu:
+    build:
+      context: .
+      dockerfile: docker/ubuntu.Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../../dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro
+      - ../../dist/SHA256SUMS:/artifacts/SHA256SUMS:ro
+    environment:
+      AIINSIGHT_BINARY_PATH: /artifacts/aiinsight-linux-x64
+      AIINSIGHT_SHA_PATH: /artifacts/SHA256SUMS
+
+  debian:
+    build:
+      context: .
+      dockerfile: docker/debian.Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../../dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro
+      - ../../dist/SHA256SUMS:/artifacts/SHA256SUMS:ro
+    environment:
+      AIINSIGHT_BINARY_PATH: /artifacts/aiinsight-linux-x64
+      AIINSIGHT_SHA_PATH: /artifacts/SHA256SUMS
+
+  alpine:
+    build:
+      context: .
+      dockerfile: docker/alpine.Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../../dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro
+      - ../../dist/SHA256SUMS:/artifacts/SHA256SUMS:ro
+    environment:
+      AIINSIGHT_BINARY_PATH: /artifacts/aiinsight-linux-x64
+      AIINSIGHT_SHA_PATH: /artifacts/SHA256SUMS
+
+  fedora:
+    build:
+      context: .
+      dockerfile: docker/fedora.Dockerfile
+    working_dir: /workspace
+    volumes:
+      - ../../dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro
+      - ../../dist/SHA256SUMS:/artifacts/SHA256SUMS:ro
+    environment:
+      AIINSIGHT_BINARY_PATH: /artifacts/aiinsight-linux-x64
+      AIINSIGHT_SHA_PATH: /artifacts/SHA256SUMS

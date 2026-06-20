@@ -1,0 +1,71 @@
+name: Binary Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  binary-validation:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - ubuntu
+          - debian
+          - alpine
+          - fedora
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure Linux artifact exists
+        run: |
+          test -f dist/aiinsight-linux-x64
+          test -f dist/SHA256SUMS
+
+      - name: Verify no Node.js runtime dependency in binary
+        run: |
+          ! strings dist/aiinsight-linux-x64 | grep -qi 'node_modules'
+          ! strings dist/aiinsight-linux-x64 | grep -qi 'require('
+          ! strings dist/aiinsight-linux-x64 | grep -qi 'createRequire'
+
+      - name: Build validation container
+        run: docker build -f tests/binary/docker/${{ matrix.distro }}.Dockerfile -t aiinsight-binary-${{ matrix.distro }} tests/binary
+
+      - name: Run standalone validation
+        run: |
+          docker run --rm \
+            -v "$PWD/dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro" \
+            -v "$PWD/dist/SHA256SUMS:/artifacts/SHA256SUMS:ro" \
+            -e AIINSIGHT_BINARY_PATH=/artifacts/aiinsight-linux-x64 \
+            -e AIINSIGHT_SHA_PATH=/artifacts/SHA256SUMS \
+            -e BINARY_REPORT_PATH=/tmp/binary-report.json \
+            aiinsight-binary-${{ matrix.distro }} \
+            bash /usr/local/bin/run-tests.sh | tee binary-report-${{ matrix.distro }}.json
+
+      - name: Validate verdict
+        run: |
+          REPORT="binary-report-${{ matrix.distro }}.json"
+          if [ ! -f "$REPORT" ]; then
+            echo "FAIL: No report generated for ${{ matrix.distro }}"
+            exit 1
+          fi
+          HEALTH=$(python3 -c "import json; print(json.load(open('$REPORT'))['binaryHealthPercent'])" 2>/dev/null || echo "0")
+          FAILURES=$(python3 -c "import json; print(len(json.load(open('$REPORT'))['criticalFailures']))" 2>/dev/null || echo "9")
+          echo "Binary Health: ${HEALTH}%"
+          echo "Critical Failures: ${FAILURES}"
+          if [ "$HEALTH" -lt 100 ]; then
+            echo "FAIL: Binary health is ${HEALTH}%, expected 100%"
+            exit 1
+          fi
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-report-${{ matrix.distro }}
+          path: binary-report-${{ matrix.distro }}.json

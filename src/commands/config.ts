@@ -1,5 +1,6 @@
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { createInterface } from 'node:readline'
 import chalk from 'chalk'
 import { readConfig, saveConfig, getConfigFilePath, getSyncConfig } from '../config.js'
 import { renderSuccess } from '../ui/success.js'
@@ -105,8 +106,7 @@ async function resetConfig(): Promise<void> {
 
 function confirmAction(message: string): Promise<boolean> {
   return new Promise((resolve) => {
-    const readline = require('readline')
-    const rl = readline.createInterface({
+    const rl = createInterface({
       input: process.stdin,
       output: process.stdout,
     })

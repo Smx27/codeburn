@@ -151,7 +151,7 @@ See [Roadmap](../roadmap.md) for planned features and improvements.
 
 If you encounter a limitation not listed here:
 
-1. Check [GitHub Issues](https://github.com/priya/aiinsight/issues) for existing reports
+1. Check [GitHub Issues](https://github.com/getagentseal/codeburn/issues) for existing reports
 2. Create a new issue with label `limitation`
 3. Include:
    - Description of limitation

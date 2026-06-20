@@ -1,10 +1,10 @@
 import { createHash } from 'crypto';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
-import { homedir } from 'os';
+import { getSyncStatePath } from '@aiinsight/platform';
 import type { SyncStateRecord, SourceStats } from '../types/sync.types.js';
 
-const SYNC_STATE_DIR = join(homedir(), '.config', 'aiinsight', 'sync-state');
+const SYNC_STATE_DIR = getSyncStatePath();
 
 interface LocalSyncStateRecord {
   organizationId: string;

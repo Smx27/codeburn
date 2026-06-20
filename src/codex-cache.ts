@@ -2,7 +2,7 @@ import { readFile, mkdir, stat, open, rename, unlink } from 'fs/promises'
 import { existsSync } from 'fs'
 import { randomBytes } from 'crypto'
 import { join } from 'path'
-import { homedir } from 'os'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 
 import type { ParsedProviderCall } from './providers/types.js'
 
@@ -24,7 +24,7 @@ type ResultCache = {
 }
 
 function getCacheDir(): string {
-  return process.env['AIINSIGHT_CACHE_DIR'] ?? join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getCachePath(): string {

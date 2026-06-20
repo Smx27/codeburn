@@ -341,7 +341,7 @@ npm update -g aiinsight
 
 If your issue isn't resolved:
 
-1. Check the [GitHub Issues](https://github.com/priya/aiinsight/issues) for known issues
+1. Check the [GitHub Issues](https://github.com/getagentseal/codeburn/issues) for known issues
 2. Join the [Discord community](https://discord.gg/w2sw8mCqep) for support
 3. Open a new issue with:
    - Steps to reproduce

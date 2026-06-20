@@ -138,7 +138,7 @@ AIInsight supports Node.js Single Executable Applications for environments witho
 
 ### Download
 
-Download the latest SEA binary from [GitHub Releases](https://github.com/priya/aiinsight/releases).
+Download the latest SEA binary from [GitHub Releases](https://github.com/getagentseal/codeburn/releases).
 
 ### Install
 

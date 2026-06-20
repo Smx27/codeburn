@@ -97,4 +97,4 @@ When reporting issues, include:
 
 - [Troubleshooting](../getting-started/troubleshooting.md) — Common issues and solutions
 - [FAQ](../getting-started/faq.md) — Common questions
-- [GitHub Issues](https://github.com/priya/aiinsight/issues) — Report bugs
+- [GitHub Issues](https://github.com/getagentseal/codeburn/issues) — Report bugs

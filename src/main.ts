@@ -24,7 +24,7 @@ import {
 import { clearPlan, readConfig, readPlan, readPlans, saveConfig, savePlan, getConfigFilePath, type Plan, type PlanId, type PlanProvider } from './config.js'
 import { clampResetDay, getPlanUsageOrNull, getPlanUsages, type PlanUsage } from './plan-usage.js'
 import { getPresetPlan, isPlanId, isPlanProvider, PLAN_IDS, PLAN_PROVIDERS, planDisplayName } from './plans.js'
-import { createRequire } from 'node:module'
+import { BUILD_VERSION } from './build-info.js'
 import { renderBanner, renderFooter, renderVersionBlock } from './ui/banner.js'
 import { renderCustomHelp } from './ui/help.js'
 import { renderTerminalStatus } from './ui/status.js'
@@ -33,8 +33,7 @@ import { renderSuccess, renderOrganizationConnected, renderSyncComplete, renderP
 import { renderError, renderMissingConfig, renderSyncError } from './ui/errors.js'
 import { createSpinner, renderBatchProgress } from './ui/spinners.js'
 
-const require = createRequire(import.meta.url)
-const { version } = require('../package.json')
+const version = BUILD_VERSION
 import { loadCurrency, getCurrency, isValidCurrencyCode } from './currency.js'
 
 function collect(val: string, acc: string[]): string[] {
@@ -139,6 +138,7 @@ async function runJsonReport(period: Period, provider: string, project: string[]
 const program = new Command()
   .name('aiinsight')
   .description('AI Usage Intelligence Platform')
+  .version(version)
   .option('--verbose', 'print warnings to stderr on read failures and skipped files')
   .option('--timezone <zone>', 'IANA timezone for date grouping (e.g. Asia/Tokyo, America/New_York)')
 

@@ -144,236 +144,6 @@
     "ast_hash": "e9b5726b0a822b013f7e4c23daea40ec",
     "semantic_hash": "e9b5726b0a822b013f7e4c23daea40ec"
   },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/AppStore.swift": {
-    "mtime": 1781178184.6283247,
-    "ast_hash": "a326c75d9b3d0c235f5348031f4fb9df",
-    "semantic_hash": "a326c75d9b3d0c235f5348031f4fb9df"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/AppVersion.swift": {
-    "mtime": 1781024857.3091319,
-    "ast_hash": "e7621f3269ec7afaf1834ee512426511",
-    "semantic_hash": "e7621f3269ec7afaf1834ee512426511"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/CodeBurnApp.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "e90339ed91ff008381aafae7c6ae6f16",
-    "semantic_hash": "e90339ed91ff008381aafae7c6ae6f16"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/CurrencyState.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "275c741bfe68b5b3384e7c3f3697a491",
-    "semantic_hash": "275c741bfe68b5b3384e7c3f3697a491"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CLIClaudeConfig.swift": {
-    "mtime": 1781030265.2223072,
-    "ast_hash": "aee3ce2a7476bc5157b249696f205af6",
-    "semantic_hash": "aee3ce2a7476bc5157b249696f205af6"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CapacityEstimator.swift": {
-    "mtime": 1781024857.3096185,
-    "ast_hash": "6a0e10b49ba46fa75c6345c95efc9695",
-    "semantic_hash": "6a0e10b49ba46fa75c6345c95efc9695"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/ClaudeCredentialStore.swift": {
-    "mtime": 1781030265.2223072,
-    "ast_hash": "d4d63f74062026c9447a3305a41d051e",
-    "semantic_hash": "d4d63f74062026c9447a3305a41d051e"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/ClaudeSubscriptionService.swift": {
-    "mtime": 1781030265.2223072,
-    "ast_hash": "35c89c2ef9e11f0482fefc402d8258ba",
-    "semantic_hash": "35c89c2ef9e11f0482fefc402d8258ba"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexCredentialStore.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "d901c9ddc4bef3a8338b97d0619cd4ea",
-    "semantic_hash": "d901c9ddc4bef3a8338b97d0619cd4ea"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexSubscriptionService.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "3662729fdca54e161ba2573489f5b124",
-    "semantic_hash": "3662729fdca54e161ba2573489f5b124"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/CodexUsage.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "be73807ad9bc6aeeaa611bb80d6ae986",
-    "semantic_hash": "be73807ad9bc6aeeaa611bb80d6ae986"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/DataClient.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "ea2aab2cf7ce627f270debc32078fa7f",
-    "semantic_hash": "ea2aab2cf7ce627f270debc32078fa7f"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/MenubarPayload.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "79acb9ee600eb854ab085a88fe55c2e8",
-    "semantic_hash": "79acb9ee600eb854ab085a88fe55c2e8"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/MenubarStatusCache.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "f2cd8427bdea521c57dbd8c9fbc6dc24",
-    "semantic_hash": "f2cd8427bdea521c57dbd8c9fbc6dc24"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/QuotaSummary.swift": {
-    "mtime": 1781024857.3096185,
-    "ast_hash": "fa721d5349acb2c03c513abf70cb9771",
-    "semantic_hash": "fa721d5349acb2c03c513abf70cb9771"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionRefreshCadence.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "b6c511cbd045d881150f6df20a9aa828",
-    "semantic_hash": "b6c511cbd045d881150f6df20a9aa828"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionSnapshotStore.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "5564ec9912618074e9ab7173af4cd16e",
-    "semantic_hash": "5564ec9912618074e9ab7173af4cd16e"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/SubscriptionUsage.swift": {
-    "mtime": 1781024857.3096185,
-    "ast_hash": "ecdd79c13fd30b5baf643a6138f34690",
-    "semantic_hash": "ecdd79c13fd30b5baf643a6138f34690"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Data/UpdateChecker.swift": {
-    "mtime": 1781030265.2233071,
-    "ast_hash": "129b72f2b5b0c3f755fbb1224a61aac8",
-    "semantic_hash": "129b72f2b5b0c3f755fbb1224a61aac8"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/CodeburnCLI.swift": {
-    "mtime": 1781030265.2243073,
-    "ast_hash": "11063bc62551d03e8ec7c982c6e6e2fa",
-    "semantic_hash": "11063bc62551d03e8ec7c982c6e6e2fa"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/SafeFile.swift": {
-    "mtime": 1781030265.2243073,
-    "ast_hash": "f796759d81bdb8d628c6b7316953ef80",
-    "semantic_hash": "f796759d81bdb8d628c6b7316953ef80"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Security/TerminalLauncher.swift": {
-    "mtime": 1781030265.2243073,
-    "ast_hash": "af547c1c5f4f2c79773e534ec5259bd2",
-    "semantic_hash": "af547c1c5f4f2c79773e534ec5259bd2"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Theme/Theme.swift": {
-    "mtime": 1781024857.310566,
-    "ast_hash": "90f08248a780536b13aa9db119e6f6bb",
-    "semantic_hash": "90f08248a780536b13aa9db119e6f6bb"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Theme/ThemeState.swift": {
-    "mtime": 1781030265.2243073,
-    "ast_hash": "35a298736f6c46df22f1f5343f539959",
-    "semantic_hash": "35a298736f6c46df22f1f5343f539959"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ActivitySection.swift": {
-    "mtime": 1781024857.3107135,
-    "ast_hash": "6ccc8227d9957dc21b59eccc467fd0d4",
-    "semantic_hash": "6ccc8227d9957dc21b59eccc467fd0d4"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/AgentTabStrip.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "8b9fb088093ea729d5fee3267ffc7c25",
-    "semantic_hash": "8b9fb088093ea729d5fee3267ffc7c25"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/FindingsSection.swift": {
-    "mtime": 1781024857.3107984,
-    "ast_hash": "957c4df9393010e6bf745620a753be1d",
-    "semantic_hash": "957c4df9393010e6bf745620a753be1d"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/HeatmapSection.swift": {
-    "mtime": 1781030265.2243073,
-    "ast_hash": "64ddf0f66333c627572830e1418200ce",
-    "semantic_hash": "64ddf0f66333c627572830e1418200ce"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/HeroSection.swift": {
-    "mtime": 1781030265.2253072,
-    "ast_hash": "c1d65999456cc0ed73b18241166e1df5",
-    "semantic_hash": "c1d65999456cc0ed73b18241166e1df5"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/MenuBarContent.swift": {
-    "mtime": 1781030265.2253072,
-    "ast_hash": "eca26b660c6ed0312db0b1b2d533766e",
-    "semantic_hash": "eca26b660c6ed0312db0b1b2d533766e"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ModelsSection.swift": {
-    "mtime": 1781024857.3109484,
-    "ast_hash": "b353a5183326a374c93bddb36b985cf4",
-    "semantic_hash": "b353a5183326a374c93bddb36b985cf4"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/PeriodSegmentedControl.swift": {
-    "mtime": 1781024857.3109484,
-    "ast_hash": "92a8a109b3703f04d1cb52bf7aee8b60",
-    "semantic_hash": "92a8a109b3703f04d1cb52bf7aee8b60"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SectionCaption.swift": {
-    "mtime": 1781024857.3109484,
-    "ast_hash": "c319de01f140e527cf6db0190a857e82",
-    "semantic_hash": "c319de01f140e527cf6db0190a857e82"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SettingsView.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "ba3da4dba967173a8b43d4decb923896",
-    "semantic_hash": "ba3da4dba967173a8b43d4decb923896"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/SparklineView.swift": {
-    "mtime": 1781024857.3109484,
-    "ast_hash": "7ee8205969ecfa364fd47ddc2ab89388",
-    "semantic_hash": "7ee8205969ecfa364fd47ddc2ab89388"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/CodeBurnMenubar/Views/ToolingSection.swift": {
-    "mtime": 1781024857.3109484,
-    "ast_hash": "04b84dec4bc69d25d52a577adb83dabd",
-    "semantic_hash": "04b84dec4bc69d25d52a577adb83dabd"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/AppStoreRefreshRecoveryTests.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "970e32b2412a7384f8989e33938ab22e",
-    "semantic_hash": "970e32b2412a7384f8989e33938ab22e"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/AppVersionTests.swift": {
-    "mtime": 1781030265.2253072,
-    "ast_hash": "e02b012feb7c07d9e02ae5a90c9d4da3",
-    "semantic_hash": "e02b012feb7c07d9e02ae5a90c9d4da3"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CLIDevinConfigTests.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "3806a78afca1e678212458d8652f3f9a",
-    "semantic_hash": "3806a78afca1e678212458d8652f3f9a"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CapacityEstimatorTests.swift": {
-    "mtime": 1781030265.2253072,
-    "ast_hash": "e0c5d4a1f9186d162a308cf177791e61",
-    "semantic_hash": "e0c5d4a1f9186d162a308cf177791e61"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/CodexTerminalFailureTests.swift": {
-    "mtime": 1781030265.2253072,
-    "ast_hash": "fc4556c94a385ca46daf9e2e985a76e0",
-    "semantic_hash": "fc4556c94a385ca46daf9e2e985a76e0"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/ContributionHeatmapTests.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "86d18ddc901f39ac709efb7f7a77d3a0",
-    "semantic_hash": "86d18ddc901f39ac709efb7f7a77d3a0"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/DataClientProcessTests.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "e3722ac505513826d02351d18bb614e9",
-    "semantic_hash": "e3722ac505513826d02351d18bb614e9"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/MenubarPeriodSettingsTests.swift": {
-    "mtime": 1781030265.2263072,
-    "ast_hash": "d886810f1b779c06edc6a44332c99bb1",
-    "semantic_hash": "d886810f1b779c06edc6a44332c99bb1"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/MenubarStatusCacheTests.swift": {
-    "mtime": 1781178184.6285634,
-    "ast_hash": "75862a00bbfd847238020ae0f96c3dde",
-    "semantic_hash": "75862a00bbfd847238020ae0f96c3dde"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/mac/Tests/CodeBurnMenubarTests/UpdateCheckerTests.swift": {
-    "mtime": 1781030265.2263072,
-    "ast_hash": "29108a1aadea67665f2f12565b31ab6a",
-    "semantic_hash": "29108a1aadea67665f2f12565b31ab6a"
-  },
   "/home/priya/Documents/Github/Ai/aiinsight/package.json": {
     "mtime": 1781181565.2688375,
     "ast_hash": "749e7bec7ade439f5cedb4bc32c044f2",
@@ -638,11 +408,6 @@
     "mtime": 1781178184.6346624,
     "ast_hash": "6818df2287a89b7b3f798023b9c33ceb",
     "semantic_hash": "6818df2287a89b7b3f798023b9c33ceb"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/src/persistent-codeburn.ts": {
-    "mtime": 1781030265.2326915,
-    "ast_hash": "6a9ae5db5e25fe9cc66a299d372a2c38",
-    "semantic_hash": "6a9ae5db5e25fe9cc66a299d372a2c38"
   },
   "/home/priya/Documents/Github/Ai/aiinsight/src/plan-usage.ts": {
     "mtime": 1781024857.3179476,
@@ -1299,26 +1064,6 @@
     "ast_hash": "6ca6143c9cb9b8cd9ce66456c3b8e026",
     "semantic_hash": "6ca6143c9cb9b8cd9ce66456c3b8e026"
   },
-  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/block-claude-coauthor.yml": {
-    "mtime": 1781178184.624323,
-    "ast_hash": "2233e3305dc26f114b49a855b1e0e1ff",
-    "semantic_hash": "2233e3305dc26f114b49a855b1e0e1ff"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/ci.yml": {
-    "mtime": 1781178184.624323,
-    "ast_hash": "d6e5f38bed80184de569c588cfc25c01",
-    "semantic_hash": "d6e5f38bed80184de569c588cfc25c01"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/firstlook.yml": {
-    "mtime": 1781024857.2869306,
-    "ast_hash": "aa8b79af70f51c3908ea8e9b57bcedd4",
-    "semantic_hash": "aa8b79af70f51c3908ea8e9b57bcedd4"
-  },
-  "/home/priya/Documents/Github/Ai/aiinsight/.github/workflows/release-menubar.yml": {
-    "mtime": 1781178184.624323,
-    "ast_hash": "6489d8a5c970197721eb83bea69449c1",
-    "semantic_hash": "6489d8a5c970197721eb83bea69449c1"
-  },
   "/home/priya/Documents/Github/Ai/aiinsight/.semgrep/rules/no-bracket-assign-hot-paths.yml": {
     "mtime": 1781024857.2870927,
     "ast_hash": "626e2ad9ef80450a0489ef87d5fd7f55",
@@ -1684,9 +1429,789 @@
     "ast_hash": "38369bfb85c1eb1add15a32dd1986fa6",
     "semantic_hash": "38369bfb85c1eb1add15a32dd1986fa6"
   },
-  "/home/priya/Documents/Github/Ai/aiinsight/gnome/icons/codeburn-symbolic.svg": {
-    "mtime": 1781024857.3069487,
-    "ast_hash": "80d943a0c7d66dd1f78c47ad447e00e1",
-    "semantic_hash": "80d943a0c7d66dd1f78c47ad447e00e1"
+  "/tmp/opencode-graphify/.opencode.json": {
+    "mtime": 1781975036.8888605,
+    "ast_hash": "d9fc08dc4d4826d7e21a57f0638ef44b",
+    "semantic_hash": "d9fc08dc4d4826d7e21a57f0638ef44b"
+  },
+  "/tmp/opencode-graphify/cmd/root.go": {
+    "mtime": 1781975036.8888605,
+    "ast_hash": "fbadc1a7b5960b1e25e67d4d50d1a0aa",
+    "semantic_hash": "fbadc1a7b5960b1e25e67d4d50d1a0aa"
+  },
+  "/tmp/opencode-graphify/cmd/schema/main.go": {
+    "mtime": 1781975036.8892596,
+    "ast_hash": "8ce67102c5f584a93b7f8e9e7e82b89e",
+    "semantic_hash": "8ce67102c5f584a93b7f8e9e7e82b89e"
+  },
+  "/tmp/opencode-graphify/install": {
+    "mtime": 1781975036.8892596,
+    "ast_hash": "f948f9936e443189f50a77a0610a4743",
+    "semantic_hash": "f948f9936e443189f50a77a0610a4743"
+  },
+  "/tmp/opencode-graphify/internal/app/app.go": {
+    "mtime": 1781975036.889591,
+    "ast_hash": "dabb5c4e3876ebf7bb0e6647cb51a690",
+    "semantic_hash": "dabb5c4e3876ebf7bb0e6647cb51a690"
+  },
+  "/tmp/opencode-graphify/internal/app/lsp.go": {
+    "mtime": 1781975036.8896492,
+    "ast_hash": "9614eed592c2f5b22ad37f8cb77fae88",
+    "semantic_hash": "9614eed592c2f5b22ad37f8cb77fae88"
+  },
+  "/tmp/opencode-graphify/internal/completions/files-folders.go": {
+    "mtime": 1781975036.8896492,
+    "ast_hash": "3d461a29d1900116e9ebc9ed9f0d18fb",
+    "semantic_hash": "3d461a29d1900116e9ebc9ed9f0d18fb"
+  },
+  "/tmp/opencode-graphify/internal/config/config.go": {
+    "mtime": 1781975036.8896492,
+    "ast_hash": "06e95d43c700e73fd88a70556e853b72",
+    "semantic_hash": "06e95d43c700e73fd88a70556e853b72"
+  },
+  "/tmp/opencode-graphify/internal/config/init.go": {
+    "mtime": 1781975036.889883,
+    "ast_hash": "0f1e1b21d9ccf699a77309b3d342da6b",
+    "semantic_hash": "0f1e1b21d9ccf699a77309b3d342da6b"
+  },
+  "/tmp/opencode-graphify/internal/db/connect.go": {
+    "mtime": 1781975036.889883,
+    "ast_hash": "edfba36ab29fcb9f8dffd912c2cda66d",
+    "semantic_hash": "edfba36ab29fcb9f8dffd912c2cda66d"
+  },
+  "/tmp/opencode-graphify/internal/db/db.go": {
+    "mtime": 1781975036.8899584,
+    "ast_hash": "bddacbdd2923ed8c5413591451c7e3c9",
+    "semantic_hash": "bddacbdd2923ed8c5413591451c7e3c9"
+  },
+  "/tmp/opencode-graphify/internal/db/embed.go": {
+    "mtime": 1781975036.8899584,
+    "ast_hash": "8c14ec267c52710fc247fd7e32410f00",
+    "semantic_hash": "8c14ec267c52710fc247fd7e32410f00"
+  },
+  "/tmp/opencode-graphify/internal/db/files.sql.go": {
+    "mtime": 1781975036.8899584,
+    "ast_hash": "cfcd71f799a8bad76d7c342d8cc02b97",
+    "semantic_hash": "cfcd71f799a8bad76d7c342d8cc02b97"
+  },
+  "/tmp/opencode-graphify/internal/db/messages.sql.go": {
+    "mtime": 1781975036.8899584,
+    "ast_hash": "4d736813ac74c69a3e3e347bcf9deadd",
+    "semantic_hash": "4d736813ac74c69a3e3e347bcf9deadd"
+  },
+  "/tmp/opencode-graphify/internal/db/migrations/20250424200609_initial.sql": {
+    "mtime": 1781975036.8899584,
+    "ast_hash": "b88b5e86f9580db1a470ab333b10cde6",
+    "semantic_hash": "b88b5e86f9580db1a470ab333b10cde6"
+  },
+  "/tmp/opencode-graphify/internal/db/migrations/20250515105448_add_summary_message_id.sql": {
+    "mtime": 1781975036.8901536,
+    "ast_hash": "736b85b05ea568d441e7d7d38c540f8a",
+    "semantic_hash": "736b85b05ea568d441e7d7d38c540f8a"
+  },
+  "/tmp/opencode-graphify/internal/db/models.go": {
+    "mtime": 1781975036.8901536,
+    "ast_hash": "2c7f55a79b38f9d85183dbea694cc892",
+    "semantic_hash": "2c7f55a79b38f9d85183dbea694cc892"
+  },
+  "/tmp/opencode-graphify/internal/db/querier.go": {
+    "mtime": 1781975036.8901536,
+    "ast_hash": "38c8ea03780dccb0356f6854010d38d8",
+    "semantic_hash": "38c8ea03780dccb0356f6854010d38d8"
+  },
+  "/tmp/opencode-graphify/internal/db/sessions.sql.go": {
+    "mtime": 1781975036.8901536,
+    "ast_hash": "423b51eef592b365cb22316cced0ee38",
+    "semantic_hash": "423b51eef592b365cb22316cced0ee38"
+  },
+  "/tmp/opencode-graphify/internal/db/sql/files.sql": {
+    "mtime": 1781975036.8901536,
+    "ast_hash": "69a652047dac561873ccf77fb24dc582",
+    "semantic_hash": "69a652047dac561873ccf77fb24dc582"
+  },
+  "/tmp/opencode-graphify/internal/db/sql/messages.sql": {
+    "mtime": 1781975036.8902934,
+    "ast_hash": "65122f610ef996a7c7a571022a5735ce",
+    "semantic_hash": "65122f610ef996a7c7a571022a5735ce"
+  },
+  "/tmp/opencode-graphify/internal/db/sql/sessions.sql": {
+    "mtime": 1781975036.8902934,
+    "ast_hash": "e3303a797d5d573d0fe65314eb842890",
+    "semantic_hash": "e3303a797d5d573d0fe65314eb842890"
+  },
+  "/tmp/opencode-graphify/internal/diff/diff.go": {
+    "mtime": 1781975036.8902934,
+    "ast_hash": "0b16000abf598986890a0f25299e9578",
+    "semantic_hash": "0b16000abf598986890a0f25299e9578"
+  },
+  "/tmp/opencode-graphify/internal/diff/patch.go": {
+    "mtime": 1781975036.8904815,
+    "ast_hash": "3c60d2f8f10c65f5619de6ab4c77b1f5",
+    "semantic_hash": "3c60d2f8f10c65f5619de6ab4c77b1f5"
+  },
+  "/tmp/opencode-graphify/internal/fileutil/fileutil.go": {
+    "mtime": 1781975036.8904815,
+    "ast_hash": "07a39c7678636d69092a5047b8ceee85",
+    "semantic_hash": "07a39c7678636d69092a5047b8ceee85"
+  },
+  "/tmp/opencode-graphify/internal/format/format.go": {
+    "mtime": 1781975036.8904815,
+    "ast_hash": "e28a179136cdf0801a81062c8303438d",
+    "semantic_hash": "e28a179136cdf0801a81062c8303438d"
+  },
+  "/tmp/opencode-graphify/internal/format/spinner.go": {
+    "mtime": 1781975036.8906653,
+    "ast_hash": "09c3f1862157d0b63d8b1fc83acebfd0",
+    "semantic_hash": "09c3f1862157d0b63d8b1fc83acebfd0"
+  },
+  "/tmp/opencode-graphify/internal/history/file.go": {
+    "mtime": 1781975036.8906653,
+    "ast_hash": "4b28e51c3209ff5497aba420755ba301",
+    "semantic_hash": "4b28e51c3209ff5497aba420755ba301"
+  },
+  "/tmp/opencode-graphify/internal/llm/agent/agent-tool.go": {
+    "mtime": 1781975036.8907793,
+    "ast_hash": "ffb2e6d456064b69c7ce1da7d948766b",
+    "semantic_hash": "ffb2e6d456064b69c7ce1da7d948766b"
+  },
+  "/tmp/opencode-graphify/internal/llm/agent/agent.go": {
+    "mtime": 1781975036.8908339,
+    "ast_hash": "26cfb828f657caaa7b9bff3a5563b676",
+    "semantic_hash": "26cfb828f657caaa7b9bff3a5563b676"
+  },
+  "/tmp/opencode-graphify/internal/llm/agent/mcp-tools.go": {
+    "mtime": 1781975036.8908339,
+    "ast_hash": "d9ee567b4afb2c5264fc599971224f24",
+    "semantic_hash": "d9ee567b4afb2c5264fc599971224f24"
+  },
+  "/tmp/opencode-graphify/internal/llm/agent/tools.go": {
+    "mtime": 1781975036.8908339,
+    "ast_hash": "60ade73ff8d0098b8e4009265664c37c",
+    "semantic_hash": "60ade73ff8d0098b8e4009265664c37c"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/anthropic.go": {
+    "mtime": 1781975036.8908339,
+    "ast_hash": "b83d72018a077f245d082de1666310a3",
+    "semantic_hash": "b83d72018a077f245d082de1666310a3"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/azure.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "6faf03b9632e58f9e4cd2bbdd84bf9bd",
+    "semantic_hash": "6faf03b9632e58f9e4cd2bbdd84bf9bd"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/copilot.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "7fb086139ece0acb8030be184308168e",
+    "semantic_hash": "7fb086139ece0acb8030be184308168e"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/gemini.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "5c8857fd1adc77a8015b2eed5e57139c",
+    "semantic_hash": "5c8857fd1adc77a8015b2eed5e57139c"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/groq.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "6635cb4c218ee9c2d74ad3f9e3ad429d",
+    "semantic_hash": "6635cb4c218ee9c2d74ad3f9e3ad429d"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/local.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "9b15c8f7cbfe2c5532966c7e7c3e937d",
+    "semantic_hash": "9b15c8f7cbfe2c5532966c7e7c3e937d"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/models.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "94ac54932c7807ff8b9b68b38edbca4d",
+    "semantic_hash": "94ac54932c7807ff8b9b68b38edbca4d"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/openai.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "5806e8e46f803a934a3afb97d806af69",
+    "semantic_hash": "5806e8e46f803a934a3afb97d806af69"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/openrouter.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "2f7dd579cd092e486a24d5e9ad2ef861",
+    "semantic_hash": "2f7dd579cd092e486a24d5e9ad2ef861"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/vertexai.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "b1f5be513c0e0c355a92800a4c4bee1f",
+    "semantic_hash": "b1f5be513c0e0c355a92800a4c4bee1f"
+  },
+  "/tmp/opencode-graphify/internal/llm/models/xai.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "67696e9087603544c77070478f8b5d43",
+    "semantic_hash": "67696e9087603544c77070478f8b5d43"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/coder.go": {
+    "mtime": 1781975036.8910394,
+    "ast_hash": "ad2e7fb7e29312d7811a862f85876607",
+    "semantic_hash": "ad2e7fb7e29312d7811a862f85876607"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/prompt.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "3b6f712aae16b30f82adec74eed3bee9",
+    "semantic_hash": "3b6f712aae16b30f82adec74eed3bee9"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/prompt_test.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "4c1410c9c5a601432acc5b549f021da7",
+    "semantic_hash": "4c1410c9c5a601432acc5b549f021da7"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/summarizer.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "261cada81d22619d01372f364e7e7c2a",
+    "semantic_hash": "261cada81d22619d01372f364e7e7c2a"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/task.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "aad9a3a59dd6c4bd2e1cb88a8d569feb",
+    "semantic_hash": "aad9a3a59dd6c4bd2e1cb88a8d569feb"
+  },
+  "/tmp/opencode-graphify/internal/llm/prompt/title.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "d0b2d1a0f9879d44f1b0e129b9831e8e",
+    "semantic_hash": "d0b2d1a0f9879d44f1b0e129b9831e8e"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/anthropic.go": {
+    "mtime": 1781975036.8914783,
+    "ast_hash": "3a5f8771542a714bb737396ae161bc1b",
+    "semantic_hash": "3a5f8771542a714bb737396ae161bc1b"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/azure.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "1c80d2c0777681af155d91cd1adfc31f",
+    "semantic_hash": "1c80d2c0777681af155d91cd1adfc31f"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/bedrock.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "49618412cd3990e62c3ec81e63102b27",
+    "semantic_hash": "49618412cd3990e62c3ec81e63102b27"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/copilot.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "98867b35533356deaf5c59693d4a4cf1",
+    "semantic_hash": "98867b35533356deaf5c59693d4a4cf1"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/gemini.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "840af654d9d4660b82ceadbf1697ccd8",
+    "semantic_hash": "840af654d9d4660b82ceadbf1697ccd8"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/openai.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "e6b0785060d95e02be4671937b487410",
+    "semantic_hash": "e6b0785060d95e02be4671937b487410"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/provider.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "9a6e78722c729efa047e8c33f52e1173",
+    "semantic_hash": "9a6e78722c729efa047e8c33f52e1173"
+  },
+  "/tmp/opencode-graphify/internal/llm/provider/vertexai.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "b0a843b7357159dd4bc2ea853fe6c1c8",
+    "semantic_hash": "b0a843b7357159dd4bc2ea853fe6c1c8"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/bash.go": {
+    "mtime": 1781975036.8916953,
+    "ast_hash": "fcd0557060e68a25018007d99142930f",
+    "semantic_hash": "fcd0557060e68a25018007d99142930f"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/diagnostics.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "17053ccdc5983777debc6df890009f47",
+    "semantic_hash": "17053ccdc5983777debc6df890009f47"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/edit.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "09dffc1ddd64c40f087b53f3d57b79b2",
+    "semantic_hash": "09dffc1ddd64c40f087b53f3d57b79b2"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/fetch.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "31159ff2924afb6093eedad595e00d3a",
+    "semantic_hash": "31159ff2924afb6093eedad595e00d3a"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/file.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "210948519b3329a54e9f6cca357b8914",
+    "semantic_hash": "210948519b3329a54e9f6cca357b8914"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/glob.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "a34d7fcd9789fdf962fb7d3da8fcf30d",
+    "semantic_hash": "a34d7fcd9789fdf962fb7d3da8fcf30d"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/grep.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "1cc82fa8646ebcc3f033ff6033cc1db6",
+    "semantic_hash": "1cc82fa8646ebcc3f033ff6033cc1db6"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/ls.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "fe3bde6f10f675d2ea6cec03607ea293",
+    "semantic_hash": "fe3bde6f10f675d2ea6cec03607ea293"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/ls_test.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "f63deb54c7b69c7e212c7fad5428789e",
+    "semantic_hash": "f63deb54c7b69c7e212c7fad5428789e"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/patch.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "8c9a6910b2d71ea00f7d16e95849b6c4",
+    "semantic_hash": "8c9a6910b2d71ea00f7d16e95849b6c4"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/shell/shell.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "2c69c19b9394ad76756ce6482e3e5952",
+    "semantic_hash": "2c69c19b9394ad76756ce6482e3e5952"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/sourcegraph.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "b1275097b04d7956df2a9d26e7713d4e",
+    "semantic_hash": "b1275097b04d7956df2a9d26e7713d4e"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/tools.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "498ee9e1303f7a2357155a4217c44bd5",
+    "semantic_hash": "498ee9e1303f7a2357155a4217c44bd5"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/view.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "cb3b447a568fd38e051f0dc4bc48b71c",
+    "semantic_hash": "cb3b447a568fd38e051f0dc4bc48b71c"
+  },
+  "/tmp/opencode-graphify/internal/llm/tools/write.go": {
+    "mtime": 1781975036.8921893,
+    "ast_hash": "58ff7df22292d16f03242e2c667c535f",
+    "semantic_hash": "58ff7df22292d16f03242e2c667c535f"
+  },
+  "/tmp/opencode-graphify/internal/logging/logger.go": {
+    "mtime": 1781975036.8928108,
+    "ast_hash": "30398d67a080eac43c450ad408489d4b",
+    "semantic_hash": "30398d67a080eac43c450ad408489d4b"
+  },
+  "/tmp/opencode-graphify/internal/logging/message.go": {
+    "mtime": 1781975036.8936036,
+    "ast_hash": "c9e58ea65a98e104881e2afb6a1f9a1f",
+    "semantic_hash": "c9e58ea65a98e104881e2afb6a1f9a1f"
+  },
+  "/tmp/opencode-graphify/internal/logging/writer.go": {
+    "mtime": 1781975036.8936036,
+    "ast_hash": "9ce7ce0b448d2afd2f263c7e4cf38e0b",
+    "semantic_hash": "9ce7ce0b448d2afd2f263c7e4cf38e0b"
+  },
+  "/tmp/opencode-graphify/internal/lsp/client.go": {
+    "mtime": 1781975036.8936036,
+    "ast_hash": "36a34e2e2d6bb10dc9edb33030621f8d",
+    "semantic_hash": "36a34e2e2d6bb10dc9edb33030621f8d"
+  },
+  "/tmp/opencode-graphify/internal/lsp/handlers.go": {
+    "mtime": 1781975036.893787,
+    "ast_hash": "c9f844a513e809fca6c30b082d6b3251",
+    "semantic_hash": "c9f844a513e809fca6c30b082d6b3251"
+  },
+  "/tmp/opencode-graphify/internal/lsp/language.go": {
+    "mtime": 1781975036.893787,
+    "ast_hash": "cf633bc85eb2bcd1ed36a9c213bf49ef",
+    "semantic_hash": "cf633bc85eb2bcd1ed36a9c213bf49ef"
+  },
+  "/tmp/opencode-graphify/internal/lsp/methods.go": {
+    "mtime": 1781975036.893787,
+    "ast_hash": "f29078727ef36d3af7065b6ba58c1105",
+    "semantic_hash": "f29078727ef36d3af7065b6ba58c1105"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol.go": {
+    "mtime": 1781975036.893787,
+    "ast_hash": "82daa8b4a621f64b5af8f1edd1b1a789",
+    "semantic_hash": "82daa8b4a621f64b5af8f1edd1b1a789"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/interface.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "76f7d48fba7eaf8905aec640a940afeb",
+    "semantic_hash": "76f7d48fba7eaf8905aec640a940afeb"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/pattern_interfaces.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "fe8455fe08dc70a7a550c8b4be27f755",
+    "semantic_hash": "fe8455fe08dc70a7a550c8b4be27f755"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/tables.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "f31ef5292addf9274b553a0946c0111c",
+    "semantic_hash": "f31ef5292addf9274b553a0946c0111c"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/tsdocument-changes.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "1747fadc9ca8d673a137be562afefa25",
+    "semantic_hash": "1747fadc9ca8d673a137be562afefa25"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/tsjson.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "64576cca5a8559de46ce90ff5fe06eaa",
+    "semantic_hash": "64576cca5a8559de46ce90ff5fe06eaa"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/tsprotocol.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "4da3d71958a4df6fa87993ded22bc554",
+    "semantic_hash": "4da3d71958a4df6fa87993ded22bc554"
+  },
+  "/tmp/opencode-graphify/internal/lsp/protocol/uri.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "890c3411347a09d515ef0b449d52999f",
+    "semantic_hash": "890c3411347a09d515ef0b449d52999f"
+  },
+  "/tmp/opencode-graphify/internal/lsp/transport.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "4f4e4177b2f54d69dde899898fab0286",
+    "semantic_hash": "4f4e4177b2f54d69dde899898fab0286"
+  },
+  "/tmp/opencode-graphify/internal/lsp/util/edit.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "ff32460e874d54956c33b3230c2d7e83",
+    "semantic_hash": "ff32460e874d54956c33b3230c2d7e83"
+  },
+  "/tmp/opencode-graphify/internal/lsp/watcher/watcher.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "77af62dd3d78d611988feba893f5eb41",
+    "semantic_hash": "77af62dd3d78d611988feba893f5eb41"
+  },
+  "/tmp/opencode-graphify/internal/message/attachment.go": {
+    "mtime": 1781975036.8940613,
+    "ast_hash": "f91b9f3c0af6656138f2797cc162a3b7",
+    "semantic_hash": "f91b9f3c0af6656138f2797cc162a3b7"
+  },
+  "/tmp/opencode-graphify/internal/message/content.go": {
+    "mtime": 1781975036.8950522,
+    "ast_hash": "5d539ca444a0f41643e82857974cd501",
+    "semantic_hash": "5d539ca444a0f41643e82857974cd501"
+  },
+  "/tmp/opencode-graphify/internal/message/message.go": {
+    "mtime": 1781975036.8950522,
+    "ast_hash": "056b592f6efa29411d5c4cab6d790ac2",
+    "semantic_hash": "056b592f6efa29411d5c4cab6d790ac2"
+  },
+  "/tmp/opencode-graphify/internal/permission/permission.go": {
+    "mtime": 1781975036.8950522,
+    "ast_hash": "b386a0b110614637ab6d66a250f91fa6",
+    "semantic_hash": "b386a0b110614637ab6d66a250f91fa6"
+  },
+  "/tmp/opencode-graphify/internal/pubsub/broker.go": {
+    "mtime": 1781975036.8950522,
+    "ast_hash": "b92b75017174e5f153e71a32ddd10488",
+    "semantic_hash": "b92b75017174e5f153e71a32ddd10488"
+  },
+  "/tmp/opencode-graphify/internal/pubsub/events.go": {
+    "mtime": 1781975036.8953593,
+    "ast_hash": "af8bca9056c17521cce255f891eea0e8",
+    "semantic_hash": "af8bca9056c17521cce255f891eea0e8"
+  },
+  "/tmp/opencode-graphify/internal/session/session.go": {
+    "mtime": 1781975036.8953593,
+    "ast_hash": "1e564ff99a5798f4fd81ce5fee67066c",
+    "semantic_hash": "1e564ff99a5798f4fd81ce5fee67066c"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/chat/chat.go": {
+    "mtime": 1781975036.8954883,
+    "ast_hash": "822bffb1256c8254c333887747079a91",
+    "semantic_hash": "822bffb1256c8254c333887747079a91"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/chat/editor.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "d50097283ff74d9912930b0382d65141",
+    "semantic_hash": "d50097283ff74d9912930b0382d65141"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/chat/list.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "1c62a74bdc37426353c3a18a27506906",
+    "semantic_hash": "1c62a74bdc37426353c3a18a27506906"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/chat/message.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "329d0c335d04fb091444facb1a768b39",
+    "semantic_hash": "329d0c335d04fb091444facb1a768b39"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/chat/sidebar.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "1eaf5fbfb3ade6f9fe6324c22ca68f74",
+    "semantic_hash": "1eaf5fbfb3ade6f9fe6324c22ca68f74"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/core/status.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "cec2339bcead37ef130a4f753147fbd9",
+    "semantic_hash": "cec2339bcead37ef130a4f753147fbd9"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/arguments.go": {
+    "mtime": 1781975036.895557,
+    "ast_hash": "f272d49a0170c286ccb45a24bf20ba5f",
+    "semantic_hash": "f272d49a0170c286ccb45a24bf20ba5f"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/commands.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "ebc7dafe42e108bc1294e489ac22d887",
+    "semantic_hash": "ebc7dafe42e108bc1294e489ac22d887"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/complete.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "222e7802e79a6f3dd5a21341cae0b8ec",
+    "semantic_hash": "222e7802e79a6f3dd5a21341cae0b8ec"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/custom_commands.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "a10350eb465cb4afa83d23cca92cdf8f",
+    "semantic_hash": "a10350eb465cb4afa83d23cca92cdf8f"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/custom_commands_test.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "b1b17867a8ff0b5beaeb2573efbbe483",
+    "semantic_hash": "b1b17867a8ff0b5beaeb2573efbbe483"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/filepicker.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "353181c810d6aad5939760a2f4c28ea1",
+    "semantic_hash": "353181c810d6aad5939760a2f4c28ea1"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/help.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "965ebf21df0ebba6a59dadef00642a5f",
+    "semantic_hash": "965ebf21df0ebba6a59dadef00642a5f"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/init.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "831e9c0f29538a2c2f8f97f8636d38d6",
+    "semantic_hash": "831e9c0f29538a2c2f8f97f8636d38d6"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/models.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "3f91f30750922a88779d026704bdcd61",
+    "semantic_hash": "3f91f30750922a88779d026704bdcd61"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/permission.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "d1963ec6a966f689865b08ce5664b545",
+    "semantic_hash": "d1963ec6a966f689865b08ce5664b545"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/quit.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "5270b71fe283cef7578888baf9bdf51a",
+    "semantic_hash": "5270b71fe283cef7578888baf9bdf51a"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/session.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "3064a82ac2227233c9ae269baa333625",
+    "semantic_hash": "3064a82ac2227233c9ae269baa333625"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/dialog/theme.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "6c341f5817d4ea12221dc0966d7d7d15",
+    "semantic_hash": "6c341f5817d4ea12221dc0966d7d7d15"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/logs/details.go": {
+    "mtime": 1781975036.8960357,
+    "ast_hash": "56e76098737d552ac9fd872ac729f890",
+    "semantic_hash": "56e76098737d552ac9fd872ac729f890"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/logs/table.go": {
+    "mtime": 1781975036.8967674,
+    "ast_hash": "afd470859199734c4426d90afff13391",
+    "semantic_hash": "afd470859199734c4426d90afff13391"
+  },
+  "/tmp/opencode-graphify/internal/tui/components/util/simple-list.go": {
+    "mtime": 1781975036.8967674,
+    "ast_hash": "5f5540f16c9dd3279fcaf3f0d8f3a71c",
+    "semantic_hash": "5f5540f16c9dd3279fcaf3f0d8f3a71c"
+  },
+  "/tmp/opencode-graphify/internal/tui/image/images.go": {
+    "mtime": 1781975036.8967674,
+    "ast_hash": "1814c9c67aabb0f4a3f48c1298bf22c4",
+    "semantic_hash": "1814c9c67aabb0f4a3f48c1298bf22c4"
+  },
+  "/tmp/opencode-graphify/internal/tui/layout/container.go": {
+    "mtime": 1781975036.8967674,
+    "ast_hash": "147af2750399d4e690082ee81e9f7afa",
+    "semantic_hash": "147af2750399d4e690082ee81e9f7afa"
+  },
+  "/tmp/opencode-graphify/internal/tui/layout/layout.go": {
+    "mtime": 1781975036.8969622,
+    "ast_hash": "ffbaca6b3fd9e33a2ea41786b6aa6650",
+    "semantic_hash": "ffbaca6b3fd9e33a2ea41786b6aa6650"
+  },
+  "/tmp/opencode-graphify/internal/tui/layout/overlay.go": {
+    "mtime": 1781975036.8969622,
+    "ast_hash": "79bbc49f8cb48ca7a084ee6791d5b3ed",
+    "semantic_hash": "79bbc49f8cb48ca7a084ee6791d5b3ed"
+  },
+  "/tmp/opencode-graphify/internal/tui/layout/split.go": {
+    "mtime": 1781975036.8969622,
+    "ast_hash": "aa680e4ee336085c985eb700221e9264",
+    "semantic_hash": "aa680e4ee336085c985eb700221e9264"
+  },
+  "/tmp/opencode-graphify/internal/tui/page/chat.go": {
+    "mtime": 1781975036.8969622,
+    "ast_hash": "c04fb9abd124d159ae6af37b71e1efc8",
+    "semantic_hash": "c04fb9abd124d159ae6af37b71e1efc8"
+  },
+  "/tmp/opencode-graphify/internal/tui/page/logs.go": {
+    "mtime": 1781975036.8971262,
+    "ast_hash": "d0cef5ff4ebc97d8c6d0db3fb33acad6",
+    "semantic_hash": "d0cef5ff4ebc97d8c6d0db3fb33acad6"
+  },
+  "/tmp/opencode-graphify/internal/tui/page/page.go": {
+    "mtime": 1781975036.8971262,
+    "ast_hash": "2ce6730a096875ef9c68c04e672c3309",
+    "semantic_hash": "2ce6730a096875ef9c68c04e672c3309"
+  },
+  "/tmp/opencode-graphify/internal/tui/styles/background.go": {
+    "mtime": 1781975036.8971262,
+    "ast_hash": "c92f9ed3bc1da98c99b741c75d201c3b",
+    "semantic_hash": "c92f9ed3bc1da98c99b741c75d201c3b"
+  },
+  "/tmp/opencode-graphify/internal/tui/styles/icons.go": {
+    "mtime": 1781975036.8972263,
+    "ast_hash": "106bae44852237630793e3922007ede2",
+    "semantic_hash": "106bae44852237630793e3922007ede2"
+  },
+  "/tmp/opencode-graphify/internal/tui/styles/markdown.go": {
+    "mtime": 1781975036.8972263,
+    "ast_hash": "c80a0394b941ef8c5283f979bc40b225",
+    "semantic_hash": "c80a0394b941ef8c5283f979bc40b225"
+  },
+  "/tmp/opencode-graphify/internal/tui/styles/styles.go": {
+    "mtime": 1781975036.8972263,
+    "ast_hash": "8385fa6c59f624ed661dd538efbdb332",
+    "semantic_hash": "8385fa6c59f624ed661dd538efbdb332"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/catppuccin.go": {
+    "mtime": 1781975036.8972263,
+    "ast_hash": "61d7b4795c8980dcf5ed8ed28dca4f48",
+    "semantic_hash": "61d7b4795c8980dcf5ed8ed28dca4f48"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/dracula.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "c5d9c9759de5a6ff0e97248d679e8804",
+    "semantic_hash": "c5d9c9759de5a6ff0e97248d679e8804"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/flexoki.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "16ef4be5d0bb7eefea48b9de07012fb3",
+    "semantic_hash": "16ef4be5d0bb7eefea48b9de07012fb3"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/gruvbox.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "b34f012f5bb8d5702fbc334fb3c4b2f2",
+    "semantic_hash": "b34f012f5bb8d5702fbc334fb3c4b2f2"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/manager.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "2a7b6952e8aaec3876fca2698734d6fa",
+    "semantic_hash": "2a7b6952e8aaec3876fca2698734d6fa"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/monokai.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "ec9f1fd8843642cd58953512ca3e410a",
+    "semantic_hash": "ec9f1fd8843642cd58953512ca3e410a"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/onedark.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "4ac42b1d9161504bc6ad6246ca51c34f",
+    "semantic_hash": "4ac42b1d9161504bc6ad6246ca51c34f"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/opencode.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "51179623a80ce543f5fd734dc722f3dd",
+    "semantic_hash": "51179623a80ce543f5fd734dc722f3dd"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/theme.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "6b3f402d14c5389e7dcb695d515f81de",
+    "semantic_hash": "6b3f402d14c5389e7dcb695d515f81de"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/theme_test.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "906b7d2fc1a0d9ce97cac968eef96b43",
+    "semantic_hash": "906b7d2fc1a0d9ce97cac968eef96b43"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/tokyonight.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "5b8b832e557a536aea8201df1838c0d2",
+    "semantic_hash": "5b8b832e557a536aea8201df1838c0d2"
+  },
+  "/tmp/opencode-graphify/internal/tui/theme/tron.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "89c56d3950ad8c496297a5160d45a800",
+    "semantic_hash": "89c56d3950ad8c496297a5160d45a800"
+  },
+  "/tmp/opencode-graphify/internal/tui/tui.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "00ece367105ca2a24e843e376ac666ea",
+    "semantic_hash": "00ece367105ca2a24e843e376ac666ea"
+  },
+  "/tmp/opencode-graphify/internal/tui/util/util.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "a6ae2b8943fb11a4cb21a10fdd7ab1c5",
+    "semantic_hash": "a6ae2b8943fb11a4cb21a10fdd7ab1c5"
+  },
+  "/tmp/opencode-graphify/internal/version/version.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "3a43465848e7117c2561dc1ae72c63e6",
+    "semantic_hash": "3a43465848e7117c2561dc1ae72c63e6"
+  },
+  "/tmp/opencode-graphify/main.go": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "bea718805164e8f0b23b1f620bf80358",
+    "semantic_hash": "bea718805164e8f0b23b1f620bf80358"
+  },
+  "/tmp/opencode-graphify/opencode-schema.json": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "27cad5f693799d71a466ec14f42780a7",
+    "semantic_hash": "27cad5f693799d71a466ec14f42780a7"
+  },
+  "/tmp/opencode-graphify/scripts/check_hidden_chars.sh": {
+    "mtime": 1781975036.8974097,
+    "ast_hash": "5b405e2d4689f8d761a7f0b913c01d5c",
+    "semantic_hash": "5b405e2d4689f8d761a7f0b913c01d5c"
+  },
+  "/tmp/opencode-graphify/scripts/release": {
+    "mtime": 1781975036.8981495,
+    "ast_hash": "93dc42a51ac0b863c35eac8e82e42011",
+    "semantic_hash": "93dc42a51ac0b863c35eac8e82e42011"
+  },
+  "/tmp/opencode-graphify/scripts/snapshot": {
+    "mtime": 1781975036.8981495,
+    "ast_hash": "e5d2a2c6eaebc248ab1fe727084d7298",
+    "semantic_hash": "e5d2a2c6eaebc248ab1fe727084d7298"
+  },
+  "/tmp/opencode-graphify/.github/workflows/build.yml": {
+    "mtime": 1781975036.888771,
+    "ast_hash": "b27d28ddf98b86185f3ad972acff1ae2",
+    "semantic_hash": "b27d28ddf98b86185f3ad972acff1ae2"
+  },
+  "/tmp/opencode-graphify/.github/workflows/release.yml": {
+    "mtime": 1781975036.8888605,
+    "ast_hash": "17bef70a493fb3107815ada806a6bb53",
+    "semantic_hash": "17bef70a493fb3107815ada806a6bb53"
+  },
+  "/tmp/opencode-graphify/.goreleaser.yml": {
+    "mtime": 1781975036.8888605,
+    "ast_hash": "899fc0763bda6fb58a1d7dc6625bcb46",
+    "semantic_hash": "899fc0763bda6fb58a1d7dc6625bcb46"
+  },
+  "/tmp/opencode-graphify/README.md": {
+    "mtime": 1781975036.8888605,
+    "ast_hash": "1974c17f8dd37e81f82eaf9f551b18f3",
+    "semantic_hash": "1974c17f8dd37e81f82eaf9f551b18f3"
+  },
+  "/tmp/opencode-graphify/cmd/schema/README.md": {
+    "mtime": 1781975036.889218,
+    "ast_hash": "bac8d97eb178413fc4db2f9b3074b2c6",
+    "semantic_hash": "bac8d97eb178413fc4db2f9b3074b2c6"
+  },
+  "/tmp/opencode-graphify/sqlc.yaml": {
+    "mtime": 1781975036.8981495,
+    "ast_hash": "83970b99553d2d67dc51ee9f8a527b94",
+    "semantic_hash": "83970b99553d2d67dc51ee9f8a527b94"
   }
 }

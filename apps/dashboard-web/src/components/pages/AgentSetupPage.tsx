@@ -473,11 +473,11 @@ export function AgentSetupPage() {
         <CardContent>
           <div className="space-y-2">
             {[
-              { platform: 'Windows', arch: 'x86_64', url: 'https://releases.aiinsight.dev/latest/aiinsight-windows-amd64.zip' },
-              { platform: 'macOS', arch: 'Apple Silicon', url: 'https://releases.aiinsight.dev/latest/aiinsight-darwin-arm64.tar.gz' },
-              { platform: 'macOS', arch: 'Intel', url: 'https://releases.aiinsight.dev/latest/aiinsight-darwin-amd64.tar.gz' },
-              { platform: 'Linux', arch: 'x86_64', url: 'https://releases.aiinsight.dev/latest/aiinsight-linux-amd64.tar.gz' },
-              { platform: 'Linux', arch: 'ARM64', url: 'https://releases.aiinsight.dev/latest/aiinsight-linux-arm64.tar.gz' },
+              { platform: 'Windows', arch: 'x86_64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight.exe' },
+              { platform: 'macOS', arch: 'Apple Silicon', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-darwin-arm64' },
+              { platform: 'macOS', arch: 'Intel', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-darwin-x64' },
+              { platform: 'Linux', arch: 'x86_64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-linux-x64' },
+              { platform: 'Linux', arch: 'ARM64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-linux-arm64' },
             ].map((link) => (
               <div key={`${link.platform}-${link.arch}`} className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors">
                 <div className="flex items-center gap-3">

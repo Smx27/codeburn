@@ -24,7 +24,7 @@ For contributors running a local build instead of the packaged release:
 
 ```bash
 npm install -g aiinsight                       # CLI the app shells out to for data
-git clone https://github.com/priya/aiinsight.git
+git clone https://github.com/getagentseal/codeburn.git
 cd aiinsight/mac
 swift build -c release
 .build/release/AiInsightMenubar                # launch

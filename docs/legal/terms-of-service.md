@@ -174,7 +174,7 @@ You agree to indemnify us from claims arising from:
 
 If you have questions about these Terms, please contact us at:
 - Email: legal@aiinsight.dev
-- GitHub: https://github.com/priya/aiinsight/issues
+- GitHub: https://github.com/getagentseal/codeburn/issues
 
 ## Related Documentation
 

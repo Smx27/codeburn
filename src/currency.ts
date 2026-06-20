@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
-import { homedir } from 'os'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 
 import { readConfig } from './config.js'
 import { fetchWithTimeout } from './fetch-utils.js'
@@ -72,7 +72,7 @@ export function roundForActiveCurrency(value: number): number {
 }
 
 function getCacheDir(): string {
-  return join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getRateCachePath(): string {

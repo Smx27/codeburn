@@ -155,7 +155,7 @@ We may update this policy:
 
 If you have questions about this policy:
 - Email: abuse@aiinsight.dev
-- GitHub: https://github.com/priya/aiinsight/issues
+- GitHub: https://github.com/getagentseal/codeburn/issues
 
 ## Related Documentation
 

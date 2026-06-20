@@ -12,7 +12,7 @@ Local development setup for AIInsight.
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/priya/aiinsight.git
+git clone https://github.com/getagentseal/codeburn.git
 cd aiinsight
 
 # 2. Install dependencies

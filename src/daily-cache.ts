@@ -1,8 +1,8 @@
 import { randomBytes } from 'crypto'
 import { existsSync } from 'fs'
 import { mkdir, open, readFile, rename, unlink } from 'fs/promises'
-import { homedir } from 'os'
 import { join } from 'path'
+import { getCacheDir as platformCacheDir } from '@aiinsight/platform'
 import type { DateRange, ProjectSummary } from './types.js'
 
 // Bumped to 8: local-model savings accounting is now part of the daily rollup
@@ -52,7 +52,7 @@ export type DailyCache = {
 }
 
 function getCacheDir(): string {
-  return process.env['AIINSIGHT_CACHE_DIR'] ?? join(homedir(), '.cache', 'aiinsight')
+  return platformCacheDir()
 }
 
 function getCachePath(): string {

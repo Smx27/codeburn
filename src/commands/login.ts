@@ -98,19 +98,22 @@ export async function runLogin(apiUrl?: string): Promise<void> {
 
 function promptForApiKey(): Promise<string | null> {
   return new Promise((resolve) => {
+    let resolved = false
     const rl = createInterface({
       input: process.stdin,
       output: process.stdout,
     })
 
-    // Mask input for API key
     rl.question(`  ${DIM('Paste your API key:')} `, (answer) => {
+      if (resolved) return
+      resolved = true
       rl.close()
       resolve(answer.trim() || null)
     })
 
-    // Handle Ctrl+C
     rl.on('close', () => {
+      if (resolved) return
+      resolved = true
       resolve(null)
     })
   })

@@ -58,7 +58,7 @@ graph TD
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/priya/aiinsight.git
+git clone https://github.com/getagentseal/codeburn.git
 cd aiinsight
 npm install
 ```
@@ -181,4 +181,4 @@ MIT
 
 ## Author
 
-AgentSeal <hello@agentseal.org>
+Sumit Maiti

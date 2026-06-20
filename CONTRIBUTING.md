@@ -14,7 +14,7 @@ Thanks for your interest. This document covers what you need to know to send a w
 ## Setup
 
 ```bash
-git clone https://github.com/priya/aiinsight.git
+git clone https://github.com/getagentseal/codeburn.git
 cd aiinsight
 npm install
 ```
@@ -125,7 +125,7 @@ PRs that add a provider based solely on online documentation or AI-generated cod
 
 ## Reporting Bugs
 
-File issues at https://github.com/priya/aiinsight/issues. Useful details:
+File issues at https://github.com/getagentseal/codeburn/issues. Useful details:
 
 - Output of `aiinsight --version`.
 - Provider involved and rough size of your session history (`du -sh ~/.codex/sessions`, etc.).

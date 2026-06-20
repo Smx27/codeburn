@@ -1,10 +1,10 @@
 import { readFile, writeFile, mkdir, unlink } from 'fs/promises';
 import { join } from 'path';
-import { homedir } from 'os';
+import { getUploadQueuePath } from '@aiinsight/platform';
 import type { BatchUploadPayload, BatchUploadResponse, SyncConfig } from '../types/sync.types.js';
 import { syncLogger, logBatchPrepared, logBatchUploaded, logBatchFailed, logRetryStarted, logRetryCompleted } from '../logging/sync.logger.js';
 
-const QUEUE_DIR = join(homedir(), '.config', 'aiinsight', 'upload-queue');
+const QUEUE_DIR = getUploadQueuePath();
 
 interface QueuedBatch {
   id: string;

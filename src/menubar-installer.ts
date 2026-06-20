@@ -12,13 +12,14 @@ import {
   buildPersistentAiInsightLookupPath,
   resolvePersistentAiInsightPathFromWhichOutput,
 } from './persistent-aiinsight.js'
+import { GITHUB_RELEASES_URL } from '@aiinsight/distribution'
 
 /// Public GitHub repo that hosts macOS release builds. CLI and menubar releases share
 /// the repository, so we scan recent releases and choose the newest `mac-v*` release
 /// that actually contains the menubar zip.
-const RELEASE_API = 'https://api.github.com/repos/getagentseal/aiinsight/releases?per_page=20'
+const RELEASE_API = `${GITHUB_RELEASES_URL}?per_page=20`
 const APP_BUNDLE_NAME = 'CodeBurnMenubar.app'
-const EXPECTED_BUNDLE_ID = 'org.agentseal.aiinsight-menubar'
+const EXPECTED_BUNDLE_ID = 'org.aiinsight.menubar'
 const VERSIONED_ASSET_PATTERN = /^CodeBurnMenubar-v.+\.zip$/
 const APP_PROCESS_NAME = 'CodeBurnMenubar'
 const SUPPORTED_OS = 'darwin'
@@ -66,7 +67,7 @@ export function resolveMenubarReleaseAssets(release: ReleaseResponse): ResolvedA
   if (!zip) {
     throw new Error(
       `No ${APP_BUNDLE_NAME} versioned zip found in release ${release.tag_name}. ` +
-      `Check https://github.com/getagentseal/aiinsight/releases.`
+      `Check https://github.com/getagentseal/codeburn/releases.`
     )
   }
   const checksum = release.assets.find(a => a.name === `${zip.name}.sha256`)
@@ -146,7 +147,7 @@ async function fetchLatestReleaseAssets(): Promise<ResolvedAssets> {
 
 async function verifyChecksum(archivePath: string, checksumUrl: string): Promise<void> {
   const response = await fetchWithProxy(checksumUrl, {
-    headers: { 'User-Agent': 'codeburn-menubar-installer' },
+    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok) {
@@ -168,7 +169,7 @@ async function verifyChecksum(archivePath: string, checksumUrl: string): Promise
 
 async function downloadToFile(url: string, destPath: string): Promise<void> {
   const response = await fetchWithProxy(url, {
-    headers: { 'User-Agent': 'codeburn-menubar-installer' },
+    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok || response.body === null) {

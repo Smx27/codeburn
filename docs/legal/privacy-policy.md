@@ -146,7 +146,7 @@ We may update this policy from time to time. We will notify you of material chan
 
 If you have questions about this Privacy Policy, please contact us at:
 - Email: privacy@aiinsight.dev
-- GitHub: https://github.com/priya/aiinsight/issues
+- GitHub: https://github.com/getagentseal/codeburn/issues
 
 ## Related Documentation
 
