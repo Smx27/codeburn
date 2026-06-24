@@ -3,6 +3,7 @@ import { homedir } from 'os'
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { render, Box, Text, useInput, useApp, useWindowSize } from 'ink'
 import { CATEGORY_LABELS, type DateRange, type ProjectSummary, type TaskCategory } from './types.js'
+import { generateShowcaseData } from './showcase-data.js'
 import { formatCost, formatTokens } from './format.js'
 import { aggregateModelEfficiency } from './model-efficiency.js'
 import { parseAllSessions, filterProjectsByName } from './parser.js'
@@ -1180,6 +1181,22 @@ export async function renderDashboard(period: Period = 'week', provider: string 
     await waitUntilExit()
   } else {
     const { unmount } = render(<StaticDashboard projects={filteredProjects} period={period} activeProvider={provider} planUsages={planUsages} label={label} dayMode={initialDay != null} />, { patchConsole: false })
+    unmount()
+  }
+}
+
+export async function renderShowcaseDashboard(period: Period = 'all', provider: string = 'all'): Promise<void> {
+  await loadPricing()
+  const projects = generateShowcaseData()
+  const isTTY = process.stdin.isTTY && process.stdout.isTTY
+  patchStdoutForWindows()
+  if (isTTY) {
+    const { waitUntilExit } = render(
+      <InteractiveDashboard initialProjects={projects} initialPeriod={period} initialProvider={provider} refreshSeconds={0} />
+    )
+    await waitUntilExit()
+  } else {
+    const { unmount } = render(<StaticDashboard projects={projects} period={period} activeProvider={provider} label="Showcase (6 months)" />, { patchConsole: false })
     unmount()
   }
 }

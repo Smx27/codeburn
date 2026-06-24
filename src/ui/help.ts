@@ -36,6 +36,7 @@ export function renderCustomHelp(): string {
     `    ${CYAN('proxy-path')}   Mark proxy-backed projects`,
     `    ${CYAN('menubar')}      Install macOS menubar app`,
     `    ${CYAN('mcp')}          Run MCP server (stdio)`,
+    `    ${CYAN('showcase')}     Enterprise demo dashboard (investor mode)`,
     '',
     `  ${BOLD('Options:')}`,
     '',

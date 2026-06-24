@@ -12,7 +12,7 @@ import { dateKey } from './day-aggregator.js'
 import { CATEGORY_LABELS, type DateRange, type ProjectSummary, type TaskCategory } from './types.js'
 import { aggregateModelEfficiency } from './model-efficiency.js'
 import { buildPeriodData, buildMenubarPayloadForRange } from './usage-aggregator.js'
-import { renderDashboard } from './dashboard.js'
+import { renderDashboard, renderShowcaseDashboard } from './dashboard.js'
 import { formatDateRangeLabel, parseDateRangeFlags, parseDayFlag, parseDaysFlag, getDateRange, toPeriod, type Period } from './cli-date.js'
 import { runOptimize } from './optimize.js'
 import { renderCompare } from './compare.js'
@@ -472,6 +472,15 @@ program
     }
     const customRangeLabel = customRange ? formatDateRangeLabel(opts.from, opts.to) : undefined
     await renderDashboard(period, opts.provider, opts.refresh, opts.project, opts.exclude, customRange, customRangeLabel, daySelection?.day)
+  })
+
+program
+  .command('showcase')
+  .description('Enterprise showcase dashboard with demo data for investor presentations')
+  .option('-p, --period <period>', 'Time period: today, week, 30days, month, all', 'all')
+  .option('--provider <provider>', 'Filter by provider', 'all')
+  .action(async (opts) => {
+    await renderShowcaseDashboard(toPeriod(opts.period), opts.provider)
   })
 
 
