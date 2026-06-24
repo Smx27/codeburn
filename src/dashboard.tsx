@@ -20,9 +20,14 @@ import { patchStdoutForWindows } from './ink-win.js'
 type View = 'dashboard' | 'optimize' | 'compare'
 
 const MIN_WIDE = 90
-const ORANGE = '#FF8C42'
-const DIM = '#555555'
-const GOLD = '#FFD700'
+const PRIMARY = '#6366F1'
+const ACCENT = '#06B6D4'
+const GOLD = '#FBBF24'
+const DIM = '#475569'
+const SUCCESS = '#10B981'
+const DANGER = '#EF4444'
+const ORANGE = PRIMARY
+const GREEN = SUCCESS
 const PLAN_BAR_WIDTH = 10
 const HEAVY_PERIODS = new Set<Period>(['30days', 'month', 'all'])
 
@@ -37,45 +42,45 @@ const LANG_DISPLAY_NAMES: Record<string, string> = {
 }
 
 const PANEL_COLORS = {
-  overview: '#FF8C42',
-  daily: '#5B9EF5',
-  project: '#5BF5A0',
-  model: '#E05BF5',
-  activity: '#F5C85B',
-  tools: '#5BF5E0',
-  mcp: '#F55BE0',
-  bash: '#F5A05B',
-  skills: '#7B68EE',
+  overview: '#6366F1',
+  daily: '#0EA5E9',
+  project: '#10B981',
+  model: '#8B5CF6',
+  activity: '#F59E0B',
+  tools: '#06B6D4',
+  mcp: '#EC4899',
+  bash: '#F97316',
+  skills: '#6366F1',
 }
 
 const PROVIDER_COLORS: Record<string, string> = {
-  claude: '#FF8C42',
-  codex: '#5BF5A0',
-  cursor: '#00B4D8',
-  'ibm-bob': '#0F62FE',
-  opencode: '#A78BFA',
-  pi: '#F472B6',
-  kimi: '#B6E34A',
-  all: '#FF8C42',
+  claude: '#6366F1',
+  codex: '#10B981',
+  cursor: '#06B6D4',
+  'ibm-bob': '#3B82F6',
+  opencode: '#8B5CF6',
+  pi: '#EC4899',
+  kimi: '#F59E0B',
+  all: '#6366F1',
 }
 
 const CATEGORY_COLORS: Record<TaskCategory, string> = {
-  coding: '#5B9EF5',
-  debugging: '#F55B5B',
-  feature: '#5BF58C',
-  refactoring: '#F5E05B',
-  testing: '#E05BF5',
-  exploration: '#5BF5E0',
-  planning: '#7B9EF5',
-  delegation: '#F5C85B',
-  git: '#CCCCCC',
-  'build/deploy': '#5BF5A0',
-  conversation: '#888888',
-  brainstorming: '#F55BE0',
-  general: '#666666',
+  coding: '#0EA5E9',
+  debugging: '#EF4444',
+  feature: '#10B981',
+  refactoring: '#F59E0B',
+  testing: '#8B5CF6',
+  exploration: '#06B6D4',
+  planning: '#6366F1',
+  delegation: '#F59E0B',
+  git: '#94A3B8',
+  'build/deploy': '#10B981',
+  conversation: '#64748B',
+  brainstorming: '#EC4899',
+  general: '#475569',
 }
 
-const IMPACT_PANEL_COLORS: Record<string, string> = { high: '#F55B5B', medium: ORANGE, low: DIM }
+const IMPACT_PANEL_COLORS: Record<string, string> = { high: '#EF4444', medium: '#F59E0B', low: DIM }
 
 function toHex(r: number, g: number, b: number): string {
   return '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('')
@@ -88,14 +93,14 @@ function lerp(a: number, b: number, t: number): number {
 function gradientColor(pct: number): string {
   if (pct <= 0.33) {
     const t = pct / 0.33
-    return toHex(lerp(91, 245, t), lerp(158, 200, t), lerp(245, 91, t))
+    return toHex(lerp(99, 6, t), lerp(102, 182, t), lerp(241, 212, t))
   }
   if (pct <= 0.66) {
     const t = (pct - 0.33) / 0.33
-    return toHex(lerp(245, 255, t), lerp(200, 140, t), lerp(91, 66, t))
+    return toHex(lerp(6, 16, t), lerp(182, 185, t), lerp(212, 129, t))
   }
   const t = (pct - 0.66) / 0.34
-  return toHex(lerp(255, 245, t), lerp(140, 91, t), lerp(66, 91, t))
+  return toHex(lerp(16, 6, t), lerp(185, 182, t), lerp(129, 212, t))
 }
 
 function getPeriodRange(period: Period): { start: Date; end: Date } {
@@ -126,27 +131,103 @@ function getLayout(columns?: number): Layout {
   return { dashWidth, wide, halfWidth, barWidth }
 }
 
-function HBar({ value, max, width }: { value: number; max: number; width: number }) {
+const PANEL_CHROME = 4
+
+const SPARK_CHARS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█']
+const DOT_FILLED = '●'
+const DOT_EMPTY = '○'
+const RING_CHARS = ['◔', '◕', '●']
+
+function HBar({ value, max, width, color }: { value: number; max: number; width: number; color?: string }) {
   if (max === 0) return <Text color={DIM}>{'░'.repeat(width)}</Text>
   const filled = Math.round((value / max) * width)
-  const fillChars: React.ReactNode[] = []
-  for (let i = 0; i < Math.min(filled, width); i++) {
-    fillChars.push(<Text key={i} color={gradientColor(i / width)}>{'█'}</Text>)
-  }
+  const barColor = color ?? ACCENT
   return (
     <Text>
-      {fillChars}
-      <Text color="#333333">{'░'.repeat(Math.max(width - filled, 0))}</Text>
+      <Text color={barColor}>{'█'.repeat(Math.min(filled, width))}</Text>
+      <Text color="#1E293B">{'░'.repeat(Math.max(width - filled, 0))}</Text>
     </Text>
   )
 }
 
-const PANEL_CHROME = 4
+function SparkLine({ values, width, color }: { values: number[]; width: number; color: string }) {
+  if (values.length === 0) return <Text color={DIM}>{'·'.repeat(width)}</Text>
+  const max = Math.max(...values, 0.001)
+  const padded = values.length >= width ? values.slice(-width) : values
+  const step = padded.length > 1 ? Math.floor(padded.length / width) : 1
+  const sampled: number[] = []
+  for (let i = 0; i < width && i * step < padded.length; i++) {
+    sampled.push(padded[i * step] ?? 0)
+  }
+  const sMax = Math.max(...sampled, 0.001)
+  return (
+    <Text>
+      {sampled.map((v, i) => {
+        const idx = Math.min(Math.round((v / sMax) * (SPARK_CHARS.length - 1)), SPARK_CHARS.length - 1)
+        return <Text key={i} color={v > 0 ? color : DIM}>{SPARK_CHARS[idx]}</Text>
+      })}
+    </Text>
+  )
+}
+
+function VerticalBar({ values, labels, colors, maxWidth }: { values: number[]; labels: string[]; colors: string[]; maxWidth: number }) {
+  if (values.length === 0) return <Text dimColor>No data</Text>
+  const max = Math.max(...values, 0.001)
+  const maxH = 6
+  const nw = Math.max(6, maxWidth - 3)
+  const rows: React.ReactNode[] = []
+  for (let row = maxH - 1; row >= 0; row--) {
+    const cells: React.ReactNode[] = []
+    const threshold = ((row + 1) / maxH) * max
+    for (let i = 0; i < values.length; i++) {
+      const barH = Math.round((values[i] / max) * maxH)
+      const filled = maxH - row <= barH
+      cells.push(<Text key={i} color={filled ? (colors[i] ?? ACCENT) : DIM}>{filled ? '█' : ' '}</Text>)
+      cells.push(<Text key={`${i}-g`}> </Text>)
+    }
+    rows.push(<Text key={row}>{cells}</Text>)
+  }
+  const labelRow: React.ReactNode[] = []
+  for (let i = 0; i < values.length; i++) {
+    labelRow.push(<Text key={i} color={colors[i] ?? DIM}>{fit(labels[i], 3)}</Text>)
+    labelRow.push(<Text key={`${i}-g`}> </Text>)
+  }
+  rows.push(<Text key="labels">{labelRow}</Text>)
+  return <>{rows}</>
+}
+
+function DotFill({ value, max, width, color }: { value: number; max: number; width: number; color: string }) {
+  if (max === 0) return <Text color={DIM}>{DOT_EMPTY.repeat(width)}</Text>
+  const filled = Math.round((value / max) * width)
+  return (
+    <Text>
+      <Text color={color}>{DOT_FILLED.repeat(Math.min(filled, width))}</Text>
+      <Text color="#1E293B">{DOT_EMPTY.repeat(Math.max(width - filled, 0))}</Text>
+    </Text>
+  )
+}
+
+function RingSegment({ percent, color }: { percent: number; color: string }) {
+  const capped = Math.max(0, Math.min(100, percent))
+  const idx = capped < 33 ? 0 : capped < 66 ? 1 : 2
+  return <Text color={color}>{RING_CHARS[idx]}</Text>
+}
+
+function ProgressBar({ value, max, width, color }: { value: number; max: number; width: number; color: string }) {
+  if (max === 0) return <Text color={DIM}>{'─'.repeat(width)}</Text>
+  const filled = Math.round((value / max) * width)
+  return (
+    <Text>
+      <Text color={color}>{'━'.repeat(Math.min(filled, width))}</Text>
+      <Text color="#1E293B">{'─'.repeat(Math.max(width - filled, 0))}</Text>
+    </Text>
+  )
+}
 
 function Panel({ title, color, children, width }: { title: string; color: string; children: React.ReactNode; width: number }) {
   return (
     <Box flexDirection="column" borderStyle="round" borderColor={color} paddingX={1} width={width} overflowX="hidden">
-      <Text bold color={color}>{title}</Text>
+      <Text bold color={color}>▸ {title}</Text>
       {children}
     </Box>
   )
@@ -174,10 +255,10 @@ function planLabel(planUsage: PlanUsage): string {
 
 function planColor(planUsage: PlanUsage): string {
   return planUsage.status === 'over'
-    ? '#F55B5B'
+    ? '#EF4444'
     : planUsage.status === 'near'
-      ? ORANGE
-      : '#5BF58C'
+      ? '#F59E0B'
+      : '#10B981'
 }
 
 function planStatusText(planUsage: PlanUsage): string {
@@ -206,11 +287,12 @@ function Overview({ projects, label, width, planUsages }: { projects: ProjectSum
   const activePlanUsages = planUsages ?? []
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor={PANEL_COLORS.overview} paddingX={1} width={width}>
+    <Box flexDirection="column" borderStyle="double" borderColor={PANEL_COLORS.overview} paddingX={1} width={width}>
       <Text wrap="truncate-end">
-        <Text bold color={ORANGE}>AiInsight</Text>
+        <Text bold color={PRIMARY}>Niriksh</Text>
         <Text dimColor>  {label}</Text>
       </Text>
+      <Text dimColor>{'─'.repeat(width - 4)}</Text>
       <Text wrap="truncate-end">
         <Text bold color={GOLD}>{formatCost(totalCost)}</Text>
         <Text dimColor> cost   </Text>
@@ -218,7 +300,7 @@ function Overview({ projects, label, width, planUsages }: { projects: ProjectSum
         <Text dimColor> calls   </Text>
         <Text bold>{String(totalSessions)}</Text>
         <Text dimColor> sessions   </Text>
-        <Text bold>{cacheHit.toFixed(1)}%</Text>
+        <Text bold color={ACCENT}>{cacheHit.toFixed(1)}%</Text>
         <Text dimColor> cache hit</Text>
       </Text>
       <Text dimColor wrap="truncate-end">
@@ -226,7 +308,7 @@ function Overview({ projects, label, width, planUsages }: { projects: ProjectSum
       </Text>
       {totalSavings > 0 && (
         <Text wrap="truncate-end">
-          <Text color="green">{formatCost(totalSavings)}</Text>
+          <Text color={SUCCESS}>{formatCost(totalSavings)}</Text>
           <Text dimColor> saved by local models</Text>
         </Text>
       )}
@@ -267,17 +349,25 @@ function DailyActivity({ projects, days = 14, pw, bw }: { projects: ProjectSumma
     }
   }
   const sortedDays = days !== undefined ? Object.keys(dailyCosts).sort().slice(-days) : Object.keys(dailyCosts).sort()
-  const maxCost = Math.max(...sortedDays.map(d => dailyCosts[d] ?? 0))
+  const costValues = sortedDays.map(d => dailyCosts[d] ?? 0)
+  const callValues = sortedDays.map(d => dailyCalls[d] ?? 0)
+  const maxCost = Math.max(...costValues, 0.001)
+  const maxCalls = Math.max(...callValues, 0.001)
 
   return (
     <Panel title="Daily Activity" color={PANEL_COLORS.daily} width={pw}>
-      <Text dimColor wrap="truncate-end">{''.padEnd(6 + bw)}{'cost'.padStart(8)}{'calls'.padStart(6)}</Text>
+      <Text dimColor wrap="truncate-end">{'cost'.padStart(8)}{'calls'.padStart(8)}</Text>
+      <Text wrap="truncate-end">
+        <SparkLine values={costValues} width={bw} color={PANEL_COLORS.daily} />
+        <Text color={GOLD}>{formatCost(maxCost).padStart(8)}</Text>
+        <Text color={ACCENT}>{String(Math.round(maxCalls)).padStart(8)}</Text>
+      </Text>
+      <Text dimColor wrap="truncate-end">{''.padEnd(bw + 8 + 8)}{'max'.padStart(8)}</Text>
       {sortedDays.map(day => (
         <Text key={day} wrap="truncate-end">
           <Text dimColor>{day.slice(5)} </Text>
-          <HBar value={dailyCosts[day] ?? 0} max={maxCost} width={bw} />
-          <Text color={GOLD}>{formatCost(dailyCosts[day] ?? 0).padStart(8)}</Text>
-          <Text>{String(dailyCalls[day] ?? 0).padStart(6)}</Text>
+          <Text color={dailyCosts[day] === maxCost ? GOLD : DIM}>{formatCost(dailyCosts[day] ?? 0).padStart(8)}</Text>
+          <Text>{String(dailyCalls[day] ?? 0).padStart(8)}</Text>
         </Text>
       ))}
     </Panel>
@@ -309,6 +399,7 @@ function ProjectBreakdown({ projects, pw, bw, budgets, rows = 14 }: { projects: 
   const maxCost = Math.max(...projects.map(p => p.totalCostUSD))
   const hasBudgets = budgets && budgets.size > 0
   const nw = Math.max(8, pw - bw - (hasBudgets ? PROJECT_COL_WITH_OVERHEAD_WIDTH : PROJECT_COL_BASE_WIDTH))
+  const dotColors = [PANEL_COLORS.project, ACCENT, PRIMARY, PANEL_COLORS.model, PANEL_COLORS.activity]
   return (
     <Panel title="By Project" color={PANEL_COLORS.project} width={pw}>
       <Text dimColor wrap="truncate-end">
@@ -321,12 +412,12 @@ function ProjectBreakdown({ projects, pw, bw, budgets, rows = 14 }: { projects: 
           : '-'
         return (
           <Text key={`${project.project}-${i}`} wrap="truncate-end">
-            <HBar value={project.totalCostUSD} max={maxCost} width={bw} />
+            <DotFill value={project.totalCostUSD} max={maxCost} width={bw} color={dotColors[i % dotColors.length]} />
             <Text dimColor> {fit(shortProject(project.projectPath), nw)}</Text>
             <Text color={GOLD}>{formatCost(project.totalCostUSD).padStart(8)}</Text>
             <Text color={GOLD}>{avgCost.padStart(PROJECT_COL_AVG)}</Text>
             <Text>{String(project.sessions.length).padStart(6)}</Text>
-            {hasBudgets && <Text color="#7B9EF5">{(budget ? formatTokens(budget.total) : '-').padStart(10)}</Text>}
+            {hasBudgets && <Text color={ACCENT}>{(budget ? formatTokens(budget.total) : '-').padStart(10)}</Text>}
           </Text>
         )
       })}
@@ -358,7 +449,7 @@ function ModelBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; pw: 
   }
   const sorted = Object.entries(modelTotals).sort(([, a], [, b]) => b.costUSD - a.costUSD)
   const maxCost = sorted[0]?.[1]?.costUSD ?? 0
-
+  const modelColors = [PANEL_COLORS.model, ACCENT, SUCCESS, PANEL_COLORS.daily, PRIMARY]
   return (
     <Panel title="By Model" color={PANEL_COLORS.model} width={pw}>
       <Text dimColor wrap="truncate-end">{''.padEnd(bw + 1 + MODEL_NAME_WIDTH)}{'cost'.padStart(MODEL_COL_COST)}{'cache'.padStart(MODEL_COL_CACHE)}{'calls'.padStart(MODEL_COL_CALLS)}{'1-shot'.padStart(MODEL_COL_ONESHOT)}</Text>
@@ -372,7 +463,7 @@ function ModelBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; pw: 
           : '-'
         return (
           <Text key={`${model}-${i}`} wrap="truncate-end">
-            <HBar value={data.costUSD} max={maxCost} width={bw} />
+            <DotFill value={data.costUSD} max={maxCost} width={bw} color={modelColors[i % modelColors.length]} />
             <Text> {fit(model, MODEL_NAME_WIDTH)}</Text>
             <Text color={GOLD}>{formatCost(data.costUSD).padStart(MODEL_COL_COST)}</Text>
             <Text>{cacheLabel.padStart(MODEL_COL_CACHE)}</Text>
@@ -418,11 +509,11 @@ function ActivityBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; p
         const oneShotPct = data.editTurns > 0 ? Math.round((data.oneShotTurns / data.editTurns) * 100) + '%' : '-'
         const rows = [
           <Text key={cat} wrap="truncate-end">
-            <HBar value={data.costUSD} max={maxCost} width={bw} />
-            <Text color={CATEGORY_COLORS[cat as TaskCategory] ?? '#666666'}> {fit(CATEGORY_LABELS[cat as TaskCategory] ?? cat, 13)}</Text>
+            <HBar value={data.costUSD} max={maxCost} width={bw} color={CATEGORY_COLORS[cat as TaskCategory] ?? '#475569'} />
+            <Text color={CATEGORY_COLORS[cat as TaskCategory] ?? '#475569'}> {fit(CATEGORY_LABELS[cat as TaskCategory] ?? cat, 13)}</Text>
             <Text color={GOLD}>{formatCost(data.costUSD).padStart(8)}</Text>
             <Text>{String(data.turns).padStart(6)}</Text>
-            <Text color={data.editTurns === 0 ? DIM : oneShotPct === '100%' ? '#5BF58C' : ORANGE}>{String(oneShotPct).padStart(7)}</Text>
+            <Text color={data.editTurns === 0 ? DIM : oneShotPct === '100%' ? SUCCESS : ACCENT}>{String(oneShotPct).padStart(7)}</Text>
           </Text>,
         ]
         if (cat === 'general' && sortedSkills.length > 0) {
@@ -430,7 +521,7 @@ function ActivityBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; p
             const subPct = sd.editTurns > 0 ? Math.round((sd.oneShotTurns / sd.editTurns) * 100) + '%' : '-'
             rows.push(
               <Text key={`${cat}:${skill}`} wrap="truncate-end" dimColor>
-                <HBar value={sd.costUSD} max={maxCost} width={bw} />
+                <ProgressBar value={sd.costUSD} max={maxCost} width={bw} color={CATEGORY_COLORS[cat as TaskCategory] ?? '#475569'} />
                 <Text> {fit(`  /${skill}`, 13)}</Text>
                 <Text>{formatCost(sd.costUSD).padStart(8)}</Text>
                 <Text>{String(sd.turns).padStart(6)}</Text>
@@ -466,7 +557,7 @@ function ToolBreakdown({ projects, pw, bw, title, filterPrefix }: { projects: Pr
         const display = filterPrefix ? (LANG_DISPLAY_NAMES[raw] ?? raw) : raw
         return (
           <Text key={tool} wrap="truncate-end">
-            <HBar value={calls} max={maxCalls} width={bw} />
+            <ProgressBar value={calls} max={maxCalls} width={bw} color={PANEL_COLORS.tools} />
             <Text> {fit(display, nw)}</Text>
             <Text>{String(calls).padStart(7)}</Text>
           </Text>
@@ -488,7 +579,7 @@ function McpBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; pw: nu
     <Panel title="MCP Servers" color={PANEL_COLORS.mcp} width={pw}>
       <Text dimColor wrap="truncate-end">{''.padEnd(bw + 1 + nw)}{'calls'.padStart(6)}</Text>
       {sorted.slice(0, 8).map(([server, calls]) => (
-        <Text key={server} wrap="truncate-end"><HBar value={calls} max={maxCalls} width={bw} /><Text> {fit(server, nw)}</Text><Text>{String(calls).padStart(6)}</Text></Text>
+        <Text key={server} wrap="truncate-end"><ProgressBar value={calls} max={maxCalls} width={bw} color={PANEL_COLORS.mcp} /><Text> {fit(server, nw)}</Text><Text>{String(calls).padStart(6)}</Text></Text>
       ))}
     </Panel>
   )
@@ -505,7 +596,7 @@ function BashBreakdown({ projects, pw, bw }: { projects: ProjectSummary[]; pw: n
     <Panel title="Shell Commands" color={PANEL_COLORS.bash} width={pw}>
       <Text dimColor wrap="truncate-end">{''.padEnd(bw + 1 + nw)}{'calls'.padStart(7)}</Text>
       {sorted.slice(0, 10).map(([cmd, calls]) => (
-        <Text key={cmd} wrap="truncate-end"><HBar value={calls} max={maxCalls} width={bw} /><Text> {fit(cmd, nw)}</Text><Text>{String(calls).padStart(7)}</Text></Text>
+        <Text key={cmd} wrap="truncate-end"><ProgressBar value={calls} max={maxCalls} width={bw} color={PANEL_COLORS.bash} /><Text> {fit(cmd, nw)}</Text><Text>{String(calls).padStart(7)}</Text></Text>
       ))}
     </Panel>
   )
@@ -527,7 +618,7 @@ function SkillsAndAgents({ projects, pw, bw }: { projects: ProjectSummary[]; pw:
     <Panel title="Skills & Agents" color={PANEL_COLORS.skills} width={pw}>
       <Text dimColor wrap="truncate-end">{''.padEnd(bw + 1 + nw)}{'uses'.padStart(6)}{'cost'.padStart(8)}</Text>
       {sorted.slice(0, 10).map(([name, d]) => (
-        <Text key={name} wrap="truncate-end"><HBar value={d.cost} max={maxCost} width={bw} /><Text> {fit(name, nw)}</Text><Text>{String(d.uses).padStart(6)}</Text><Text color={GOLD}>{formatCost(d.cost).padStart(8)}</Text></Text>
+        <Text key={name} wrap="truncate-end"><ProgressBar value={d.cost} max={maxCost} width={bw} color={PANEL_COLORS.skills} /><Text> {fit(name, nw)}</Text><Text>{String(d.uses).padStart(6)}</Text><Text color={GOLD}>{formatCost(d.cost).padStart(8)}</Text></Text>
       ))}
     </Panel>
   )
@@ -553,7 +644,7 @@ function ClaudeAgentTypes({ projects, pw, bw }: { projects: ProjectSummary[]; pw
     <Panel title="Claude Agent Types" color={PANEL_COLORS.skills} width={pw}>
       <Text dimColor wrap="truncate-end">{''.padEnd(bw + 1 + nw)}{'calls'.padStart(6)}{'cost'.padStart(8)}</Text>
       {sorted.slice(0, 10).map(([name, d]) => (
-        <Text key={name} wrap="truncate-end"><HBar value={d.cost} max={maxCost} width={bw} /><Text> {fit(name, nw)}</Text><Text>{String(d.uses).padStart(6)}</Text><Text color={GOLD}>{formatCost(d.cost).padStart(8)}</Text></Text>
+        <Text key={name} wrap="truncate-end"><ProgressBar value={d.cost} max={maxCost} width={bw} color={PANEL_COLORS.skills} /><Text> {fit(name, nw)}</Text><Text>{String(d.uses).padStart(6)}</Text><Text color={GOLD}>{formatCost(d.cost).padStart(8)}</Text></Text>
       ))}
     </Panel>
   )
@@ -576,13 +667,13 @@ function PeriodTabs({ active, providerName, showProvider }: { active: Period; pr
     <Box justifyContent="space-between" paddingX={1}>
       <Box gap={1}>
         {PERIODS.map(p => (
-          <Text key={p} bold={active === p} color={active === p ? ORANGE : DIM}>
+          <Text key={p} bold={active === p} color={active === p ? PRIMARY : DIM}>
             {active === p ? `[ ${PERIOD_LABELS[p]} ]` : `  ${PERIOD_LABELS[p]}  `}
           </Text>
         ))}
       </Box>
       {showProvider && providerName && (
-        <Box><Text color={DIM}>|  </Text><Text color={ORANGE} bold>[p]</Text><Text bold color={PROVIDER_COLORS[providerName] ?? ORANGE}> {getProviderDisplayName(providerName)}</Text></Box>
+        <Box><Text color={DIM}>|  </Text><Text color={PRIMARY} bold>[p]</Text><Text bold color={PROVIDER_COLORS[providerName] ?? PRIMARY}> {getProviderDisplayName(providerName)}</Text></Box>
       )}
     </Box>
   )
@@ -622,7 +713,7 @@ function FindingAction({ action }: { action: WasteAction }) {
     <>
       <Text color={ORANGE}>{header}</Text>
       <Text dimColor>{action.label}</Text>
-      {lines.map((line, i) => <Text key={i} color="#5BF5E0">  {line}</Text>)}
+      {lines.map((line, i) => <Text key={i} color={ACCENT}>  {line}</Text>)}
     </>
   )
 }
@@ -638,7 +729,7 @@ function FindingPanel({ index, finding, costRate, width }: { index: number; find
         <Text bold>{index}. {finding.title}</Text>
         <Text>  </Text>
         <Text color={color}>{label}</Text>
-        {trendBadge && <Text color="#5BF5A0">{trendBadge}</Text>}
+        {trendBadge && <Text color={SUCCESS}>{trendBadge}</Text>}
       </Text>
       <Text dimColor wrap="wrap">{finding.explanation}</Text>
       <Text color={GOLD}>Savings: ~{formatTokens(finding.tokensSaved)} tokens (~{formatCost(costSaved)})</Text>
@@ -648,7 +739,7 @@ function FindingPanel({ index, finding, costRate, width }: { index: number; find
   )
 }
 
-const GRADE_COLORS: Record<string, string> = { A: '#5BF5A0', B: '#5BF5A0', C: GOLD, D: ORANGE, F: '#F55B5B' }
+const GRADE_COLORS: Record<string, string> = { A: SUCCESS, B: SUCCESS, C: GOLD, D: '#F59E0B', F: DANGER }
 
 // Each finding panel takes ~6-8 lines. Show 3 at a time so the window fits a
 // 30-line terminal alongside the optimize header + status bar; users page
@@ -669,14 +760,14 @@ function OptimizeView({ findings, costRate, projects, label, width, healthScore,
   const visible = findings.slice(start, end)
   return (
     <Box flexDirection="column" width={width}>
-      <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={width}>
+      <Box flexDirection="column" borderStyle="double" borderColor={PRIMARY} paddingX={1} width={width}>
         <Text wrap="truncate-end">
-          <Text bold color={ORANGE}>AiInsight Optimize</Text>
+          <Text bold color={PRIMARY}>Niriksh Optimize</Text>
           <Text dimColor>  {label}   Setup: </Text>
           <Text bold color={gradeColor}>{healthGrade}</Text>
           <Text dimColor> ({healthScore}/100)</Text>
         </Text>
-        <Text color="#5BF5A0" wrap="truncate-end">Savings: ~{formatTokens(totalTokens)} tokens (~{formatCost(totalCost)}, ~{pct}% of spend)</Text>
+        <Text color={SUCCESS} wrap="truncate-end">Savings: ~{formatTokens(totalTokens)} tokens (~{formatCost(totalCost)}, ~{pct}% of spend)</Text>
         {total > FINDINGS_WINDOW_SIZE && (
           <Text dimColor>Showing {start + 1}–{end} of {total} · j/k to scroll</Text>
         )}
@@ -693,34 +784,34 @@ function StatusBar({ width, showProvider, view, findingCount, optimizeAvailable,
     <Box borderStyle="round" borderColor={DIM} width={width} justifyContent="center" paddingX={1}>
       <Text>
         {isOptimize
-          ? <><Text color={ORANGE} bold>b</Text><Text dimColor> back   </Text><Text color={ORANGE} bold>j</Text><Text dimColor>/</Text><Text color={ORANGE} bold>k</Text><Text dimColor> scroll   </Text></>
+          ? <><Text color={PRIMARY} bold>b</Text><Text dimColor> back   </Text><Text color={PRIMARY} bold>j</Text><Text dimColor>/</Text><Text color={PRIMARY} bold>k</Text><Text dimColor> scroll   </Text></>
           : dayMode
-            ? <><Text color={ORANGE} bold>{'<'}</Text><Text color={ORANGE}>{'>'}</Text><Text dimColor> day   </Text></>
+            ? <><Text color={PRIMARY} bold>{'<'}</Text><Text color={PRIMARY}>{'>'}</Text><Text dimColor> day   </Text></>
             : !customRange
-              ? <><Text color={ORANGE} bold>{'<'}</Text><Text color={ORANGE}>{'>'}</Text><Text dimColor> switch   </Text></>
+              ? <><Text color={PRIMARY} bold>{'<'}</Text><Text color={PRIMARY}>{'>'}</Text><Text dimColor> switch   </Text></>
               : null}
-        <Text color={ORANGE} bold>q</Text><Text dimColor> quit</Text>
+        <Text color={PRIMARY} bold>q</Text><Text dimColor> quit</Text>
         {!customRange && !isOptimize && (
           <>
-            <Text dimColor>   </Text><Text color={ORANGE} bold>1</Text><Text dimColor> today   </Text>
-            <Text color={ORANGE} bold>2</Text><Text dimColor> week   </Text>
-            <Text color={ORANGE} bold>3</Text><Text dimColor> 30 days   </Text>
-            <Text color={ORANGE} bold>4</Text><Text dimColor> month   </Text>
-            <Text color={ORANGE} bold>5</Text><Text dimColor> 6 months</Text>
+            <Text dimColor>   </Text><Text color={PRIMARY} bold>1</Text><Text dimColor> today   </Text>
+            <Text color={PRIMARY} bold>2</Text><Text dimColor> week   </Text>
+            <Text color={PRIMARY} bold>3</Text><Text dimColor> 30 days   </Text>
+            <Text color={PRIMARY} bold>4</Text><Text dimColor> month   </Text>
+            <Text color={PRIMARY} bold>5</Text><Text dimColor> 6 months</Text>
           </>
         )}
         {!customRange && !isOptimize && (
           <>
-            <Text dimColor>   </Text><Text color={ORANGE} bold>d</Text><Text dimColor>{dayMode ? ' exit day' : ' yesterday'}</Text>
+            <Text dimColor>   </Text><Text color={PRIMARY} bold>d</Text><Text dimColor>{dayMode ? ' exit day' : ' yesterday'}</Text>
           </>
         )}
         {!isOptimize && optimizeAvailable && (
-          <><Text dimColor>   </Text><Text color={ORANGE} bold>o</Text><Text dimColor> optimize</Text>{findingCount != null && findingCount > 0 ? <Text color="#F55B5B"> ({findingCount})</Text> : null}</>
+          <><Text dimColor>   </Text><Text color={PRIMARY} bold>o</Text><Text dimColor> optimize</Text>{findingCount != null && findingCount > 0 ? <Text color={DANGER}> ({findingCount})</Text> : null}</>
         )}
         {!isOptimize && compareAvailable && (
-          <><Text dimColor>   </Text><Text color={ORANGE} bold>c</Text><Text dimColor> compare</Text></>
+          <><Text dimColor>   </Text><Text color={PRIMARY} bold>c</Text><Text dimColor> compare</Text></>
         )}
-        {showProvider && (<><Text dimColor>   </Text><Text color={ORANGE} bold>p</Text><Text dimColor> provider</Text></>)}
+        {showProvider && (<><Text dimColor>   </Text><Text color={PRIMARY} bold>p</Text><Text dimColor> provider</Text></>)}
       </Text>
     </Box>
   )
@@ -735,7 +826,7 @@ function DashboardContent({ projects, period, columns, activeProvider, budgets, 
   const { dashWidth, wide, halfWidth, barWidth } = getLayout(columns)
   const isCursor = activeProvider === 'cursor'
   const activeLabel = label ?? PERIOD_LABELS[period]
-    if (projects.length === 0) return <Panel title="AiInsight" color={ORANGE} width={dashWidth}><Text dimColor>No usage data found for {activeLabel}.</Text></Panel>
+    if (projects.length === 0) return <Panel title="Niriksh" color={PRIMARY} width={dashWidth}><Text dimColor>No usage data found for {activeLabel}.</Text></Panel>
   const pw = wide ? halfWidth : dashWidth
   const days = dayMode ? 1 : period === 'all' ? undefined : (period === 'month' || period === '30days' ? 31 : 14)
   return (
@@ -1016,15 +1107,15 @@ function InteractiveDashboard({ initialProjects, initialPeriod, initialProvider,
         {isCustomRange && <CustomRangeBanner label={headerLabel} width={dashWidth} />}
         {view === 'compare'
           ? <Box flexDirection="column" paddingX={2} paddingY={1}>
-            <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
-              <Text bold color={ORANGE}>Model Comparison</Text>
+            <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1}>
+              <Text bold color={PRIMARY}>Model Comparison</Text>
               <Text> </Text>
               <Text dimColor>Loading {headerLabel} model data...</Text>
             </Box>
           </Box>
           : view === 'optimize'
-            ? <Panel title="AiInsight Optimize" color={ORANGE} width={dashWidth}><Text dimColor>Scanning {headerLabel}...</Text></Panel>
-            : <Panel title="AiInsight" color={ORANGE} width={dashWidth}><Text dimColor>Loading {headerLabel}...</Text></Panel>}
+            ? <Panel title="Niriksh Optimize" color={PRIMARY} width={dashWidth}><Text dimColor>Scanning {headerLabel}...</Text></Panel>
+            : <Panel title="Niriksh" color={PRIMARY} width={dashWidth}><Text dimColor>Loading {headerLabel}...</Text></Panel>}
         {view !== 'compare' && <StatusBar width={dashWidth} showProvider={multipleProviders} view={view} findingCount={0} optimizeAvailable={false} compareAvailable={false} customRange={isCustomRange} dayMode={isDayMode} />}
       </Box>
     )
@@ -1048,7 +1139,7 @@ function InteractiveDashboard({ initialProjects, initialPeriod, initialProvider,
 function DayBanner({ label, width }: { label: string; width: number }) {
   return (
     <Box width={width} paddingX={1} marginBottom={1}>
-      <Text color={ORANGE} bold>{label}</Text>
+      <Text color={PRIMARY} bold>{label}</Text>
     </Box>
   )
 }
@@ -1057,7 +1148,7 @@ function CustomRangeBanner({ label, width }: { label: string; width: number }) {
   return (
     <Box width={width} paddingX={1} marginBottom={1}>
       <Text dimColor>Custom range: </Text>
-      <Text color={ORANGE} bold>{label}</Text>
+      <Text color={PRIMARY} bold>{label}</Text>
     </Box>
   )
 }

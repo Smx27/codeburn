@@ -15,12 +15,12 @@ import { formatTokens } from './format.js'
 // Display constants
 // ============================================================================
 
-const ORANGE = '#FF8C42'
-const DIM = '#666666'
-const GOLD = '#FFD700'
-const CYAN = '#5BF5E0'
-const GREEN = '#5BF5A0'
-const RED = '#F55B5B'
+const ORANGE = '#6366F1'
+const DIM = '#475569'
+const GOLD = '#FBBF24'
+const CYAN = '#06B6D4'
+const GREEN = '#10B981'
+const RED = '#EF4444'
 
 // ============================================================================
 // Token estimation constants

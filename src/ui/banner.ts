@@ -9,17 +9,17 @@ const BORDER = chalk.hex('#4a5568')
 export function renderBanner(): string {
   let ascii: string
   try {
-    ascii = figlet.textSync('AIInsight', {
+    ascii = figlet.textSync('Niriksh', {
       font: 'ANSI Shadow',
       horizontalLayout: 'fitted',
     })
   } catch {
     try {
-      ascii = figlet.textSync('AIInsight', {
+      ascii = figlet.textSync('Niriksh', {
         horizontalLayout: 'fitted',
       })
     } catch {
-      ascii = '  AIInsight'
+      ascii = '  Niriksh'
     }
   }
 
@@ -55,7 +55,7 @@ export function renderFooter(): string {
     '',
     divider,
     '',
-    `  ${chalk.bold.cyan('AIInsight Agent')} ${chalk.dim(`v${version}`)}`,
+    `  ${chalk.bold.cyan('Niriksh Agent')} ${chalk.dim(`v${version}`)}`,
     '',
     `  ${chalk.dim('Environment')} : ${env}`,
     `  ${dim('Platform')}    : ${platform}`,
@@ -64,7 +64,7 @@ export function renderFooter(): string {
     '',
     divider,
     '',
-    chalk.hex('#718096')('  Built with ❤️  by AIInsight Labs'),
+    chalk.hex('#718096')('  Built with ❤️  by Niriksh Labs'),
     '',
   ].join('\n')
 }
@@ -79,7 +79,7 @@ export function renderVersionBlock(): string {
 
   return [
     '',
-    `  ${chalk.bold.cyan('AIInsight Agent')}`,
+    `  ${chalk.bold.cyan('Niriksh Agent')}`,
     '',
     `  ${dim('Version')}  : ${version}`,
     `  ${dim('Platform')} : ${platform}`,

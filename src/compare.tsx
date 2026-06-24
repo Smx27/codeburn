@@ -9,19 +9,19 @@ import { getAllProviders } from './providers/index.js'
 import type { ProjectSummary, DateRange } from './types.js'
 import { patchStdoutForWindows } from './ink-win.js'
 
-const ORANGE = '#FF8C42'
-const GREEN = '#5BF5A0'
-const DIM = '#888888'
-const GOLD = '#FFD700'
-const BAR_A = '#6495ED'
-const BAR_B = '#5BF5A0'
+const PRIMARY = '#6366F1'
+const BAR_A = '#6366F1'
+const BAR_B = '#10B981'
+const SUCCESS = '#10B981'
+const DANGER = '#EF4444'
+const GOLD = '#FBBF24'
+const DIM = '#475569'
 const LOW_DATA_THRESHOLD = 20
 const LABEL_WIDTH = 20
 const VALUE_WIDTH = 14
 const MODEL_NAME_COL = 24
-const BAR_MAX_WIDTH = 30
+const BAR_MAX_WIDTH = 20
 const MIN_WIDE = 90
-const PANEL_CHROME = 4
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 const FULL_BLOCK = '\u2588'
 
@@ -45,8 +45,52 @@ function daysOfData(first: string, last: string): number {
   return Math.max(1, Math.ceil(ms / MS_PER_DAY))
 }
 
+function fit(s: string, n: number): string {
+  return s.length > n ? s.slice(0, n) : s.padEnd(n)
+}
+
 function barWidth(rate: number): number {
   return Math.round((rate / 100) * BAR_MAX_WIDTH)
+}
+
+function SparkBar({ value, max, width, color }: { value: number; max: number; width: number; color: string }) {
+  if (max === 0) return <Text color={DIM}>{'░'.repeat(width)}</Text>
+  const filled = Math.round((value / max) * width)
+  return (
+    <Text>
+      <Text color={color}>{'█'.repeat(Math.min(filled, width))}</Text>
+      <Text color="#1E293B">{'░'.repeat(Math.max(width - filled, 0))}</Text>
+    </Text>
+  )
+}
+
+function SideBar({ valueA, valueB, max, width }: { valueA: number; valueB: number; max: number; width: number }) {
+  if (max === 0) return <Text color={DIM}>{'░'.repeat(width)}</Text>
+  const mid = Math.floor(width / 2)
+  const filledA = Math.round((valueA / max) * mid)
+  const filledB = Math.round((valueB / max) * mid)
+  return (
+    <Text>
+      <Text color={BAR_A}>{'█'.repeat(Math.min(filledA, mid))}</Text>
+      <Text color="#1E293B">{'░'.repeat(Math.max(mid - filledA, 0))}</Text>
+      <Text color={DIM}>│</Text>
+      <Text color="#1E293B">{'░'.repeat(Math.max(mid - filledB, 0))}</Text>
+      <Text color={BAR_B}>{'█'.repeat(Math.min(filledB, mid))}</Text>
+    </Text>
+  )
+}
+
+function WinnerBadge({ winner }: { winner: 'a' | 'b' | 'tie' | 'none' }) {
+  if (winner === 'a') return <Text color={BAR_A}> ◀</Text>
+  if (winner === 'b') return <Text color={BAR_B}>▶ </Text>
+  return null
+}
+
+function ScoreRing({ score, maxScore, color }: { score: number; maxScore: number; color: string }) {
+  const pct = maxScore > 0 ? score / maxScore : 0
+  const idx = pct < 0.33 ? 0 : pct < 0.66 ? 1 : 2
+  const chars = ['◔', '◕', '●']
+  return <Text color={color}>{chars[idx]}</Text>
 }
 
 type ModelSelectorProps = {
@@ -57,6 +101,9 @@ type ModelSelectorProps = {
 
 function ModelSelector({ models, onSelect, onBack }: ModelSelectorProps) {
   const { exit } = useApp()
+  const { stdout } = useStdout()
+  const termWidth = stdout?.columns || 80
+  const dashWidth = Math.min(160, termWidth)
   const [cursor, setCursor] = useState(0)
   const [selected, setSelected] = useState<Set<number>>(new Set())
 
@@ -92,10 +139,12 @@ function ModelSelector({ models, onSelect, onBack }: ModelSelectorProps) {
     }
   })
 
+  const maxCost = Math.max(...models.map(m => m.cost), 0.001)
+
   return (
     <Box flexDirection="column" paddingX={2} paddingY={1}>
-      <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
-        <Text bold color={ORANGE}>Model Comparison</Text>
+      <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1}>
+        <Text bold color={PRIMARY}>◆ Model Comparison</Text>
         <Text> </Text>
         <Text color={DIM}>Select two models to compare:</Text>
         <Text> </Text>
@@ -103,28 +152,39 @@ function ModelSelector({ models, onSelect, onBack }: ModelSelectorProps) {
           const isCursor = i === cursor
           const isSelected = selected.has(i)
           const lowData = m.calls < LOW_DATA_THRESHOLD
-          const prefix = isCursor ? '> ' : '  '
+          const prefix = isCursor ? '▸ ' : '  '
+          const oneShotRate = m.editTurns > 0 ? (m.oneShotTurns / m.editTurns) * 100 : 0
           return (
-            <Text key={m.model}>
-              <Text color={isCursor ? ORANGE : undefined}>{prefix}</Text>
-              <Text bold={isSelected} color={isSelected ? GREEN : undefined}>
-                {shortName(m.model).padEnd(MODEL_NAME_COL)}
+            <Box key={m.model} flexDirection="column">
+              <Text>
+                <Text color={isCursor ? PRIMARY : undefined}>{prefix}</Text>
+                <Text bold={isSelected} color={isSelected ? (selected.size === 1 ? BAR_A : BAR_B) : undefined}>
+                  {fit(shortName(m.model), MODEL_NAME_COL)}
+                </Text>
+                <Text color={GOLD}>{formatCost(m.cost).padStart(10)}</Text>
+                <Text> </Text>
+                <Text>{m.calls.toLocaleString().padStart(6)} calls</Text>
+                {isSelected && <Text color={selected.size === 1 ? BAR_A : BAR_B}>  [picked]</Text>}
+                {lowData && <Text color={DIM}>  ⚠ low data</Text>}
               </Text>
-              <Text>{m.calls.toLocaleString().padStart(8)} calls</Text>
-              <Text color={GOLD}>{formatCost(m.cost).padStart(10)}</Text>
-              {isSelected && <Text color={GREEN}>   [selected]</Text>}
-              {lowData && <Text color={DIM}>   low data</Text>}
-            </Text>
+              <Text>
+                <Text>{''.padEnd(MODEL_NAME_COL + 2)}</Text>
+                <SparkBar value={m.cost} max={maxCost} width={Math.min(20, Math.floor(dashWidth / 6))} color={isSelected ? (selected.size === 1 ? BAR_A : BAR_B) : DIM} />
+                <Text> </Text>
+                <ScoreRing score={oneShotRate} maxScore={100} color={oneShotRate > 70 ? SUCCESS : oneShotRate > 40 ? GOLD : DANGER} />
+                <Text color={DIM}> {oneShotRate.toFixed(0)}%</Text>
+              </Text>
+            </Box>
           )
         })}
       </Box>
       <Text> </Text>
       <Text>
-        <Text color={ORANGE} bold>[space]</Text><Text dimColor> select  </Text>
-        <Text color={ORANGE} bold>[enter]</Text><Text dimColor> compare  </Text>
-        <Text color={ORANGE} bold>{'<>'}</Text><Text dimColor> switch period  </Text>
-        <Text color={ORANGE} bold>[esc]</Text><Text dimColor> back  </Text>
-        <Text color={ORANGE} bold>[q]</Text><Text dimColor> quit</Text>
+        <Text color={PRIMARY} bold>[space]</Text><Text dimColor> select  </Text>
+        <Text color={PRIMARY} bold>[enter]</Text><Text dimColor> compare  </Text>
+        <Text color={PRIMARY} bold>{'<>'}</Text><Text dimColor> switch period  </Text>
+        <Text color={PRIMARY} bold>[esc]</Text><Text dimColor> back  </Text>
+        <Text color={PRIMARY} bold>[q]</Text><Text dimColor> quit</Text>
       </Text>
     </Box>
   )
@@ -140,23 +200,32 @@ type ComparisonResultsProps = {
 }
 
 function MetricPanel({ title, rows, nameA, nameB, pw }: { title: string; rows: ComparisonRow[]; nameA: string; nameB: string; pw: number }) {
+  const maxVal = Math.max(...rows.map(r => Math.max(r.valueA ?? 0, r.valueB ?? 0)), 1)
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={pw}>
-      <Text bold color={ORANGE}>{title}</Text>
+    <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1} width={pw}>
+      <Text bold color={PRIMARY}>▸ {title}</Text>
       <Text>
         <Text>{''.padEnd(LABEL_WIDTH)}</Text>
-        <Text bold>{nameA.padStart(VALUE_WIDTH)}</Text>
-        <Text bold>{nameB.padStart(VALUE_WIDTH)}</Text>
+        <Text bold color={BAR_A}>{nameA.padStart(VALUE_WIDTH)}</Text>
+        <Text bold color={BAR_B}>{'  ' + nameB.padStart(VALUE_WIDTH)}</Text>
       </Text>
       {rows.map(row => {
         const fmtA = formatValue(row.valueA, row.formatFn)
         const fmtB = formatValue(row.valueB, row.formatFn)
+        const bw = Math.max(4, Math.min(BAR_MAX_WIDTH, Math.floor((pw - LABEL_WIDTH - VALUE_WIDTH * 2 - 6) / 2)))
         return (
-          <Text key={row.label}>
-            <Text color={DIM}>{row.label.padEnd(LABEL_WIDTH)}</Text>
-            <Text color={row.winner === 'a' ? GREEN : undefined}>{fmtA.padStart(VALUE_WIDTH)}</Text>
-            <Text color={row.winner === 'b' ? GREEN : undefined}>{fmtB.padStart(VALUE_WIDTH)}</Text>
-          </Text>
+          <Box key={row.label} flexDirection="column">
+            <Text>
+              <Text color={DIM}>{row.label.padEnd(LABEL_WIDTH)}</Text>
+              <Text color={row.winner === 'a' ? BAR_A : DIM}>{fmtA.padStart(VALUE_WIDTH)}</Text>
+              <Text color={row.winner === 'b' ? BAR_B : DIM}>{'  ' + fmtB.padStart(VALUE_WIDTH)}</Text>
+              <WinnerBadge winner={row.winner} />
+            </Text>
+            <Text>
+              <Text>{''.padEnd(LABEL_WIDTH)}</Text>
+              <SideBar valueA={row.valueA ?? 0} valueB={row.valueB ?? 0} max={maxVal} width={bw * 2 + 1} />
+            </Text>
+          </Box>
         )
       })}
     </Box>
@@ -165,18 +234,18 @@ function MetricPanel({ title, rows, nameA, nameB, pw }: { title: string; rows: C
 
 function ContextPanel({ title, rows, nameA, nameB, pw, lowDataWarning }: { title: string; rows: { label: string; valueA: string; valueB: string }[]; nameA: string; nameB: string; pw: number; lowDataWarning?: string }) {
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={pw}>
-      <Text bold color={ORANGE}>{title}</Text>
+    <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1} width={pw}>
+      <Text bold color={PRIMARY}>▸ {title}</Text>
       <Text>
         <Text>{''.padEnd(LABEL_WIDTH)}</Text>
-        <Text bold>{nameA.padStart(VALUE_WIDTH)}</Text>
-        <Text bold>{nameB.padStart(VALUE_WIDTH)}</Text>
+        <Text bold color={BAR_A}>{nameA.padStart(VALUE_WIDTH)}</Text>
+        <Text bold color={BAR_B}>{'  ' + nameB.padStart(VALUE_WIDTH)}</Text>
       </Text>
       {rows.map(row => (
         <Text key={row.label}>
           <Text color={DIM}>{row.label.padEnd(LABEL_WIDTH)}</Text>
-          <Text color={DIM}>{row.valueA.padStart(VALUE_WIDTH)}</Text>
-          <Text color={DIM}>{row.valueB.padStart(VALUE_WIDTH)}</Text>
+          <Text color={BAR_A}>{row.valueA.padStart(VALUE_WIDTH)}</Text>
+          <Text color={BAR_B}>{'  ' + row.valueB.padStart(VALUE_WIDTH)}</Text>
         </Text>
       ))}
       {lowDataWarning && <Text color={GOLD}>{lowDataWarning}</Text>}
@@ -218,29 +287,70 @@ function ComparisonResults({ modelA, modelB, rows, categories, workingStyle, onB
     return String(n)
   }
 
-  const contextRows: { label: string; valueA: string; valueB: string }[] = [
-    { label: 'Calls', valueA: modelA.calls.toLocaleString(), valueB: modelB.calls.toLocaleString() },
-    { label: 'Total cost', valueA: formatCost(modelA.cost), valueB: formatCost(modelB.cost) },
-    { label: 'Input tokens', valueA: fmtTokens(modelA.inputTokens), valueB: fmtTokens(modelB.inputTokens) },
-    { label: 'Output tokens', valueA: fmtTokens(modelA.outputTokens), valueB: fmtTokens(modelB.outputTokens) },
-    { label: 'Days of data', valueA: String(daysOfData(modelA.firstSeen, modelA.lastSeen)), valueB: String(daysOfData(modelB.firstSeen, modelB.lastSeen)) },
-    { label: 'Edit turns', valueA: modelA.editTurns.toLocaleString(), valueB: modelB.editTurns.toLocaleString() },
-    { label: 'Self-corrections', valueA: modelA.selfCorrections.toLocaleString(), valueB: modelB.selfCorrections.toLocaleString() },
-  ]
+  const oneShotA = modelA.editTurns > 0 ? (modelA.oneShotTurns / modelA.editTurns) * 100 : 0
+  const oneShotB = modelB.editTurns > 0 ? (modelB.oneShotTurns / modelB.editTurns) * 100 : 0
+  const costPerCallA = modelA.calls > 0 ? modelA.cost / modelA.calls : 0
+  const costPerCallB = modelB.calls > 0 ? modelB.cost / modelB.calls : 0
+  const totalA = modelA.inputTokens + modelA.cacheReadTokens + modelA.cacheWriteTokens
+  const totalB = modelB.inputTokens + modelB.cacheReadTokens + modelB.cacheWriteTokens
+  const cacheA = totalA > 0 ? (modelA.cacheReadTokens / totalA) * 100 : 0
+  const cacheB = totalB > 0 ? (modelB.cacheReadTokens / totalB) * 100 : 0
 
   const lowDataWarning = (lowDataA || lowDataB)
-    ? `Note: ${[lowDataA && shortName(modelA.model), lowDataB && shortName(modelB.model)].filter(Boolean).join(' and ')} ha${lowDataA && lowDataB ? 've' : 's'} fewer than ${LOW_DATA_THRESHOLD} calls`
+    ? `⚠ ${[lowDataA && nameA, lowDataB && nameB].filter(Boolean).join(' and ')} ha${lowDataA && lowDataB ? 've' : 's'} fewer than ${LOW_DATA_THRESHOLD} calls`
     : undefined
 
   const pw = wide ? halfWidth : dashWidth
 
   return (
     <Box flexDirection="column" paddingX={2} paddingY={1}>
-      <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={dashWidth}>
+      <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1} width={dashWidth}>
         <Text>
-          <Text bold color={ORANGE}>{nameA}</Text>
+          <Text bold color={BAR_A}>◆ {nameA}</Text>
           <Text dimColor>  vs  </Text>
-          <Text bold color={ORANGE}>{nameB}</Text>
+          <Text bold color={BAR_B}>{nameB} ◆</Text>
+        </Text>
+      </Box>
+
+      <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1} width={dashWidth}>
+        <Text bold color={PRIMARY}>▸ Quick Stats</Text>
+        <Text> </Text>
+        <Text>
+          <Text color={DIM}>{'One-shot'.padEnd(LABEL_WIDTH)}</Text>
+          <Text color={BAR_A}>{oneShotA.toFixed(1).padStart(VALUE_WIDTH)}</Text>
+          <Text color={BAR_B}>{'  ' + oneShotB.toFixed(1).padStart(VALUE_WIDTH)}</Text>
+          <WinnerBadge winner={oneShotA > oneShotB ? 'a' : oneShotB > oneShotA ? 'b' : 'tie'} />
+        </Text>
+        <Text>
+          <Text color={DIM}>{'Cost/call'.padEnd(LABEL_WIDTH)}</Text>
+          <Text color={costPerCallA <= costPerCallB ? SUCCESS : DANGER}>{formatCost(costPerCallA).padStart(VALUE_WIDTH)}</Text>
+          <Text color={costPerCallB <= costPerCallA ? SUCCESS : DANGER}>{'  ' + formatCost(costPerCallB).padStart(VALUE_WIDTH)}</Text>
+          <WinnerBadge winner={costPerCallA <= costPerCallB ? 'a' : costPerCallB <= costPerCallA ? 'b' : 'tie'} />
+        </Text>
+        <Text>
+          <Text color={DIM}>{'Cache hit'.padEnd(LABEL_WIDTH)}</Text>
+          <Text color={cacheA >= cacheB ? SUCCESS : DANGER}>{cacheA.toFixed(1).padStart(VALUE_WIDTH)}</Text>
+          <Text color={cacheB >= cacheA ? SUCCESS : DANGER}>{'  ' + cacheB.toFixed(1).padStart(VALUE_WIDTH)}</Text>
+          <WinnerBadge winner={cacheA >= cacheB ? 'a' : cacheB >= cacheA ? 'b' : 'tie'} />
+        </Text>
+        <Text> </Text>
+        <Text>
+          <Text>{''.padEnd(LABEL_WIDTH)}</Text>
+          <SparkBar value={oneShotA} max={100} width={VALUE_WIDTH} color={BAR_A} />
+          <Text> </Text>
+          <SparkBar value={oneShotB} max={100} width={VALUE_WIDTH} color={BAR_B} />
+        </Text>
+        <Text>
+          <Text>{''.padEnd(LABEL_WIDTH)}</Text>
+          <SparkBar value={costPerCallA} max={Math.max(costPerCallA, costPerCallB, 0.001)} width={VALUE_WIDTH} color={costPerCallA <= costPerCallB ? SUCCESS : DANGER} />
+          <Text> </Text>
+          <SparkBar value={costPerCallB} max={Math.max(costPerCallA, costPerCallB, 0.001)} width={VALUE_WIDTH} color={costPerCallB <= costPerCallA ? SUCCESS : DANGER} />
+        </Text>
+        <Text>
+          <Text>{''.padEnd(LABEL_WIDTH)}</Text>
+          <SparkBar value={cacheA} max={100} width={VALUE_WIDTH} color={cacheA >= cacheB ? SUCCESS : DANGER} />
+          <Text> </Text>
+          <SparkBar value={cacheB} max={100} width={VALUE_WIDTH} color={cacheB >= cacheA ? SUCCESS : DANGER} />
         </Text>
       </Box>
 
@@ -250,8 +360,8 @@ function ComparisonResults({ modelA, modelB, rows, categories, workingStyle, onB
       </Box>
 
       {categories.length > 0 && (
-        <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1} width={dashWidth}>
-          <Text bold color={ORANGE}>Category Head-to-Head</Text>
+        <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1} width={dashWidth}>
+          <Text bold color={PRIMARY}>▸ Category Head-to-Head</Text>
           <Text color={DIM}>one-shot rate per category</Text>
           <Text>
             <Text>{'  '}</Text>
@@ -276,14 +386,14 @@ function ComparisonResults({ modelA, modelB, rows, categories, workingStyle, onB
                   <Text>{'  '}</Text>
                   <Text color={BAR_A}>{FULL_BLOCK.repeat(Math.max(bwA, 1))}</Text>
                   <Text>{' '.repeat(Math.max(0, BAR_MAX_WIDTH - bwA))} </Text>
-                  <Text color={cat.winner === 'a' ? GREEN : undefined}>{rateA.padStart(6)}</Text>
+                  <Text color={cat.winner === 'a' ? SUCCESS : undefined}>{rateA.padStart(6)}</Text>
                   <Text color={DIM}> {turnsA}</Text>
                 </Text>
                 <Text>
                   <Text>{'  '}</Text>
                   <Text color={BAR_B}>{FULL_BLOCK.repeat(Math.max(bwB, 1))}</Text>
                   <Text>{' '.repeat(Math.max(0, BAR_MAX_WIDTH - bwB))} </Text>
-                  <Text color={cat.winner === 'b' ? GREEN : undefined}>{rateB.padStart(6)}</Text>
+                  <Text color={cat.winner === 'b' ? SUCCESS : undefined}>{rateB.padStart(6)}</Text>
                   <Text color={DIM}> {turnsB}</Text>
                 </Text>
               </React.Fragment>
@@ -296,13 +406,21 @@ function ComparisonResults({ modelA, modelB, rows, categories, workingStyle, onB
         {workingStyle.length > 0 && (
           <ContextPanel title="Working Style" rows={workingStyle.map(r => ({ label: r.label, valueA: formatValue(r.valueA, r.formatFn), valueB: formatValue(r.valueB, r.formatFn) }))} nameA={nameA} nameB={nameB} pw={pw} />
         )}
-        <ContextPanel title="Context" rows={contextRows} nameA={nameA} nameB={nameB} pw={pw} lowDataWarning={lowDataWarning} />
+        <ContextPanel title="Context" rows={[
+          { label: 'Total calls', valueA: modelA.calls.toLocaleString(), valueB: modelB.calls.toLocaleString() },
+          { label: 'Total cost', valueA: formatCost(modelA.cost), valueB: formatCost(modelB.cost) },
+          { label: 'Input tokens', valueA: fmtTokens(modelA.inputTokens), valueB: fmtTokens(modelB.inputTokens) },
+          { label: 'Output tokens', valueA: fmtTokens(modelA.outputTokens), valueB: fmtTokens(modelB.outputTokens) },
+          { label: 'Edit turns', valueA: modelA.editTurns.toLocaleString(), valueB: modelB.editTurns.toLocaleString() },
+          { label: 'Self-corrections', valueA: modelA.selfCorrections.toLocaleString(), valueB: modelB.selfCorrections.toLocaleString() },
+          { label: 'Days of data', valueA: String(daysOfData(modelA.firstSeen, modelA.lastSeen)), valueB: String(daysOfData(modelB.firstSeen, modelB.lastSeen)) },
+        ]} nameA={nameA} nameB={nameB} pw={pw} lowDataWarning={lowDataWarning} />
       </Box>
 
       <Text>
-        <Text color={ORANGE} bold>{'<>'}</Text><Text dimColor> switch period  </Text>
-        <Text color={ORANGE} bold>[esc]</Text><Text dimColor> back  </Text>
-        <Text color={ORANGE} bold>[q]</Text><Text dimColor> quit</Text>
+        <Text color={PRIMARY} bold>{'<>'}</Text><Text dimColor> switch period  </Text>
+        <Text color={PRIMARY} bold>[esc]</Text><Text dimColor> back  </Text>
+        <Text color={PRIMARY} bold>[q]</Text><Text dimColor> quit</Text>
       </Text>
     </Box>
   )
@@ -340,14 +458,6 @@ export function CompareView({ projects, onBack }: CompareViewProps) {
       return
     }
 
-    // When the periodic CLI refresh updates `projects` while the user is
-    // reading the results page, recompute the comparison rows IN PLACE rather
-    // than flipping to a loading screen. Previously every 30s tick bounced the
-    // user to a loading flash and reset their scroll position; the slow part
-    // (scanSelfCorrections, which walks every provider's session dir) is
-    // skipped on these refreshes — corrections drift slowly enough that
-    // staying with the existing values until the user re-enters compare from
-    // scratch is fine.
     if (phase === 'results') {
       const a = newModels.find(m => m.model === pickedNames[0])
       const b = newModels.find(m => m.model === pickedNames[1])
@@ -362,8 +472,6 @@ export function CompareView({ projects, onBack }: CompareViewProps) {
       return
     }
 
-    // Initial load (or returning from select after picking) — full pipeline,
-    // including scanSelfCorrections.
     setLoadTrigger(t => t + 1)
   }, [projects])
 
@@ -413,15 +521,15 @@ export function CompareView({ projects, onBack }: CompareViewProps) {
   if (models.length < 2) {
     return (
       <Box flexDirection="column" paddingX={2} paddingY={1}>
-        <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
-          <Text bold color={ORANGE}>Model Comparison</Text>
+        <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1}>
+          <Text bold color={PRIMARY}>◆ Model Comparison</Text>
           <Text> </Text>
           <Text color={DIM}>Need at least 2 models to compare. Found {models.length}.</Text>
         </Box>
         <Text> </Text>
         <Text>
-          <Text color={ORANGE} bold>[esc]</Text><Text dimColor> back  </Text>
-          <Text color={ORANGE} bold>[q]</Text><Text dimColor> quit</Text>
+          <Text color={PRIMARY} bold>[esc]</Text><Text dimColor> back  </Text>
+          <Text color={PRIMARY} bold>[q]</Text><Text dimColor> quit</Text>
         </Text>
       </Box>
     )
@@ -435,8 +543,8 @@ export function CompareView({ projects, onBack }: CompareViewProps) {
   if (phase === 'loading') {
     return (
       <Box flexDirection="column" paddingX={2} paddingY={1}>
-        <Box flexDirection="column" borderStyle="round" borderColor={ORANGE} paddingX={1}>
-          <Text bold color={ORANGE}>Model Comparison</Text>
+        <Box flexDirection="column" borderStyle="round" borderColor={PRIMARY} paddingX={1}>
+          <Text bold color={PRIMARY}>◆ Model Comparison</Text>
           <Text> </Text>
           <Text color={DIM}>Scanning self-corrections...</Text>
         </Box>
