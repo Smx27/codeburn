@@ -11,8 +11,8 @@ declare global {
 }
 
 // @ts-ignore - replaced at build time by esbuild define
-export const BUILD_VERSION: string = __BUILD_VERSION__
+export const BUILD_VERSION: string = typeof __BUILD_VERSION__ !== 'undefined' ? __BUILD_VERSION__ : '0.0.0-dev'
 // @ts-ignore - replaced at build time by esbuild define
-export const BUILD_COMMIT: string = __BUILD_COMMIT__
+export const BUILD_COMMIT: string = typeof __BUILD_COMMIT__ !== 'undefined' ? __BUILD_COMMIT__ : 'dev'
 // @ts-ignore - replaced at build time by esbuild define
-export const BUILD_DATE: string = __BUILD_DATE__
+export const BUILD_DATE: string = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toISOString()
