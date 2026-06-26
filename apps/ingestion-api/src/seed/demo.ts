@@ -71,6 +71,13 @@ function calculateCost(model: string, inputTokens: number, outputTokens: number)
   return inputTokens * costs.input + outputTokens * costs.output;
 }
 
+function sqlVal(v: unknown): string {
+  if (v === null || v === undefined) return 'NULL';
+  if (typeof v === 'number') return isFinite(v) ? String(v) : '0';
+  if (typeof v === 'string') return `'${v.replace(/'/g, "''")}'`;
+  return `'${String(v)}'`;
+}
+
 async function seed() {
   console.log('\n=== AiInsight Demo Seed ===\n');
 
@@ -125,10 +132,9 @@ async function seed() {
 
   // daily_usage per org
   console.log('  Inserting daily_usage...');
+  if (organizations.length === 0) throw new Error('No organizations found');
   for (const org of organizations) {
     const values: string[] = [];
-    const params: any[] = [];
-    let paramIdx = 1;
 
     for (let dayOffset = 0; dayOffset < totalDays; dayOffset++) {
       const date = new Date(startDate);
@@ -162,32 +168,20 @@ async function seed() {
 
       const sessionsToday = Math.floor(finalTokens / 15) + randomBetween(1, 5);
       const usersToday = Math.floor(USERS_PER_ORG * (0.3 + Math.random() * 0.4));
+      const safeCost = isFinite(cost) ? cost : 0;
 
       values.push(
-        `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6}, $${paramIdx + 7})`
+        `('${org.id}', '${date.toISOString().split('T')[0]}', ${sessionsToday}, ${usersToday}, ${inputTokens}, ${outputTokens}, ${finalTokens}, ${safeCost.toFixed(8)})`
       );
-      params.push(
-        org.id,
-        date.toISOString().split('T')[0],
-        sessionsToday,
-        usersToday,
-        inputTokens,
-        outputTokens,
-        finalTokens,
-        cost.toFixed(8)
-      );
-      paramIdx += 8;
     }
 
     // Batch insert in chunks of 100
     for (let i = 0; i < values.length; i += 100) {
       const chunk = values.slice(i, i + 100);
-      const chunkParams = params.slice(i * 8, (i + 100) * 8);
       await query(
         `INSERT INTO daily_usage (organization_id, usage_date, total_sessions, total_users, total_input_tokens, total_output_tokens, total_tokens, total_cost)
          VALUES ${chunk.join(', ')}
-         ON CONFLICT (organization_id, usage_date) DO NOTHING`,
-        chunkParams
+         ON CONFLICT (organization_id, usage_date) DO NOTHING`
       );
     }
   }
@@ -196,8 +190,6 @@ async function seed() {
   console.log('  Inserting daily_provider_usage...');
   for (const org of organizations) {
     const values: string[] = [];
-    const params: any[] = [];
-    let paramIdx = 1;
 
     for (let dayOffset = 0; dayOffset < totalDays; dayOffset++) {
       const date = new Date(startDate);
@@ -219,6 +211,7 @@ async function seed() {
 
       const jitter = 1 + (Math.random() * 2 - 1) * RANDOMIZATION_RANGE;
       const dayTokens = Math.floor(baseTokens * jitter);
+      const dateStr = date.toISOString().split('T')[0];
 
       for (const pw of PROVIDER_WEIGHTS) {
         const providerTokens = Math.floor(dayTokens * (pw.weight / 100));
@@ -229,28 +222,17 @@ async function seed() {
         const sessionsForProvider = Math.floor(providerTokens / 15) + randomBetween(0, 2);
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5})`
+          `(${sqlVal(org.id)}, ${sqlVal(pw.id)}, ${sqlVal(dateStr)}, ${sessionsForProvider}, ${providerTokens}, ${sqlVal((isFinite(cost) ? cost : 0).toFixed(8))})`
         );
-        params.push(
-          org.id,
-          pw.id,
-          date.toISOString().split('T')[0],
-          sessionsForProvider,
-          providerTokens,
-          cost.toFixed(8)
-        );
-        paramIdx += 6;
       }
     }
 
     for (let i = 0; i < values.length; i += 100) {
       const chunk = values.slice(i, i + 100);
-      const chunkParams = params.slice(i * 6, (i + 100) * 6);
       await query(
         `INSERT INTO daily_provider_usage (organization_id, provider_id, usage_date, total_sessions, total_tokens, total_cost)
          VALUES ${chunk.join(', ')}
-         ON CONFLICT (organization_id, provider_id, usage_date) DO NOTHING`,
-        chunkParams
+         ON CONFLICT (organization_id, provider_id, usage_date) DO NOTHING`
       );
     }
   }
@@ -259,8 +241,6 @@ async function seed() {
   console.log('  Inserting daily_model_usage...');
   for (const org of organizations) {
     const values: string[] = [];
-    const params: any[] = [];
-    let paramIdx = 1;
 
     for (let dayOffset = 0; dayOffset < totalDays; dayOffset++) {
       const date = new Date(startDate);
@@ -282,6 +262,7 @@ async function seed() {
 
       const jitter = 1 + (Math.random() * 2 - 1) * RANDOMIZATION_RANGE;
       const dayTokens = Math.floor(baseTokens * jitter);
+      const dateStr = date.toISOString().split('T')[0];
 
       for (const pw of PROVIDER_WEIGHTS) {
         const models = MODELS_BY_PROVIDER[pw.id] || ['claude-sonnet-4'];
@@ -295,29 +276,18 @@ async function seed() {
           const sessionsForModel = Math.floor(modelTokens / 15) + randomBetween(0, 1);
 
           values.push(
-            `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5})`
+            `(${sqlVal(org.id)}, ${sqlVal(model)}, ${sqlVal(dateStr)}, ${modelTokens}, ${sqlVal((isFinite(cost) ? cost : 0).toFixed(8))}, ${sessionsForModel})`
           );
-          params.push(
-            org.id,
-            model,
-            date.toISOString().split('T')[0],
-            modelTokens,
-            cost.toFixed(8),
-            sessionsForModel
-          );
-          paramIdx += 6;
         }
       }
     }
 
     for (let i = 0; i < values.length; i += 100) {
       const chunk = values.slice(i, i + 100);
-      const chunkParams = params.slice(i * 6, (i + 100) * 6);
       await query(
         `INSERT INTO daily_model_usage (organization_id, model, usage_date, total_tokens, total_cost, session_count)
          VALUES ${chunk.join(', ')}
-         ON CONFLICT (organization_id, model, usage_date) DO NOTHING`,
-        chunkParams
+         ON CONFLICT (organization_id, model, usage_date) DO NOTHING`
       );
     }
   }
@@ -327,8 +297,6 @@ async function seed() {
   for (const org of organizations) {
     const orgUsers = users.filter(u => u.organization_id === org.id);
     const values: string[] = [];
-    const params: any[] = [];
-    let paramIdx = 1;
 
     for (let dayOffset = 0; dayOffset < totalDays; dayOffset++) {
       const date = new Date(startDate);
@@ -352,6 +320,7 @@ async function seed() {
       const activeUsers = Math.floor(orgUsers.length * (0.3 + Math.random() * 0.4));
       const shuffled = [...orgUsers].sort(() => Math.random() - 0.5);
       const activeUserList = shuffled.slice(0, activeUsers);
+      const dateStr = date.toISOString().split('T')[0];
 
       for (const user of activeUserList) {
         const isHero = heroUserIds.has(user.id);
@@ -361,28 +330,17 @@ async function seed() {
         const cost = calculateCost('claude-sonnet-4', Math.floor(userTokens * 0.65), Math.floor(userTokens * 0.35));
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5})`
+          `(${sqlVal(org.id)}, ${sqlVal(user.id)}, ${sqlVal(dateStr)}, ${userSessions}, ${userTokens}, ${sqlVal((isFinite(cost) ? cost : 0).toFixed(8))})`
         );
-        params.push(
-          org.id,
-          user.id,
-          date.toISOString().split('T')[0],
-          userSessions,
-          userTokens,
-          cost.toFixed(8)
-        );
-        paramIdx += 6;
       }
     }
 
     for (let i = 0; i < values.length; i += 100) {
       const chunk = values.slice(i, i + 100);
-      const chunkParams = params.slice(i * 6, (i + 100) * 6);
       await query(
         `INSERT INTO daily_user_usage (organization_id, user_id, usage_date, session_count, token_count, cost)
          VALUES ${chunk.join(', ')}
-         ON CONFLICT (organization_id, user_id, usage_date) DO NOTHING`,
-        chunkParams
+         ON CONFLICT (organization_id, user_id, usage_date) DO NOTHING`
       );
     }
   }
@@ -397,8 +355,6 @@ async function seed() {
 
   for (const org of organizations) {
     const values: string[] = [];
-    const params: any[] = [];
-    let paramIdx = 1;
 
     for (let dayOffset = 0; dayOffset < totalDays; dayOffset++) {
       const date = new Date(startDate);
@@ -421,6 +377,7 @@ async function seed() {
       // Distribute tokens across projects with Zipf-like distribution
       const activeProjects = randomBetween(5, projectNames.length);
       const projectTokensRemaining = baseTokens;
+      const dateStr = date.toISOString().split('T')[0];
 
       for (let p = 0; p < activeProjects; p++) {
         const projectName = projectNames[p];
@@ -436,28 +393,17 @@ async function seed() {
         const sessionsForProject = Math.max(1, Math.floor(projectTokens / 15));
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5})`
+          `(${sqlVal(org.id)}, ${sqlVal(projectName)}, ${sqlVal(dateStr)}, ${sessionsForProject}, ${projectTokens}, ${sqlVal((isFinite(cost) ? cost : 0).toFixed(8))})`
         );
-        params.push(
-          org.id,
-          projectName,
-          date.toISOString().split('T')[0],
-          sessionsForProject,
-          projectTokens,
-          cost.toFixed(8)
-        );
-        paramIdx += 6;
       }
     }
 
     for (let i = 0; i < values.length; i += 100) {
       const chunk = values.slice(i, i + 100);
-      const chunkParams = params.slice(i * 6, (i + 100) * 6);
       await query(
         `INSERT INTO daily_project_usage (organization_id, project_name, usage_date, session_count, token_count, cost)
          VALUES ${chunk.join(', ')}
-         ON CONFLICT (organization_id, project_name, usage_date) DO NOTHING`,
-        chunkParams
+         ON CONFLICT (organization_id, project_name, usage_date) DO NOTHING`
       );
     }
   }
