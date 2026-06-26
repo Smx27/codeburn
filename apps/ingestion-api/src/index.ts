@@ -60,7 +60,7 @@ const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
   console.log(NIRIKSH_BANNER);
   logger.info(`Ingestion API listening on port ${PORT}`);
-  logger.info(`API docs available at http://localhost:${PORT}/api/docs`);
+  logger.info(`API docs available at ${(process.env.BASE_URL || `http://localhost:${PORT}`)}/api/docs`);
 });
 
 // Graceful shutdown

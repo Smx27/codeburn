@@ -180,7 +180,7 @@ export function generateOpenApiSpec() {
       description: 'Multi-tenant event ingestion API for AiInsight Cloud',
     },
     servers: [
-      { url: 'http://localhost:3001', description: 'Development server' },
+      { url: process.env.BASE_URL || 'http://localhost:3001', description: 'API server' },
     ],
     security: [{ bearerAuth: [] }],
   });
