@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     const result = await apiLogin({ email, password });
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, result.token);
-    localStorage.setItem(AUTH_REFRESH_TOKEN_STORAGE_KEY, result.refreshToken);
+    if (result.refreshToken) localStorage.setItem(AUTH_REFRESH_TOKEN_STORAGE_KEY, result.refreshToken);
     localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(result.user));
     setCookie('aiinsight_token', result.token, 60 * 60 * 24 * 7);
     setToken(result.token);

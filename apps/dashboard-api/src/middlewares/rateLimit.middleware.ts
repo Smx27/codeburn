@@ -20,10 +20,10 @@ export const ingestRateLimit = rateLimit({
   max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req, res) => {
+  keyGenerator: (req) => {
     const apiKey = req.headers['x-api-key'] as string | undefined;
     if (apiKey) return `apikey:${apiKey}`;
-    return ipKeyGenerator(req, res);
+    return ipKeyGenerator(req.ip ?? '127.0.0.1');
   },
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
@@ -38,12 +38,12 @@ export const generalRateLimit = rateLimit({
   max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req, res) => {
+  keyGenerator: (req) => {
     const apiKey = req.headers['authorization']?.replace('Bearer ', '');
     if (apiKey && isApiKey(apiKey)) {
       return `apikey:${apiKey}`;
     }
-    return ipKeyGenerator(req, res);
+    return ipKeyGenerator(req.ip ?? '127.0.0.1');
   },
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });

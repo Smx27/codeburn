@@ -3,18 +3,19 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: aiinsight
-      POSTGRES_USER: aiinsight
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aiinsight_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-aiinsight}
+      POSTGRES_USER: ${POSTGRES_USER:-aiinsight}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U aiinsight"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aiinsight} -d ${POSTGRES_DB:-aiinsight}"]
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   ingestion-api:
     build:
@@ -22,13 +23,21 @@ services:
       dockerfile: apps/ingestion-api/Dockerfile
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "${INGESTION_API_PORT:-3001}:3001"
     environment:
-      DATABASE_URL: postgresql://aiinsight:${POSTGRES_PASSWORD:-aiinsight_secret}@postgres:5432/aiinsight
+      DATABASE_URL: postgresql://${POSTGRES_USER:-aiinsight}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-aiinsight}
       PORT: 3001
       NODE_ENV: production
-      LOG_LEVEL: info
-      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      REQUIRE_INGEST_AUTH: ${REQUIRE_INGEST_AUTH:-true}
+      BASE_URL: ${INGESTION_BASE_URL:-http://localhost:3001}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/api/v1/health').then(r=>{process.exit(r.ok?0:1)}).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,18 +48,30 @@ services:
       dockerfile: apps/dashboard-api/Dockerfile
     restart: unless-stopped
     ports:
-      - "3002:3002"
+      - "${DASHBOARD_API_PORT:-3002}:3002"
     environment:
-      DATABASE_URL: postgresql://aiinsight:${POSTGRES_PASSWORD:-aiinsight_secret}@postgres:5432/aiinsight
+      DATABASE_URL: postgresql://${POSTGRES_USER:-aiinsight}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-aiinsight}
       PORT: 3002
       NODE_ENV: production
-      LOG_LEVEL: info
-      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
-      CORS_ORIGIN: http://localhost:3000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       APP_URL: ${APP_URL:-http://localhost:3000}
       INGESTION_API_URL: http://ingestion-api:3001
       MAIL_PROVIDER: ${MAIL_PROVIDER:-resend}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-AIInsight <noreply@aiinsight.dev>}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3002/api/v1/health').then(r=>{process.exit(r.ok?0:1)}).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,13 +80,24 @@ services:
     build:
       context: .
       dockerfile: apps/dashboard-web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3002}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${DASHBOARD_WEB_PORT:-3000}:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3002
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3002}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000').then(r=>{process.exit(r.ok?0:1)}).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
-      - dashboard-api
+      dashboard-api:
+        condition: service_healthy
 
 volumes:
   postgres_data:

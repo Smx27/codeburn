@@ -8,6 +8,11 @@ RUN npm install --workspace=apps/dashboard-web
 
 COPY apps/dashboard-web/ apps/dashboard-web/
 
+ARG NEXT_PUBLIC_API_URL=http://localhost:3002
+ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+
 RUN npm run build --workspace=apps/dashboard-web
 
 FROM node:22-slim AS runtime
@@ -22,6 +27,11 @@ COPY --from=base /app/apps/dashboard-web/.next apps/dashboard-web/.next
 COPY --from=base /app/apps/dashboard-web/public apps/dashboard-web/public
 COPY --from=base /app/apps/dashboard-web/next.config.js apps/dashboard-web/
 COPY --from=base /app/apps/dashboard-web/package.json apps/dashboard-web/
+
+ARG NEXT_PUBLIC_API_URL=http://localhost:3002
+ARG NEXT_PUBLIC_APP_URL=http://localhost:3000
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 
 WORKDIR /app/apps/dashboard-web
 EXPOSE 3000

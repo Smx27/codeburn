@@ -128,7 +128,7 @@ export function SettingsPage() {
     },
   });
 
-  const { data: invitations } = useQuery({
+  const { data: invitations } = useQuery<Array<{ id: string; email: string; role: string; expires_at: string }>>({
     queryKey: ['invitations'],
     queryFn: async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
