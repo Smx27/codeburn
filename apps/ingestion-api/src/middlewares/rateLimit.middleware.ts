@@ -10,7 +10,7 @@ export const ingestRateLimit = rateLimit({
     const authHeader = req.headers['authorization'];
     if (apiKey) return `apikey:${apiKey}`;
     if (authHeader?.startsWith('Bearer ')) return `bearer:${authHeader.slice(7)}`;
-    return ipKeyGenerator(req, res);
+    return ipKeyGenerator(req.ip || '');
   },
   handler: (_req, res) => {
     res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
