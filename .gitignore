@@ -46,3 +46,4 @@ appstore/
 # WIP / not ready
 src/summit.ts
 .next
+.mimocode/*
