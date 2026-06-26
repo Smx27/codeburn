@@ -9,7 +9,27 @@ import { closePool } from './database/pool.js';
 import { ingestAuthMiddleware } from './middlewares/auth.middleware.js';
 import { ingestRateLimit } from './middlewares/rateLimit.middleware.js';
 
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  transport: process.env.NODE_ENV !== 'production'
+    ? { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' } }
+    : undefined,
+});
+
+const NIRIKSH_BANNER = `
+ ██╗██╗██╗  ██╗██╗██╗██╗  ██╗ ██████╗ ███████╗██╗██████╗ ██╗███╗   ██╗ ██████╗
+███║██║██║  ██║██║██║██║  ██║██╔═══██╗██╔════╝██║██╔══██╗██║████╗  ██║██╔════╝
+╚██║██║██║  ██║██║██║██║  ██║██║   ██║███████╗██║██████╔╝██║██╔██╗ ██║██║  ███╗
+ ██║╚═╝██║  ██║╚═╝██║██║  ██║██║   ██║╚════██║██║██╔═══╝ ██║██║╚██╗██║██║   ██║
+ ██║██╗╚█████╔╝██╗██║╚█████╔╝╚██████╔╝███████║██║██║     ██║██║ ╚████║╚██████╔╝
+ ╚═╝╚═╝ ╚════╝ ╚═╝╚═╝ ╚════╝  ╚═════╝ ╚══════╝╚═╝╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═════╝
+                              ██████╗  █████╗ ███╗   ██╗██████╗ ██╗   ██╗██╗███████╗███████╗
+                             ██╔════╝ ██╔══██╗████╗  ██║██╔══██╗╚██╗ ██╔╝██║██╔════╝██╔════╝
+                             ██║  ███╗███████║██╔██╗ ██║██║  ██║ ╚████╔╝ ██║█████╗  ███████╗
+                             ██║   ██║██╔══██║██║╚██╗██║██║  ██║  ╚██╔╝  ██║██╔══╝  ╚════██║
+                             ╚██████╔╝██║  ██║██║ ╚████║██████╔╝   ██║   ██║███████╗███████║
+                              ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝`;
+
 const app = express();
 
 app.use(helmet());
@@ -38,8 +58,9 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 const PORT = process.env.PORT || 3001;
 
 const server = app.listen(PORT, () => {
-  logger.info(`🚀 Ingestion API listening on port ${PORT}`);
-  logger.info(`📚 API docs available at http://localhost:${PORT}/api/docs`);
+  console.log(NIRIKSH_BANNER);
+  logger.info(`Ingestion API listening on port ${PORT}`);
+  logger.info(`API docs available at http://localhost:${PORT}/api/docs`);
 });
 
 // Graceful shutdown
