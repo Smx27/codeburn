@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { query, closePool } from '../database/pool.js';
+import argon2 from 'argon2';
 import { createOrganizations } from './factories/organization.factory.js';
 import { createUsers } from './factories/user.factory.js';
 import { createMachines } from './factories/machine.factory.js';
@@ -93,6 +94,20 @@ async function seed() {
   console.log(`Creating machines (${MACHINES_PER_USER}/user)...`);
   const machines = await createMachines(users, MACHINES_PER_USER);
   console.log(`  Created ${machines.length} machines`);
+
+  // Create a demo login user with a known password
+  console.log('Creating demo login user...');
+  const demoPasswordHash = await argon2.hash('demo1234');
+  const demoOrg = organizations[0];
+  if (demoOrg) {
+    await query(
+      `INSERT INTO users (organization_id, email, name, role, password_hash)
+       VALUES ($1, 'demo@aiinsight.dev', 'Demo Admin', 'org_admin', $2)
+       ON CONFLICT (organization_id, email) DO UPDATE SET password_hash = $2, role = 'org_admin'`,
+      [demoOrg.id, demoPasswordHash]
+    );
+    console.log('  Created demo login: demo@aiinsight.dev / demo1234');
+  }
 
   // Mark some users as heroes
   const heroUserIds = new Set<string>();
