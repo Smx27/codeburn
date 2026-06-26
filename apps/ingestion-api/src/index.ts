@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import helmet from 'helmet';
@@ -34,10 +33,6 @@ const NIRIKSH_BANNER = `
 const app = express();
 
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : undefined,
-  credentials: true,
-}));
 app.use(express.json({ limit: '10mb' }));
 app.use(pinoHttp({ logger }));
 
