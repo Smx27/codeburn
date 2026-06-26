@@ -41,7 +41,10 @@ COPY --from=base /app/packages/analytics-engine/dist packages/analytics-engine/d
 COPY --from=base /app/packages/auth-shared/dist packages/auth-shared/dist
 COPY --from=base /app/apps/ingestion-api/src/database/migrations apps/ingestion-api/dist/database/migrations
 
+COPY apps/ingestion-api/docker-entrypoint.sh /app/apps/ingestion-api/docker-entrypoint.sh
+RUN chmod +x /app/apps/ingestion-api/docker-entrypoint.sh
+
 WORKDIR /app/apps/ingestion-api
 EXPOSE 3001
 
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

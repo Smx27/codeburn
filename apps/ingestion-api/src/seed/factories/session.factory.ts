@@ -128,7 +128,7 @@ export async function createSessions(
         const metadata = randomFrom(METADATA_TEMPLATES);
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6}, $${paramIdx + 7}, $${paramIdx + 8}, $${paramIdx + 9}::jsonb)`
+          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6}, $${paramIdx + 7}, $${paramIdx + 8}::jsonb)`
         );
         params.push(
           user.organization_id,
@@ -141,7 +141,7 @@ export async function createSessions(
           endTime,
           JSON.stringify(metadata)
         );
-        paramIdx += 10;
+        paramIdx += 9;
       }
     }
 

@@ -69,7 +69,7 @@ export async function createMachines(
         const lastSeen = new Date(firstSeen.getTime() + Math.random() * (now - firstSeen.getTime()));
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6})`
+          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5})`
         );
         params.push(
           user.organization_id,
@@ -79,7 +79,7 @@ export async function createMachines(
           firstSeen,
           lastSeen
         );
-        paramIdx += 7;
+        paramIdx += 6;
       }
     }
 

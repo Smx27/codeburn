@@ -117,7 +117,7 @@ export async function createEvents(
         };
 
         values.push(
-          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6}, $${paramIdx + 7}, $${paramIdx + 8}, $${paramIdx + 9}, $${paramIdx + 10}, $${paramIdx + 11}::jsonb)`
+          `($${paramIdx}, $${paramIdx + 1}, $${paramIdx + 2}, $${paramIdx + 3}, $${paramIdx + 4}, $${paramIdx + 5}, $${paramIdx + 6}, $${paramIdx + 7}, $${paramIdx + 8}, $${paramIdx + 9}, $${paramIdx + 10}::jsonb)`
         );
         params.push(
           session.organization_id,
@@ -132,7 +132,7 @@ export async function createEvents(
           estimatedCost.toFixed(8),
           JSON.stringify(payload)
         );
-        paramIdx += 12;
+        paramIdx += 11;
       }
     }
 
