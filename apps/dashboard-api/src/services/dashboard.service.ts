@@ -663,10 +663,17 @@ export async function agentLogin(
   const org = await dashboardRepo.getOrganizationById(keyRecord.organization_id);
   if (!org) return null;
 
+  // Get a user for this organization (required by machines.user_id NOT NULL constraint)
+  const user = await queryOne<{ id: string }>(
+    `SELECT id FROM users WHERE organization_id = $1 LIMIT 1`,
+    [keyRecord.organization_id]
+  );
+  if (!user) return null;
+
   // Upsert machine
   const machine = await queryOne<{ id: string }>(
-    `INSERT INTO machines (organization_id, hostname, os, architecture, agent_version, status)
-     VALUES ($1, $2, $3, $4, $5, 'ONLINE')
+    `INSERT INTO machines (organization_id, user_id, hostname, os, architecture, agent_version, status)
+     VALUES ($1, $2, $3, $4, $5, $6, 'ONLINE')
      ON CONFLICT (organization_id, hostname) DO UPDATE SET
        os = EXCLUDED.os,
        architecture = EXCLUDED.architecture,
@@ -674,7 +681,7 @@ export async function agentLogin(
        last_seen = NOW(),
        status = 'ONLINE'
      RETURNING id`,
-    [keyRecord.organization_id, hostname, os || null, architecture || null, agentVersion || null]
+    [keyRecord.organization_id, user.id, hostname, os || null, architecture || null, agentVersion || null]
   );
 
   if (!machine) return null;

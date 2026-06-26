@@ -23,15 +23,14 @@ import { authRateLimit, generalRateLimit } from './middlewares/rateLimit.middlew
 import { startOfflineDetection } from './jobs/offlineDetection.js';
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
-  ...(process.env.NODE_ENV !== 'production' && {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'SYS:standard'
-      }
-    }
-  })
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: process.env.NODE_ENV !== 'production',
+      translateTime: 'SYS:standard',
+      ignore: 'pid,hostname',
+    },
+  },
 });
 const app = express();
 
@@ -41,7 +40,12 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
-app.use(pinoHttp({ logger }));
+app.use(pinoHttp({
+  logger,
+  autoLogging: {
+    ignore: (req) => req.url === '/api/v1/health' || req.url === '/api/v1/version',
+  },
+}));
 
 app.use('/api/v1/auth', authRateLimit, authRoutes);
 app.use('/api/v1/dashboard', generalRateLimit, dashboardRoutes);

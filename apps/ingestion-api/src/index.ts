@@ -11,9 +11,14 @@ import { ingestRateLimit } from './middlewares/rateLimit.middleware.js';
 
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
-  transport: process.env.NODE_ENV !== 'production'
-    ? { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:standard', ignore: 'pid,hostname' } }
-    : undefined,
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: process.env.NODE_ENV !== 'production',
+      translateTime: 'SYS:standard',
+      ignore: 'pid,hostname',
+    },
+  },
 });
 
 const NIRIKSH_BANNER = `
@@ -34,7 +39,12 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
-app.use(pinoHttp({ logger }));
+app.use(pinoHttp({
+  logger,
+  autoLogging: {
+    ignore: (req) => req.url === '/api/v1/health' || req.url === '/api/v1/version',
+  },
+}));
 
 app.use('/api/v1/ingest', ingestRateLimit, ingestAuthMiddleware, ingestionRoutes);
 app.use('/api/v1', healthRoutes);

@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import * as dashboardService from '../services/dashboard.service.js';
 
+function logError(error: unknown, context: string) {
+  console.error(`[${context}]`, error instanceof Error ? error.message : error);
+  if (error instanceof Error && error.stack) {
+    console.error(`[${context}] stack:`, error.stack);
+  }
+}
+
 export async function registerAgent(req: Request, res: Response): Promise<void> {
   try {
     const { enrollmentKey, hostname, os, architecture, agentVersion } = req.body;
@@ -18,6 +25,7 @@ export async function registerAgent(req: Request, res: Response): Promise<void> 
 
     res.status(201).json(result);
   } catch (error) {
+    logError(error, 'registerAgent');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -39,6 +47,7 @@ export async function agentLogin(req: Request, res: Response): Promise<void> {
 
     res.status(200).json(result);
   } catch (error) {
+    logError(error, 'agentLogin');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -68,6 +77,7 @@ export async function reportSyncComplete(req: Request, res: Response): Promise<v
 
     res.status(200).json({ success: true });
   } catch (error) {
+    logError(error, 'reportSyncComplete');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -88,6 +98,7 @@ export async function getAgentConfig(req: Request, res: Response): Promise<void>
 
     res.json(config);
   } catch (error) {
+    logError(error, 'getAgentConfig');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -109,6 +120,7 @@ export async function heartbeat(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logError(error, 'heartbeat');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -124,6 +136,7 @@ export async function listAgents(req: Request, res: Response): Promise<void> {
     const agents = await dashboardService.listAgents(orgId);
     res.json(agents);
   } catch (error) {
+    logError(error, 'listAgents');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -146,6 +159,7 @@ export async function getAgent(req: Request, res: Response): Promise<void> {
 
     res.json(agent);
   } catch (error) {
+    logError(error, 'getAgent');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
