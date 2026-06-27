@@ -1,116 +1,88 @@
 import { Request, Response } from 'express';
-import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
 
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
-
 export async function createInvitation(req: Request, res: Response): Promise<void> {
-  try {
-    const orgId = req.user?.organizationId;
-    if (!orgId) {
-      res.status(401).json({ error: 'Not authenticated' });
-      return;
-    }
-
-    const { email, role } = req.body;
-    if (!email) {
-      res.status(400).json({ error: 'Email is required' });
-      return;
-    }
-
-    const inviterName = req.user?.name || req.user?.email || 'Your team';
-    const invitation = await dashboardService.createInvitation(orgId, email, role || 'member', inviterName);
-    if (!invitation) {
-      res.status(409).json({ error: 'Invitation already exists for this email' });
-      return;
-    }
-
-    res.status(201).json(invitation);
-  } catch (error) {
-    logger.error({ err: error, endpoint: 'createInvitation' }, 'Invitation error');
-    res.status(500).json({ error: 'Internal server error' });
+  const orgId = req.user?.organizationId;
+  if (!orgId) {
+    res.status(401).json({ error: 'Not authenticated' });
+    return;
   }
+
+  const { email, role } = req.body;
+  if (!email) {
+    res.status(400).json({ error: 'Email is required' });
+    return;
+  }
+
+  const inviterName = req.user?.name || req.user?.email || 'Your team';
+  const invitation = await dashboardService.createInvitation(orgId, email, role || 'member', inviterName);
+  if (!invitation) {
+    res.status(409).json({ error: 'Invitation already exists for this email' });
+    return;
+  }
+
+  res.status(201).json(invitation);
 }
 
 export async function listInvitations(req: Request, res: Response): Promise<void> {
-  try {
-    const orgId = req.user?.organizationId;
-    if (!orgId) {
-      res.status(401).json({ error: 'Not authenticated' });
-      return;
-    }
-
-    const invitations = await dashboardService.listInvitations(orgId);
-    res.json(invitations);
-  } catch (error) {
-    logger.error({ err: error, endpoint: 'listInvitations' }, 'Invitation error');
-    res.status(500).json({ error: 'Internal server error' });
+  const orgId = req.user?.organizationId;
+  if (!orgId) {
+    res.status(401).json({ error: 'Not authenticated' });
+    return;
   }
+
+  const invitations = await dashboardService.listInvitations(orgId);
+  res.json(invitations);
 }
 
 export async function acceptInvitation(req: Request, res: Response): Promise<void> {
-  try {
-    const { token, password, name } = req.body;
-    if (!token) {
-      res.status(400).json({ error: 'Invitation token is required' });
-      return;
-    }
-
-    if (password && password.length < 8) {
-      res.status(400).json({ error: 'Password must be at least 8 characters' });
-      return;
-    }
-
-    const result = await dashboardService.acceptInvitation(token, password, name);
-    if (!result) {
-      res.status(404).json({ error: 'Invalid or expired invitation' });
-      return;
-    }
-
-    res.json(result);
-  } catch (error) {
-    logger.error({ err: error, endpoint: 'acceptInvitation' }, 'Invitation error');
-    res.status(500).json({ error: 'Internal server error' });
+  const { token, password, name } = req.body;
+  if (!token) {
+    res.status(400).json({ error: 'Invitation token is required' });
+    return;
   }
+
+  if (password && password.length < 8) {
+    res.status(400).json({ error: 'Password must be at least 8 characters' });
+    return;
+  }
+
+  const result = await dashboardService.acceptInvitation(token, password, name);
+  if (!result) {
+    res.status(404).json({ error: 'Invalid or expired invitation' });
+    return;
+  }
+
+  res.json(result);
 }
 
 export async function revokeInvitation(req: Request, res: Response): Promise<void> {
-  try {
-    const orgId = req.user?.organizationId;
-    const id = req.params.id as string;
+  const orgId = req.user?.organizationId;
+  const id = req.params.id as string;
 
-    if (!orgId) {
-      res.status(401).json({ error: 'Not authenticated' });
-      return;
-    }
-
-    await dashboardService.revokeInvitation(orgId, id);
-    res.json({ success: true });
-  } catch (error) {
-    logger.error({ err: error, endpoint: 'revokeInvitation' }, 'Invitation error');
-    res.status(500).json({ error: 'Internal server error' });
+  if (!orgId) {
+    res.status(401).json({ error: 'Not authenticated' });
+    return;
   }
+
+  await dashboardService.revokeInvitation(orgId, id);
+  res.json({ success: true });
 }
 
 export async function resendInvitation(req: Request, res: Response): Promise<void> {
-  try {
-    const orgId = req.user?.organizationId;
-    const id = req.params.id as string;
+  const orgId = req.user?.organizationId;
+  const id = req.params.id as string;
 
-    if (!orgId) {
-      res.status(401).json({ error: 'Not authenticated' });
-      return;
-    }
-
-    const result = await dashboardService.resendInvitation(orgId, id);
-    if (!result) {
-      res.status(404).json({ error: 'Invitation not found' });
-      return;
-    }
-
-    res.json(result);
-  } catch (error) {
-    logger.error({ err: error, endpoint: 'resendInvitation' }, 'Invitation error');
-    res.status(500).json({ error: 'Internal server error' });
+  if (!orgId) {
+    res.status(401).json({ error: 'Not authenticated' });
+    return;
   }
+
+  const result = await dashboardService.resendInvitation(orgId, id);
+  if (!result) {
+    res.status(404).json({ error: 'Invitation not found' });
+    return;
+  }
+
+  res.json(result);
 }

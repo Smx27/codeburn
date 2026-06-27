@@ -13,7 +13,9 @@ export const ApiKeyParamsSchema = z.object({
 export function validateBody<T extends z.ZodType>(schema: T, body: unknown): z.infer<T> {
   const result = schema.safeParse(body);
   if (!result.success) {
-    throw new Error(`Validation error: ${result.error.errors.map(e => e.message).join(', ')}`);
+    const err = new Error(`Validation error: ${result.error.errors.map(e => e.message).join(', ')}`);
+    (err as any).statusCode = 400;
+    throw err;
   }
   return result.data;
 }
