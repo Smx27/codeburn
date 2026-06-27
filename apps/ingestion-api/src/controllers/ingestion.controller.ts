@@ -3,7 +3,7 @@ import { getProviderId } from '../repositories/provider.repository.js';
 import { findOrganizationById } from '../repositories/organization.repository.js';
 import { findOrCreateUser } from '../repositories/user.repository.js';
 import { findOrCreateMachine } from '../repositories/machine.repository.js';
-import { upsertSession } from '../repositories/session.repository.js';
+import { upsertSession, findSessionByExternalId } from '../repositories/session.repository.js';
 import { insertEvents } from '../repositories/event.repository.js';
 import { BatchUpload, SyncSession, SyncEvent } from '../validators/ingestion.validator.js';
 
@@ -160,11 +160,29 @@ export async function ingestEvents(req: Request, res: Response): Promise<void> {
     const machine = await findOrCreateMachine(org.id, user.id, machineId);
     const providerId = await getProviderId(provider);
 
-    // For events-only, we need to ensure sessions exist
-    // This is a simplified version - in practice you'd want to upsert sessions first
+    const uniqueSessionIds = [...new Set(events.map((e) => e.sessionId))];
+    const sessionMap = new Map<string, string>();
+    const missingSessions: string[] = [];
+    for (const externalId of uniqueSessionIds) {
+      const session = await findSessionByExternalId(providerId, externalId);
+      if (session) {
+        sessionMap.set(externalId, session.id);
+      } else {
+        missingSessions.push(externalId);
+      }
+    }
+
+    if (missingSessions.length > 0) {
+      res.status(400).json({
+        error: 'Sessions not found. Send sessions first via /api/v1/ingest/sessions or /api/v1/ingest/batch.',
+        missingSessions,
+      });
+      return;
+    }
+
     const eventInputs = events.map((event) => ({
       organizationId: org.id,
-      sessionId: event.sessionId,
+      sessionId: sessionMap.get(event.sessionId)!,
       eventTime: new Date(event.eventTime),
       eventType: event.eventType,
       model: event.model,
