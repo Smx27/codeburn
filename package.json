@@ -17,6 +17,8 @@
   "scripts": {
     "bundle-litellm": "node scripts/bundle-litellm.mjs",
     "build": "node scripts/bundle-litellm.mjs && tsup && node -e \"const fs=require('fs'); fs.copyFileSync('src/cli.ts','dist/cli.js'); fs.chmodSync('dist/cli.js',0o755)\"",
+    "build:workspaces": "npm run sync:build && npm run analytics:build",
+    "build:all": "npm run build:workspaces && npm run build",
     "build:sea": "node scripts/bundle-litellm.mjs && npx tsup --config tsup.sea.config.ts && node -e \"const fs=require('fs'); fs.copyFileSync('src/cli.ts','dist/cli.js'); fs.chmodSync('dist/cli.js',0o755)\" && node scripts/build-sea.mjs",
     "build:sea:windows": "npm run build:sea -- --platform win32",
     "build:sea:linux": "npm run build:sea -- --platform linux",
