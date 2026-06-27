@@ -30,7 +30,7 @@ export class SyncLoop {
 
   private async sendHeartbeat(): Promise<void> {
     try {
-      const url = `${this.config.apiUrl}/heartbeat`;
+      const url = `${this.config.apiUrl}/api/v1/heartbeat`;
       await fetch(url, {
         method: 'POST',
         headers: {

@@ -99,11 +99,31 @@ export async function computeFileChecksum(filePath: string): Promise<string> {
   return createHash('sha256').update(content).digest('hex');
 }
 
+function isSqliteUri(p: string): boolean {
+  const lastColon = p.lastIndexOf(':');
+  return lastColon > 0 && p.substring(lastColon + 1).startsWith('ses_');
+}
+
+function resolveRealPath(filePath: string): string {
+  if (isSqliteUri(filePath)) {
+    return filePath.substring(0, filePath.lastIndexOf(':'));
+  }
+  return filePath;
+}
+
 export async function getSourceStats(filePath: string): Promise<SourceStats> {
-  const { stat } = await import('fs/promises');
-  const stats = await stat(filePath);
-  const checksum = await computeFileChecksum(filePath);
-  
+  const { stat, readdir } = await import('fs/promises');
+  const realPath = resolveRealPath(filePath);
+  const stats = await stat(realPath);
+
+  let checksum: string;
+  if (stats.isDirectory()) {
+    const entries = await readdir(realPath).catch(() => []);
+    checksum = createHash('sha256').update(entries.sort().join('\n')).digest('hex');
+  } else {
+    checksum = await computeFileChecksum(realPath);
+  }
+
   return {
     path: filePath,
     size: stats.size,

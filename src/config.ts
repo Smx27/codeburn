@@ -58,6 +58,7 @@ export type AiInsightConfig = {
     organizationId?: string
     organizationName?: string
     machineId?: string
+    dashboardApiUrl?: string
     apiUrl?: string
     apiKey?: string
     agentToken?: string
@@ -186,9 +187,9 @@ export async function getOrCreateMachineId(): Promise<string> {
     const id = await readFile(MACHINE_ID_FILE, 'utf-8')
     return id.trim()
   } catch {
-    // Generate new machine ID
-    const { randomBytes } = await import('crypto')
-    const id = randomBytes(16).toString('hex')
+    // Generate new machine ID as a proper UUID v4
+    const { randomUUID } = await import('crypto')
+    const id = randomUUID()
     await mkdir(getConfigDir(), { recursive: true })
     await writeFile(MACHINE_ID_FILE, id, 'utf-8')
     return id
@@ -199,6 +200,7 @@ export async function getSyncConfig(): Promise<{
   organizationId: string | undefined
   organizationName: string | undefined
   machineId: string
+  dashboardApiUrl: string | undefined
   apiUrl: string | undefined
   apiKey: string | undefined
   agentToken: string | undefined
@@ -211,6 +213,7 @@ export async function getSyncConfig(): Promise<{
     organizationId: config.sync?.organizationId,
     organizationName: config.sync?.organizationName,
     machineId,
+    dashboardApiUrl: config.sync?.dashboardApiUrl,
     apiUrl: config.sync?.apiUrl,
     apiKey: config.sync?.apiKey,
     agentToken: config.sync?.agentToken,
@@ -223,6 +226,7 @@ export async function saveSyncConfig(syncConfig: {
   organizationId?: string
   organizationName?: string
   machineId?: string
+  dashboardApiUrl?: string
   apiUrl?: string
   apiKey?: string
   agentToken?: string

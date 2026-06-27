@@ -56,6 +56,7 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       APP_URL: ${APP_URL:-http://localhost:3000}
       INGESTION_API_URL: http://ingestion-api:3001
+      INGESTION_API_EXTERNAL_URL: ${INGESTION_API_EXTERNAL_URL:-http://localhost:3001}
       MAIL_PROVIDER: ${MAIL_PROVIDER:-resend}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       MAIL_FROM: ${MAIL_FROM:-AIInsight <noreply@aiinsight.dev>}

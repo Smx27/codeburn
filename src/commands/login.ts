@@ -38,9 +38,9 @@ export async function runLogin(apiUrl?: string): Promise<void> {
   const architecture = arch()
 
   // Determine API URL
-  const baseUrl = apiUrl || 'http://localhost:3001'
+  const baseUrl = apiUrl || 'https://dapi.titanbyte.in'
 
-  console.log(`\n  ${CYAN('▸')} Connecting to AIInsight Cloud...`)
+  console.log(`\n  ${CYAN('▸')} Connecting to AIInsight Cloud at ${DIM(baseUrl)}...`)
 
   try {
     const response = await fetchWithTimeout(`${baseUrl}/api/v1/agents/login`, {
@@ -68,6 +68,7 @@ export async function runLogin(apiUrl?: string): Promise<void> {
       organizationId: data.organizationId,
       organizationName: data.organizationName,
       machineId: data.machineId,
+      dashboardApiUrl: baseUrl,
       apiUrl: data.apiUrl,
       apiKey,
       agentToken: data.agentToken,
@@ -88,9 +89,10 @@ export async function runLogin(apiUrl?: string): Promise<void> {
     console.log(`  ${DIM('Run')} ${BOLD.cyan('aiinsight sync')} ${DIM('to start syncing.')}\n`)
   } catch (error) {
     if ((error as Error).name === 'TimeoutError') {
-      console.error(renderError('Connection timed out. Check your network and API URL.'))
+      console.error(renderError(`Connection timed out after 8s. URL: ${baseUrl}/api/v1/agents/login`))
     } else {
-      console.error(renderError((error as Error).message))
+      const cause = (error as any).cause?.message || ''
+      console.error(renderError(`Failed to connect to ${baseUrl}: ${(error as Error).message}${cause ? ` (${cause})` : ''}`))
     }
     process.exit(1)
   }

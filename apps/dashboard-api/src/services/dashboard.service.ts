@@ -689,13 +689,19 @@ export async function agentLogin(
   // Generate agent token
   const agentToken = await generateAgentToken(machine.id);
 
-  const apiUrl = process.env.INGESTION_API_URL || process.env.API_URL || 'http://localhost:3001';
+  // External URL for clients (CLI) to reach the ingestion-api.
+  // INGESTION_API_EXTERNAL_URL is the URL reachable from outside Docker (e.g. Coolify ingress).
+  // INGESTION_API_URL is the Docker-internal URL (e.g. http://ingestion-api:3001).
+  const ingestionApiUrl = process.env.INGESTION_API_EXTERNAL_URL
+    || process.env.INGESTION_API_URL
+    || process.env.API_URL
+    || 'http://localhost:3001';
 
   return {
     organizationId: keyRecord.organization_id,
     organizationName: org.name,
     machineId: machine.id,
-    apiUrl,
+    apiUrl: ingestionApiUrl,
     syncInterval: 300,
     agentToken,
   };

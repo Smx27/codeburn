@@ -501,11 +501,11 @@ export function getModelCosts(model: string): ModelCosts | null {
 // Warn at most once per unknown model name per process. Without this, a model
 // missing from the pricing snapshot would silently price at $0 for every
 // session that used it, hiding real spend until the user noticed.
-const warnedUnknownModels = new Set<string>()
+const warnedUnknownModels: Record<string, boolean> = {}
 
 /// Heuristic for "this looks like a local model that will never be in LiteLLM's
 /// pricing JSON". We suppress the unknown-model warning for these because the
-/  // "update aiinsight" advice can't help — local Ollama models, llama.cpp tags,
+/// "update aiinsight" advice can't help — local Ollama models, llama.cpp tags,
 /// LM Studio loads, etc. are billed locally and don't have public pricing.
 /// Users still get $0 in cost reports for them (correct — local inference is
 /// effectively free); the warning was just noise.
@@ -519,7 +519,7 @@ function looksLikeLocalModel(name: string): boolean {
 
 function shouldWarnAboutUnknownModel(name: string): boolean {
   if (!name || name === '<synthetic>') return false
-  if (warnedUnknownModels.has(name)) return false
+  if (warnedUnknownModels[name]) return false
   // Suppress for local/quantized models — the "update aiinsight" hint is
   // actively misleading there. Users who need cost visibility for local
   // inference can still set an alias via `aiinsight model-alias`.
@@ -546,7 +546,7 @@ export function calculateCost(
   const costs = getModelCosts(model)
   if (!costs) {
     if (shouldWarnAboutUnknownModel(model)) {
-      warnedUnknownModels.add(model)
+      warnedUnknownModels[model] = true
       // Strip control characters and cap length: model names come from JSONL
       // payloads written by external tools, so a hostile or corrupt file
       // could embed terminal escape sequences here.

@@ -8,6 +8,15 @@ const baseLogger = pino({
     service: 'aiinsight-sync-engine',
     version: process.env.npm_package_version || '0.1.0',
   },
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: process.stdout.isTTY,
+      translateTime: 'SYS:standard',
+      ignore: 'pid,hostname,service,version',
+      messageFormat: '{msg}',
+    },
+  },
   formatters: {
     level: (label) => ({ level: label }),
   },

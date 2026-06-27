@@ -78,21 +78,30 @@ export class BatchUploader {
   }
 
   private async doUpload(payload: BatchUploadPayload): Promise<BatchUploadResponse> {
-    const response = await fetch(`${this.config.apiUrl}/api/v1/ingest/batch`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    const url = `${this.config.apiUrl}/api/v1/ingest/batch`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.config.apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status} from ${url}: ${errorText}`);
+      }
+
+      return response.json() as Promise<BatchUploadResponse>;
+    } catch (error) {
+      if (error instanceof TypeError && error.message === 'fetch failed') {
+        const cause = (error as any).cause?.message || '';
+        throw new Error(`Cannot reach ${url}${cause ? `: ${cause}` : ''}`);
+      }
+      throw error;
     }
-
-    return response.json() as Promise<BatchUploadResponse>;
   }
 
   private async persistBatch(batch: QueuedBatch): Promise<void> {

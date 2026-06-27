@@ -1204,7 +1204,7 @@ program
   .description('Sync historical and incremental usage to AiInsight Cloud')
   .option('--org-id <uuid>', 'Organization ID')
   .option('--machine-id <uuid>', 'Machine ID (auto-generated if not provided)')
-  .option('--api-url <url>', 'Ingestion API URL (e.g. http://localhost:3001)')
+  .option('--api-url <url>', 'Override ingestion API URL (default: from login config)')
   .option('--api-key <key>', 'API Key for authentication')
   .option('--once', 'Run historical + incremental sync once and exit')
   .option('--historical-only', 'Run only historical sync (no incremental)')
@@ -1236,7 +1236,7 @@ program
     
     console.log(renderBanner())
     console.log(`  ${chalk.dim('Mode')}    : ${opts.once ? 'once' : (opts.historicalOnly ? 'historical-only' : 'continuous')}`)
-    console.log(`  ${chalk.dim('API')}     : ${apiUrl}`)
+    console.log(`  ${chalk.dim('Ingestion')} : ${apiUrl}`)
     console.log(`  ${chalk.dim('Org')}     : ${organizationId}`)
     console.log('')
     
@@ -1282,7 +1282,7 @@ program
 program
   .command('login')
   .description('Connect to AIInsight Cloud with your API key')
-  .option('--api-url <url>', 'API URL (default: http://localhost:3001)')
+  .option('--api-url <url>', 'API URL (default: http://localhost:3002)')
   .action(async (opts) => {
     const { runLogin } = await import('./commands/login.js')
     await runLogin(opts.apiUrl)
