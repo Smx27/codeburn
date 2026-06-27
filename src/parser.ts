@@ -1046,7 +1046,7 @@ function extractClaudeCacheCreation(usage: AssistantMessageContent['usage']): { 
 }
 
 /// Apply local-model savings accounting to a call. If the raw model name is
-/// mapped via `aiinsight model-savings`, the call's actual cost is forced
+/// mapped via `niriksh model-savings`, the call's actual cost is forced
 /// to $0 and the hypothetical baseline cost is recorded as `savingsUSD`.
 /// Returns the input unchanged when no mapping is configured for the
 /// model — keeps the hot path branch-free for the common paid-only case.
@@ -1919,7 +1919,7 @@ function warnProviderReadFailureOnce(providerName: string, err: unknown): void {
   warnedProviderReadFailures.add(key)
   if (isSqliteBusyError(err)) {
     process.stderr.write(
-      `aiinsight: skipped ${providerName} data because its SQLite database is temporarily locked; will retry on the next refresh.\n`
+      `niriksh: skipped ${providerName} data because its SQLite database is temporarily locked; will retry on the next refresh.\n`
     )
   }
 }
@@ -1940,7 +1940,7 @@ function warnProviderParseFailure(providerName: string, sourcePath: string, err:
     ? ` (further ${providerName} parse failures this run are suppressed)`
     : ''
   process.stderr.write(
-    `aiinsight: skipped ${providerName} session that failed to parse: ${sourcePath} (${msg})${tail}\n`
+    `niriksh: skipped ${providerName} session that failed to parse: ${sourcePath} (${msg})${tail}\n`
   )
 }
 

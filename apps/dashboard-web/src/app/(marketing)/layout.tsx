@@ -46,7 +46,7 @@ const footerSections = [
       { href: '/docs', label: 'Documentation' },
       { href: 'mailto:support@niriksh.dev', label: 'Contact Support' },
       { href: 'https://status.niriksh.dev', label: 'Status Page' },
-      { href: 'https://github.com/aiinsight/aiinsight', label: 'GitHub' },
+      { href: 'https://github.com/Smx27/codeburn', label: 'GitHub' },
     ],
   },
 ];
@@ -186,7 +186,7 @@ export default function MarketingLayout({
             </p>
             <div className="flex items-center gap-4">
               <Link
-                href="https://github.com/aiinsight/aiinsight"
+                href="https://github.com/Smx27/codeburn"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/30 hover:text-white/60 transition-colors"

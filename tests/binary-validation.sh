@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# AIInsight Binary Validation Test Suite
+# Niriksh Binary Validation Test Suite
 # =============================================================================
 # Tests the packaged SEA binary in a clean environment.
 # Run: bash tests/binary-validation.sh
@@ -11,11 +11,11 @@
 
 set -euo pipefail
 
-BINARY="/home/priya/Documents/Github/Ai/aiinsight/dist/aiinsight-linux-x64"
+BINARY="/home/priya/Documents/Github/Ai/aiinsight/dist/niriksh-linux-x64"
 MAIN_JS="/home/priya/Documents/Github/Ai/aiinsight/dist/main.js"
 TEST_DIR="/tmp/aiinsight-validation-$$"
 ISOLATED_HOME="$TEST_DIR/fake-home"
-CONFIG_DIR="$ISOLATED_HOME/.config/aiinsight"
+CONFIG_DIR="$ISOLATED_HOME/.config/niriksh"
 LOG_FILE="$TEST_DIR/validation.log"
 RESULTS=()
 
@@ -158,13 +158,13 @@ fi
 # Copy binary + main.js to isolated test directory (simulates "downloaded to a clean machine")
 TEST_BIN_DIR="$TEST_DIR/bin"
 mkdir -p "$TEST_BIN_DIR"
-cp "$BINARY" "$TEST_BIN_DIR/aiinsight"
+cp "$BINARY" "$TEST_BIN_DIR/niriksh"
 cp "$MAIN_JS" "$TEST_BIN_DIR/main.js"
-chmod +x "$TEST_BIN_DIR/aiinsight"
-BINARY="$TEST_BIN_DIR/aiinsight"
+chmod +x "$TEST_BIN_DIR/niriksh"
+BINARY="$TEST_BIN_DIR/niriksh"
 
 # Clean any existing config from the real config dir (backup first)
-REAL_CONFIG_DIR="$HOME/.config/aiinsight"
+REAL_CONFIG_DIR="$HOME/.config/niriksh"
 REAL_CONFIG_BACKUP="$TEST_DIR/real-config-backup"
 if [ -d "$REAL_CONFIG_DIR" ]; then
   cp -r "$REAL_CONFIG_DIR" "$REAL_CONFIG_BACKUP" 2>/dev/null || true
@@ -190,7 +190,7 @@ section "TEST 1: Binary Startup"
 echo "  1a: Binary launches..."
 OUTPUT=$(run_cmd "binary-launch" "$BINARY" --version 2>&1) || true
 EXIT_CODE=$?
-if [ "$EXIT_CODE" -eq 0 ] || echo "$OUTPUT" | grep -qi "aiinsight\|version\|0\.9\.\|node\|platform\|linux"; then
+if [ "$EXIT_CODE" -eq 0 ] || echo "$OUTPUT" | grep -qi "niriksh\|version\|0\.9\.\|node\|platform\|linux"; then
   pass "1a: Binary launches without crash"
 else
   fail "1a: Binary launch" "exit=$EXIT_CODE output=$OUTPUT"
@@ -199,7 +199,7 @@ fi
 # 1b: Version displayed
 echo "  1b: Version displayed..."
 OUTPUT=$(run_cmd "binary-version" "$BINARY" --version 2>&1) || true
-if echo "$OUTPUT" | grep -qiE "version|0\.9\.\d+|aiinsight"; then
+if echo "$OUTPUT" | grep -qiE "version|0\.9\.\d+|niriksh"; then
   pass "1b: Version information displayed"
 else
   fail "1b: Version display" "no version info found in: $OUTPUT"
@@ -237,58 +237,58 @@ fi
 
 section "TEST 2: Commands"
 
-# 2a: aiinsight status
+# 2a: niriksh status
 echo "  2a: status command..."
 OUTPUT=$(run_cmd "cmd-status" "$BINARY" status 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "no usage|status|cost|\$|savings|month|model|token"; then
-  pass "2a: aiinsight status runs"
+  pass "2a: niriksh status runs"
 else
-  fail "2a: aiinsight status" "$OUTPUT"
+  fail "2a: niriksh status" "$OUTPUT"
 fi
 
-# 2b: aiinsight config
+# 2b: niriksh config
 echo "  2b: config command..."
 OUTPUT=$(run_cmd "cmd-config" "$BINARY" config 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "config|not connected|organization|configuration"; then
-  pass "2b: aiinsight config runs"
+  pass "2b: niriksh config runs"
 else
-  fail "2b: aiinsight config" "$OUTPUT"
+  fail "2b: niriksh config" "$OUTPUT"
 fi
 
-# 2c: aiinsight providers
+# 2c: niriksh providers
 echo "  2c: providers command..."
 OUTPUT=$(run_cmd "cmd-providers" "$BINARY" providers 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "provider|claude|cursor|gemini|detect"; then
-  pass "2c: aiinsight providers runs"
+  pass "2c: niriksh providers runs"
 else
-  fail "2c: aiinsight providers" "$OUTPUT"
+  fail "2c: niriksh providers" "$OUTPUT"
 fi
 
-# 2d: aiinsight doctor
+# 2d: niriksh doctor
 echo "  2d: doctor command..."
 OUTPUT=$(run_cmd "cmd-doctor" "$BINARY" doctor 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "doctor|config|check|ok|fail|node|os|provider"; then
-  pass "2d: aiinsight doctor runs"
+  pass "2d: niriksh doctor runs"
 else
-  fail "2d: aiinsight doctor" "$OUTPUT"
+  fail "2d: niriksh doctor" "$OUTPUT"
 fi
 
-# 2e: aiinsight --help
+# 2e: niriksh --help
 echo "  2e: --help..."
 OUTPUT=$(run_cmd "cmd-help" "$BINARY" --help 2>&1) || true
-if echo "$OUTPUT" | grep -qiE "usage|command|help|aiinsight"; then
-  pass "2e: aiinsight --help runs"
+if echo "$OUTPUT" | grep -qiE "usage|command|help|niriksh"; then
+  pass "2e: niriksh --help runs"
 else
-  fail "2e: aiinsight --help" "$OUTPUT"
+  fail "2e: niriksh --help" "$OUTPUT"
 fi
 
-# 2f: aiinsight version
+# 2f: niriksh version
 echo "  2f: version command..."
 OUTPUT=$(run_cmd "cmd-version" "$BINARY" version 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "version|0\.9|platform|linux|node"; then
-  pass "2f: aiinsight version runs"
+  pass "2f: niriksh version runs"
 else
-  fail "2f: aiinsight version" "$OUTPUT"
+  fail "2f: niriksh version" "$OUTPUT"
 fi
 
 # ─── Test 3: Config Files ───────────────────────────────────────────────────
@@ -375,7 +375,7 @@ echo "  4a: Login prompt..."
 # Simulate keyboard interrupt to test interactive prompt
 OUTPUT=$(echo "" | timeout 5 "$BINARY" login 2>&1) || true
 EXIT_CODE=$?
-if echo "$OUTPUT" | grep -qiE "welcome|api.*key|paste|connect|login|aiinsight"; then
+if echo "$OUTPUT" | grep -qiE "welcome|api.*key|paste|connect|login|niriksh"; then
   pass "4a: Login prompt displays correctly"
 else
   # Login may exit with error on empty key - that's expected
@@ -405,9 +405,9 @@ section "TEST 5: Logout"
 echo "  5a: logout --force..."
 OUTPUT=$(run_cmd "cmd-logout-force" "$BINARY" logout --force 2>&1) || true
 if echo "$OUTPUT" | grep -qiE "disconnect|not connected|clear|sync"; then
-  pass "5a: aiinsight logout --force runs"
+  pass "5a: niriksh logout --force runs"
 else
-  pass "5a: aiinsight logout --force runs (output: $(echo "$OUTPUT" | head -1))"
+  pass "5a: niriksh logout --force runs (output: $(echo "$OUTPUT" | head -1))"
 fi
 
 # ─── Test 6: Corrupt Config ────────────────────────────────────────────────
@@ -676,7 +676,7 @@ rm -rf "$ISOLATED_HOME" 2>/dev/null || true
 
 echo ""
 echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BOLD}  AIInsight Binary Validation Report${NC}"
+echo -e "${BOLD}  Niriksh Binary Validation Report${NC}"
 echo -e "${BOLD}${CYAN}══════════════════════════════════════════════════════════════${NC}"
 echo ""
 

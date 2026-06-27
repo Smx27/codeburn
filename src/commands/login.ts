@@ -40,7 +40,7 @@ export async function runLogin(apiUrl?: string): Promise<void> {
   // Determine API URL
   const baseUrl = apiUrl || 'https://dapi.titanbyte.in'
 
-  console.log(`\n  ${CYAN('▸')} Connecting to AIInsight Cloud at ${DIM(baseUrl)}...`)
+  console.log(`\n  ${CYAN('▸')} Connecting to Niriksh Cloud at ${DIM(baseUrl)}...`)
 
   try {
     const response = await fetchWithTimeout(`${baseUrl}/api/v1/agents/login`, {
@@ -79,14 +79,14 @@ export async function runLogin(apiUrl?: string): Promise<void> {
     // Also save machine ID to the separate file
     const machineIdPath = await getOrCreateMachineId()
 
-    console.log(renderSuccess('Connected to AIInsight Cloud', {
+    console.log(renderSuccess('Connected to Niriksh Cloud', {
       'Organization': data.organizationName,
       'Machine ID': data.machineId,
       'API URL': data.apiUrl,
       'Sync Interval': `${data.syncInterval} seconds`,
     }))
 
-    console.log(`  ${DIM('Run')} ${BOLD.cyan('aiinsight sync')} ${DIM('to start syncing.')}\n`)
+    console.log(`  ${DIM('Run')} ${BOLD.cyan('niriksh sync')} ${DIM('to start syncing.')}\n`)
   } catch (error) {
     if ((error as Error).name === 'TimeoutError') {
       console.error(renderError(`Connection timed out after 8s. URL: ${baseUrl}/api/v1/agents/login`))

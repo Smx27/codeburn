@@ -42,7 +42,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
     return p
   }
 
-  const server = new McpServer({ name: 'aiinsight', version: deps.version }, { instructions: INSTRUCTIONS })
+  const server = new McpServer({ name: 'niriksh', version: deps.version }, { instructions: INSTRUCTIONS })
 
   server.registerTool(
     'get_usage',
@@ -84,7 +84,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
         }
       } catch (err) {
         return {
-          content: [{ type: 'text' as const, text: `aiinsight: failed to read usage — ${err instanceof Error ? err.message : String(err)}` }],
+          content: [{ type: 'text' as const, text: `niriksh: failed to read usage — ${err instanceof Error ? err.message : String(err)}` }],
           structuredContent: { period: 'unknown', empty: true, totals: { costUSD: 0, calls: 0, sessions: 0, cacheHitPercent: 0, oneShotRate: null }, breakdown: null },
           isError: true,
         }
@@ -118,7 +118,7 @@ export function createServer(deps: { version: string; aggregate?: Aggregate }): 
         }
       } catch (err) {
         return {
-          content: [{ type: 'text' as const, text: `aiinsight: failed to compute savings — ${err instanceof Error ? err.message : String(err)}` }],
+          content: [{ type: 'text' as const, text: `niriksh: failed to compute savings — ${err instanceof Error ? err.message : String(err)}` }],
           structuredContent: { period: 'unknown', optimize: { findingCount: 0, savingsUSD: 0, topFindings: [] }, retryTaxUSD: 0, routingWasteUSD: 0 },
           isError: true,
         }

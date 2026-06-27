@@ -1,8 +1,8 @@
-# AIInsight
+# Niriksh
 
 **See where your AI coding tokens go — by task, tool, model, and project.**
 
-AIInsight tracks token usage across Claude, Codex, Cursor, and Gemini. It runs locally, syncs to a self-hosted dashboard, and gives you per-task cost visibility that AI coding tools don't provide.
+Niriksh tracks token usage across Claude, Codex, Cursor, and Gemini. It runs locally, syncs to a self-hosted dashboard, and gives you per-task cost visibility that AI coding tools don't provide.
 
 ---
 
@@ -58,8 +58,8 @@ graph TD
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/getagentseal/codeburn.git
-cd aiinsight
+git clone https://github.com/Smx27/codeburn.git
+cd codeburn
 npm install
 ```
 
@@ -84,9 +84,14 @@ Navigate to **Settings** in the dashboard and create an API key.
 ### 5. Install and run the agent
 
 ```bash
-npm install -g aiinsight
-aiinsight login                # Paste your API key when prompted
-aiinsight sync                 # Run sync
+# macOS / Linux
+curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
+
+# Windows
+irm https://niriksh.titanbyte.in/install.ps1 | iex
+
+niriksh login                # Paste your API key when prompted
+niriksh sync                 # Run sync
 ```
 
 ### 6. View your data
@@ -102,9 +107,9 @@ Register
     ↓
 Generate API Key
     ↓
-aiinsight login
+niriksh login
     ↓
-aiinsight sync
+niriksh sync
     ↓
 Dashboard
 ```
@@ -129,7 +134,7 @@ Dashboard
 ## Repository Structure
 
 ```
-aiinsight/
+codeburn/
 ├── apps/
 │   ├── dashboard-api/        # Express API (auth, orgs, analytics)
 │   ├── dashboard-web/        # Next.js frontend

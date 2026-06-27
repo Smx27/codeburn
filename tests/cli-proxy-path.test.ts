@@ -29,12 +29,12 @@ function runCli(args: string[], home: string) {
   })
 }
 
-const configPath = (home: string) => join(home, '.config', 'codeburn', 'config.json')
+const configPath = (home: string) => join(home, '.config', 'niriksh', 'config.json')
 async function readConfig(home: string): Promise<Record<string, unknown>> {
   return JSON.parse(await readFile(configPath(home), 'utf-8'))
 }
 async function writeConfig(home: string, obj: unknown): Promise<void> {
-  await mkdir(join(home, '.config', 'codeburn'), { recursive: true })
+  await mkdir(join(home, '.config', 'niriksh'), { recursive: true })
   await writeFile(configPath(home), JSON.stringify(obj), 'utf-8')
 }
 

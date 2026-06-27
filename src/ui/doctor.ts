@@ -30,7 +30,7 @@ async function checkConfig(): Promise<CheckResult> {
       }
       return { name: 'Configuration', ok: true, message: `${path} (not connected)` }
     }
-    return { name: 'Configuration', ok: false, message: 'No config file found', recommendation: 'Run aiinsight login to connect' }
+    return { name: 'Configuration', ok: false, message: 'No config file found', recommendation: 'Run niriksh login to connect' }
   } catch {
     return { name: 'Configuration', ok: false, message: 'Failed to read config' }
   }
@@ -39,10 +39,10 @@ async function checkConfig(): Promise<CheckResult> {
 async function checkSyncConfig(): Promise<CheckResult> {
   const syncConfig = await getSyncConfig()
   if (!syncConfig.organizationId) {
-    return { name: 'Sync Configuration', ok: false, message: 'Not connected to AIInsight Cloud', recommendation: 'Run aiinsight login' }
+    return { name: 'Sync Configuration', ok: false, message: 'Not connected to Niriksh Cloud', recommendation: 'Run niriksh login' }
   }
   if (!syncConfig.apiKey && !syncConfig.agentToken) {
-    return { name: 'Sync Configuration', ok: false, message: 'No API key or agent token', recommendation: 'Run aiinsight login' }
+    return { name: 'Sync Configuration', ok: false, message: 'No API key or agent token', recommendation: 'Run niriksh login' }
   }
   return { name: 'Sync Configuration', ok: true, message: `Org: ${syncConfig.organizationName || syncConfig.organizationId}` }
 }
@@ -62,7 +62,7 @@ async function checkNetwork(): Promise<CheckResult> {
 async function checkApiConnectivity(): Promise<CheckResult> {
   const syncConfig = await getSyncConfig()
   if (!syncConfig.apiUrl) {
-    return { name: 'API Connectivity', ok: false, message: 'No API URL configured', recommendation: 'Run aiinsight login' }
+    return { name: 'API Connectivity', ok: false, message: 'No API URL configured', recommendation: 'Run niriksh login' }
   }
 
   try {
@@ -79,7 +79,7 @@ async function checkApiConnectivity(): Promise<CheckResult> {
 async function checkApiKeyValidity(): Promise<CheckResult> {
   const syncConfig = await getSyncConfig()
   if (!syncConfig.apiKey && !syncConfig.agentToken) {
-    return { name: 'API Key', ok: false, message: 'No API key configured', recommendation: 'Run aiinsight login' }
+    return { name: 'API Key', ok: false, message: 'No API key configured', recommendation: 'Run niriksh login' }
   }
   return { name: 'API Key', ok: true, message: 'Key configured' }
 }

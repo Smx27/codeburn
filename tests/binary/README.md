@@ -1,8 +1,8 @@
-# AIInsight Docker-Based Binary Validation Harness
+# Niriksh Docker-Based Binary Validation Harness
 
 ## Overview
 
-A Docker-based test harness to validate that AIInsight binaries are truly standalone — no Node.js, no npm, no source checkout, no node_modules.
+A Docker-based test harness to validate that Niriksh binaries are truly standalone — no Node.js, no npm, no source checkout, no node_modules.
 
 ## Directory Structure
 
@@ -29,7 +29,7 @@ No Node.js. No npm. No python3.
 ## Artifact Injection
 
 Mount only:
-- `dist/aiinsight-linux-x64`
+- `dist/niriksh-linux-x64`
 - `dist/SHA256SUMS`
 
 Nothing else. No source tree. No node_modules.
@@ -63,11 +63,11 @@ docker compose up --build --abort-on-container-exit
 
 ```bash
 docker run --rm \
-  -v "$PWD/dist/aiinsight-linux-x64:/artifacts/aiinsight-linux-x64:ro" \
+  -v "$PWD/dist/niriksh-linux-x64:/artifacts/niriksh-linux-x64:ro" \
   -v "$PWD/dist/SHA256SUMS:/artifacts/SHA256SUMS:ro" \
-  -e AIINSIGHT_BINARY_PATH=/artifacts/aiinsight-linux-x64 \
-  -e AIINSIGHT_SHA_PATH=/artifacts/SHA256SUMS \
-  aiinsight-binary-ubuntu \
+  -e NIRIKSH_BINARY_PATH=/artifacts/niriksh-linux-x64 \
+  -e NIRIKSH_SHA_PATH=/artifacts/SHA256SUMS \
+  niriksh-binary-ubuntu \
   bash /usr/local/bin/run-tests.sh
 ```
 
@@ -75,8 +75,8 @@ docker run --rm \
 
 ```bash
 cd tests/binary
-AIINSIGHT_BINARY_PATH=../../dist/aiinsight-linux-x64 \
-AIINSIGHT_SHA_PATH=../../dist/SHA256SUMS \
+NIRIKSH_BINARY_PATH=../../dist/niriksh-linux-x64 \
+NIRIKSH_SHA_PATH=../../dist/SHA256SUMS \
 bash run-tests.sh
 ```
 
@@ -127,14 +127,3 @@ Ready For:
 - Mac Release: YES/NO
 - Design Partners: YES/NO
 - Public Beta: YES/NO
-
-## Current Results (2026-06-21)
-
-| Distro | Health | Standalone | Critical Failures |
-|--------|--------|------------|-------------------|
-| Ubuntu 24.04 | 44% | 0% | 6 |
-| Debian 12 | 44% | 0% | 6 |
-| Alpine 3.20 | 56% | 0% | 5 |
-| Fedora 40 | 44% | 0% | 6 |
-
-**Blocker**: The SEA build (`npm run build:sea:linux`) must complete properly so `main.js` is embedded in the binary blob. Until then, the binary is not standalone.

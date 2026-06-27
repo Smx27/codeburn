@@ -199,7 +199,7 @@ describe('claude provider — CLAUDE_CONFIG_DIRS discovery', () => {
 
 describe('claude provider — config.json claudeConfigDirs (menubar-driven)', () => {
   async function writeConfigJson(value: unknown): Promise<void> {
-    const dir = join(process.env['HOME']!, '.config', 'codeburn')
+    const dir = join(process.env['HOME']!, '.config', 'niriksh')
     await mkdir(dir, { recursive: true })
     await writeFile(join(dir, 'config.json'), JSON.stringify({ claudeConfigDirs: value }))
   }

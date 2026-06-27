@@ -22,8 +22,8 @@ afterEach(async () => {
 })
 
 async function configureDevinRate(rate = 1): Promise<void> {
-  await mkdir(join(tmpDir, '.config', 'codeburn'), { recursive: true })
-  await writeFile(join(tmpDir, '.config', 'codeburn', 'config.json'), JSON.stringify({
+  await mkdir(join(tmpDir, '.config', 'niriksh'), { recursive: true })
+  await writeFile(join(tmpDir, '.config', 'niriksh', 'config.json'), JSON.stringify({
     devin: { acuUsdRate: rate },
   }))
 }

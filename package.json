@@ -1,11 +1,11 @@
 {
-  "name": "aiinsight",
+  "name": "niriksh",
   "version": "0.9.12",
   "description": "See where your AI coding tokens go - by task, tool, model, and project",
   "type": "module",
   "main": "./dist/cli.js",
   "bin": {
-    "aiinsight": "dist/cli.js"
+    "niriksh": "dist/cli.js"
   },
   "files": [
     "dist"
@@ -64,12 +64,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getagentseal/codeburn.git"
+    "url": "git+https://github.com/Smx27/codeburn.git"
   },
   "bugs": {
-    "url": "https://github.com/getagentseal/codeburn/issues"
+    "url": "https://github.com/Smx27/codeburn/issues"
   },
-  "homepage": "https://github.com/getagentseal/codeburn#readme",
+  "homepage": "https://github.com/Smx27/codeburn#readme",
   "dependencies": {
     "@aiinsight/distribution": "*",
     "@aiinsight/platform": "*",

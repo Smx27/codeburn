@@ -4,7 +4,7 @@ Complete onboarding guide from signup to viewing your first dashboard.
 
 ## Overview
 
-AIInsight helps teams track AI coding costs across multiple providers. This guide walks you through creating an account, connecting your first agent, and viewing your analytics dashboard.
+Niriksh helps teams track AI coding costs across multiple providers. This guide walks you through creating an account, connecting your first agent, and viewing your analytics dashboard.
 
 ## Prerequisites
 
@@ -15,12 +15,12 @@ AIInsight helps teams track AI coding costs across multiple providers. This guid
 ## Quick Start
 
 ```
-Register → Generate API Key → aiinsight login → aiinsight sync → Dashboard
+Register → Generate API Key → niriksh login → niriksh sync → Dashboard
 ```
 
 ## Step 1: Create Account
 
-1. Navigate to [app.aiinsight.dev/register](https://app.aiinsight.dev/register)
+1. Navigate to [niriksh.titanbyte.in/register](https://niriksh.titanbyte.in/register)
 2. Enter your name, email, and password
 3. Click **Create Account**
 
@@ -30,7 +30,7 @@ Your organization is created automatically during registration.
 
 ## Step 2: Verify Email
 
-1. Check your inbox for a verification email from `no-reply@aiinsight.dev`
+1. Check your inbox for a verification email from `noreply@niriksh.dev`
 2. Click the **Verify Email** link in the email
 3. You'll be redirected to the dashboard
 
@@ -51,27 +51,22 @@ Your organization is created automatically during registration.
 
 ## Step 4: Install Agent
 
-Install the AIInsight agent on your machine:
+Install the Niriksh agent on your machine:
 
-**macOS:**
+**macOS / Linux:**
 ```bash
-brew install aiinsight/tap/aiinsight
-```
-
-**Linux:**
-```bash
-curl -fsSL https://get.aiinsight.dev/install.sh | bash
+curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
 ```
 
 **Windows:**
-```bash
-winget install AIInsight.CLI
+```powershell
+irm https://niriksh.titanbyte.in/install.ps1 | iex
 ```
 
 Verify the installation:
 
 ```bash
-aiinsight --version
+niriksh --version
 ```
 
 See [Install Agent](install-agent.md) for detailed instructions.
@@ -82,11 +77,11 @@ See [Install Agent](install-agent.md) for detailed instructions.
 2. Run the login command and paste your API key when prompted:
 
 ```bash
-aiinsight login
+niriksh login
 ```
 
 3. The agent connects to your organization automatically
-4. Run `aiinsight sync` to start syncing
+4. Run `niriksh sync` to start syncing
 
 <!-- Screenshot: Terminal showing registration success -->
 
@@ -96,14 +91,14 @@ After registration, the agent automatically:
 
 1. Scans your local AI coding tool session files
 2. Parses session data and token usage
-3. Uploads historical data to AIInsight Cloud
+3. Uploads historical data to Niriksh Cloud
 4. Triggers analytics aggregation
 
 This process may take several minutes depending on the amount of historical data. You can monitor progress in **Settings → Agents → Sync Status**.
 
 ## Step 7: Invite Team (Optional)
 
-Share AIInsight with your team:
+Share Niriksh with your team:
 
 1. Navigate to **Settings → Team**
 2. Click **Invite Member**
@@ -138,4 +133,4 @@ Navigate to the **Dashboard** to see your analytics:
 
 ## Self-Hosted Deployment
 
-If you prefer to run AIInsight on your own infrastructure, see the [Deployment](../operations/deployment.md) guide.
+If you prefer to run Niriksh on your own infrastructure, see the [Deployment](../operations/deployment.md) guide.

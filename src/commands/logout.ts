@@ -55,7 +55,7 @@ export async function runLogout(force?: boolean): Promise<void> {
     await rm(uploadQueueDir, { recursive: true }).catch(() => {})
   }
 
-  console.log(renderSuccess('Disconnected from AIInsight Cloud', {
+  console.log(renderSuccess('Disconnected from Niriksh Cloud', {
     'Organization': orgName,
     'Status': 'All sync data cleared',
   }))

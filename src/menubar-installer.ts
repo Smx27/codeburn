@@ -134,7 +134,7 @@ async function sysProductVersion(): Promise<string> {
 async function fetchLatestReleaseAssets(): Promise<ResolvedAssets> {
   const response = await fetchWithProxy(RELEASE_API, {
     headers: {
-      'User-Agent': 'aiinsight-menubar-installer',
+      'User-Agent': 'niriksh-menubar-installer',
       Accept: 'application/vnd.github+json',
     },
   })
@@ -147,7 +147,7 @@ async function fetchLatestReleaseAssets(): Promise<ResolvedAssets> {
 
 async function verifyChecksum(archivePath: string, checksumUrl: string): Promise<void> {
   const response = await fetchWithProxy(checksumUrl, {
-    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
+    headers: { 'User-Agent': 'niriksh-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok) {
@@ -169,7 +169,7 @@ async function verifyChecksum(archivePath: string, checksumUrl: string): Promise
 
 async function downloadToFile(url: string, destPath: string): Promise<void> {
   const response = await fetchWithProxy(url, {
-    headers: { 'User-Agent': 'aiinsight-menubar-installer' },
+    headers: { 'User-Agent': 'niriksh-menubar-installer' },
     redirect: 'follow',
   })
   if (!response.ok || response.body === null) {
@@ -279,7 +279,7 @@ export async function installMenubarApp(options: { force?: boolean } = {}): Prom
   console.log('Looking up the latest CodeBurn Menubar release...')
   const { zip, checksum } = await fetchLatestReleaseAssets()
 
-  const stagingDir = await mkdtemp(join(tmpdir(), 'aiinsight-menubar-'))
+  const stagingDir = await mkdtemp(join(tmpdir(), 'niriksh-menubar-'))
   try {
     const archivePath = join(stagingDir, zip.name)
     console.log(`Downloading ${zip.name}...`)

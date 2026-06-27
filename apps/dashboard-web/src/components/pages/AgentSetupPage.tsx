@@ -42,19 +42,19 @@ function relativeTime(dateStr: string | null): string {
 
 const INSTALL_COMMANDS: Record<string, { label: string; cmd: string }[]> = {
   Windows: [
-    { label: 'Install', cmd: 'iex (irm -Uri "https://get.aiinsight.dev")' },
-    { label: 'Configure', cmd: 'aiinsight configure --key <YOUR_ENROLLMENT_KEY>' },
-    { label: 'Start', cmd: 'aiinsight start' },
+    { label: 'Install', cmd: 'irm https://niriksh.titanbyte.in/install.ps1 | iex' },
+    { label: 'Login', cmd: 'niriksh login' },
+    { label: 'Start', cmd: 'niriksh sync' },
   ],
   macOS: [
-    { label: 'Install', cmd: 'curl -fsSL https://get.aiinsight.dev | sh' },
-    { label: 'Configure', cmd: 'aiinsight configure --key <YOUR_ENROLLMENT_KEY>' },
-    { label: 'Start', cmd: 'aiinsight start' },
+    { label: 'Install', cmd: 'curl -fsSL https://niriksh.titanbyte.in/install.sh | bash' },
+    { label: 'Login', cmd: 'niriksh login' },
+    { label: 'Start', cmd: 'niriksh sync' },
   ],
   Linux: [
-    { label: 'Install', cmd: 'curl -fsSL https://get.aiinsight.dev | sh' },
-    { label: 'Configure', cmd: 'aiinsight configure --key <YOUR_ENROLLMENT_KEY>' },
-    { label: 'Start', cmd: 'aiinsight start' },
+    { label: 'Install', cmd: 'curl -fsSL https://niriksh.titanbyte.in/install.sh | bash' },
+    { label: 'Login', cmd: 'niriksh login' },
+    { label: 'Start', cmd: 'niriksh sync' },
   ],
 };
 
@@ -473,11 +473,11 @@ export function AgentSetupPage() {
         <CardContent>
           <div className="space-y-2">
             {[
-              { platform: 'Windows', arch: 'x86_64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight.exe' },
-              { platform: 'macOS', arch: 'Apple Silicon', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-darwin-arm64' },
-              { platform: 'macOS', arch: 'Intel', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-darwin-x64' },
-              { platform: 'Linux', arch: 'x86_64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-linux-x64' },
-              { platform: 'Linux', arch: 'ARM64', url: 'https://github.com/getagentseal/codeburn/releases/latest/download/aiinsight-linux-arm64' },
+              { platform: 'Windows', arch: 'x86_64', url: 'https://github.com/Smx27/codeburn/releases/latest/download/niriksh.exe' },
+              { platform: 'macOS', arch: 'Apple Silicon', url: 'https://github.com/Smx27/codeburn/releases/latest/download/niriksh-darwin-arm64' },
+              { platform: 'macOS', arch: 'Intel', url: 'https://github.com/Smx27/codeburn/releases/latest/download/niriksh-darwin-x64' },
+              { platform: 'Linux', arch: 'x86_64', url: 'https://github.com/Smx27/codeburn/releases/latest/download/niriksh-linux-x64' },
+              { platform: 'Linux', arch: 'ARM64', url: 'https://github.com/Smx27/codeburn/releases/latest/download/niriksh-linux-arm64' },
             ].map((link) => (
               <div key={`${link.platform}-${link.arch}`} className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors">
                 <div className="flex items-center gap-3">

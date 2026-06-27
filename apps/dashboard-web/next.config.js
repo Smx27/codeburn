@@ -20,6 +20,8 @@ if (!parsed.success) {
 
 /** @type {import('next').NextConfig} */
 const path = require('path');
+const fs = require('fs');
+
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
@@ -28,6 +30,24 @@ const nextConfig = {
       '@splinetool/react-spline': path.resolve(__dirname, '../../node_modules/@splinetool/react-spline/dist/react-spline.js'),
     };
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: '/install.sh',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=3600' },
+        ],
+      },
+      {
+        source: '/install.ps1',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=3600' },
+        ],
+      },
+    ];
   },
   async rewrites() {
     return [

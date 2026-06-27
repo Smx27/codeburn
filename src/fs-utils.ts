@@ -19,7 +19,7 @@ function verbose(): boolean {
 }
 
 function warn(msg: string): void {
-  if (verbose()) process.stderr.write(`aiinsight: ${msg}\n`)
+  if (verbose()) process.stderr.write(`niriksh: ${msg}\n`)
 }
 
 export async function readSessionFile(filePath: string): Promise<string | null> {

@@ -151,7 +151,7 @@ if (blobSize < 100000) {
 // Step 4: Copy the node binary
 const isWindows = platform === 'win32'
 const nodeBinary = isWindows ? 'node.exe' : 'node'
-const seaBinary = isWindows ? 'aiinsight.exe' : `aiinsight-${platform}-${arch}`
+const seaBinary = isWindows ? 'niriksh.exe' : `niriksh-${platform}-${arch}`
 const seaBinPath = join(distDir, seaBinary)
 
 const nodePath = execSync('which node', { encoding: 'utf-8' }).trim()

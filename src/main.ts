@@ -136,7 +136,7 @@ async function runJsonReport(period: Period, provider: string, project: string[]
 }
 
 const program = new Command()
-  .name('aiinsight')
+  .name('niriksh')
   .description('AI Usage Intelligence Platform')
   .version(version)
   .option('--verbose', 'print warnings to stderr on read failures and skipped files')
@@ -637,7 +637,7 @@ program
       return
     }
 
-    const defaultName = `aiinsight-${toDateString(new Date())}`
+    const defaultName = `niriksh-${toDateString(new Date())}`
     const outputPath = opts.output ?? `${defaultName}.${opts.format}`
 
     let savedPath: string
@@ -682,7 +682,7 @@ program
 
 program
   .command('currency [code]')
-  .description('Set display currency (e.g. aiinsight currency GBP)')
+  .description('Set display currency (e.g. niriksh currency GBP)')
   .option('--symbol <symbol>', 'Override the currency symbol')
   .option('--reset', 'Reset to USD (removes currency config)')
   .action(async (code?: string, opts?: { symbol?: string; reset?: boolean }) => {
@@ -733,7 +733,7 @@ program
 
 program
   .command('model-alias [from] [to]')
-  .description('Map a provider model name to a canonical one for pricing (e.g. aiinsight model-alias my-model claude-opus-4-6)')
+  .description('Map a provider model name to a canonical one for pricing (e.g. niriksh model-alias my-model claude-opus-4-6)')
   .option('--remove <from>', 'Remove an alias')
   .option('--list', 'List configured aliases')
   .action(async (from?: string, to?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -769,7 +769,7 @@ program
     }
 
     if (!from || !to) {
-      console.error(renderError('Usage: aiinsight model-alias <from> <to>'))
+      console.error(renderError('Usage: niriksh model-alias <from> <to>'))
       process.exitCode = 1
       return
     }
@@ -786,7 +786,7 @@ program
 
 program
   .command('model-savings [local] [baseline]')
-  .description('Track a local model as "savings" rather than cost. Maps a local-model name to a paid baseline so the dashboard can show what the same tokens would have cost on the baseline (e.g. aiinsight model-savings "llama3.1:8b" gpt-4o). The local call itself still costs $0 — actual cost is left untouched.')
+  .description('Track a local model as "savings" rather than cost. Maps a local-model name to a paid baseline so the dashboard can show what the same tokens would have cost on the baseline (e.g. niriksh model-savings "llama3.1:8b" gpt-4o). The local call itself still costs $0 — actual cost is left untouched.')
   .option('--remove <local>', 'Remove a savings mapping for the given local model')
   .option('--list', 'List configured savings mappings')
   .action(async (local?: string, baseline?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -798,7 +798,7 @@ program
       if (entries.length === 0) {
         console.log('\n  No local-model savings mappings configured.')
         console.log(`  Config: ${getConfigFilePath()}`)
-        console.log('  Add one with: aiinsight model-savings <local-model> <baseline-model>\n')
+        console.log('  Add one with: niriksh model-savings <local-model> <baseline-model>\n')
       } else {
         console.log('\n  Local-model savings mappings:')
         for (const [src, dst] of entries) {
@@ -823,7 +823,7 @@ program
     }
 
     if (!local || !baseline) {
-      console.error(renderError('Usage: aiinsight model-savings <local-model> <baseline-model>'))
+      console.error(renderError('Usage: niriksh model-savings <local-model> <baseline-model>'))
       process.exitCode = 1
       return
     }
@@ -845,7 +845,7 @@ program
 
 program
   .command('proxy-path [path]')
-  .description('Mark a project directory as routed through a subscription-backed LLM proxy (e.g. Claude Code over GitHub Copilot). Sessions whose canonical path is under it keep their full API-rate cost as the "would-be" figure, but that amount is reported as subscription-covered so the report can show net out-of-pocket (e.g. aiinsight proxy-path ~/work/copilot-repo). Actual API-key sessions elsewhere are untouched.')
+  .description('Mark a project directory as routed through a subscription-backed LLM proxy (e.g. Claude Code over GitHub Copilot). Sessions whose canonical path is under it keep their full API-rate cost as the "would-be" figure, but that amount is reported as subscription-covered so the report can show net out-of-pocket (e.g. niriksh proxy-path ~/work/copilot-repo). Actual API-key sessions elsewhere are untouched.')
   .option('--remove <path>', 'Remove a configured proxy path')
   .option('--list', 'List configured proxy paths')
   .action(async (path?: string, opts?: { remove?: string; list?: boolean }) => {
@@ -861,7 +861,7 @@ program
       if (paths.length === 0) {
         console.log('\n  No proxy paths configured.')
         console.log(`  Config: ${getConfigFilePath()}`)
-        console.log('  Add one with: aiinsight proxy-path <project-dir>\n')
+        console.log('  Add one with: niriksh proxy-path <project-dir>\n')
       } else {
         console.log('\n  Proxy paths (sessions under these are subscription-covered):')
         for (const p of paths) console.log(`    ${p}`)
@@ -885,14 +885,14 @@ program
     }
 
     if (!path) {
-      console.error(renderError('Usage: aiinsight proxy-path <project-dir>'))
+      console.error(renderError('Usage: niriksh proxy-path <project-dir>'))
       process.exitCode = 1
       return
     }
 
     const trimmed = path.trim()
     if (!isAbsolute(trimmed) || normalizeProxyPath(trimmed) === '') {
-      console.error(renderError(`Proxy path must be an absolute project directory (got: ${path}).\n  aiinsight matches sessions by their recorded absolute cwd; the\n  filesystem root is too broad and is not accepted.`))
+      console.error(renderError(`Proxy path must be an absolute project directory (got: ${path}).\n  niriksh matches sessions by their recorded absolute cwd; the\n  filesystem root is too broad and is not accepted.`))
       process.exitCode = 1
       return
     }
@@ -968,7 +968,7 @@ program
     }
 
     if (mode !== 'set') {
-      console.error(renderError('Usage: aiinsight plan [set <id> | reset]'))
+      console.error(renderError('Usage: niriksh plan [set <id> | reset]'))
       process.exitCode = 1
       return
     }
@@ -1171,7 +1171,7 @@ program
           : '\n  Antigravity CLI usage capture removed.\n')
         return
       }
-      console.error(renderError('Usage: aiinsight antigravity-hook <install|uninstall>'))
+      console.error(renderError('Usage: niriksh antigravity-hook <install|uninstall>'))
       process.exit(1)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -1201,7 +1201,7 @@ program
 
 program
   .command('sync')
-  .description('Sync historical and incremental usage to AiInsight Cloud')
+  .description('Sync historical and incremental usage to Niriksh Cloud')
   .option('--org-id <uuid>', 'Organization ID')
   .option('--machine-id <uuid>', 'Machine ID (auto-generated if not provided)')
   .option('--api-url <url>', 'Override ingestion API URL (default: from login config)')
@@ -1281,7 +1281,7 @@ program
 
 program
   .command('login')
-  .description('Connect to AIInsight Cloud with your API key')
+  .description('Connect to Niriksh Cloud with your API key')
   .option('--api-url <url>', 'API URL (default: http://localhost:3002)')
   .action(async (opts) => {
     const { runLogin } = await import('./commands/login.js')
@@ -1290,7 +1290,7 @@ program
 
 program
   .command('logout')
-  .description('Disconnect from AIInsight Cloud and clear sync data')
+  .description('Disconnect from Niriksh Cloud and clear sync data')
   .option('--force', 'Skip confirmation')
   .action(async (opts) => {
     const { runLogout } = await import('./commands/logout.js')

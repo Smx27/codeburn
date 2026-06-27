@@ -2,15 +2,15 @@
 
 set -euo pipefail
 
-WORK_DIR="${BINARY_TEST_WORK_DIR:-/tmp/aiinsight-binary-test}"
+WORK_DIR="${BINARY_TEST_WORK_DIR:-/tmp/niriksh-binary-test}"
 ARTIFACT_DIR="$WORK_DIR/artifacts"
 HOME_DIR="$WORK_DIR/home"
 REPORT_PATH="${BINARY_REPORT_PATH:-$WORK_DIR/binary-report.json}"
-BINARY_NAME="aiinsight-linux-x64"
+BINARY_NAME="niriksh-linux-x64"
 BINARY_PATH="$ARTIFACT_DIR/$BINARY_NAME"
 SHA_PATH="$ARTIFACT_DIR/SHA256SUMS"
-MOUNTED_BINARY_PATH="${AIINSIGHT_BINARY_PATH:-}"
-MOUNTED_SHA_PATH="${AIINSIGHT_SHA_PATH:-}"
+MOUNTED_BINARY_PATH="${NIRIKSH_BINARY_PATH:-}"
+MOUNTED_SHA_PATH="${NIRIKSH_SHA_PATH:-}"
 
 mkdir -p "$ARTIFACT_DIR" "$HOME_DIR"
 
@@ -181,7 +181,7 @@ test_login_and_config() {
   fi
   echo "  login: $RESULT_LOGIN"
 
-  local config_dir="$HOME_DIR/.config/aiinsight"
+  local config_dir="$HOME_DIR/.config/niriksh"
   local missing=()
   [[ -f "$config_dir/config.json" ]] || missing+=("config.json")
   [[ -f "$config_dir/machine-id" ]] || missing+=("machine-id")
@@ -200,7 +200,7 @@ test_login_and_config() {
 
 test_corrupt_config() {
   echo "=== Test: Corrupt Config ==="
-  local config_dir="$HOME_DIR/.config/aiinsight"
+  local config_dir="$HOME_DIR/.config/niriksh"
   local out="$WORK_DIR/corrupt.log"
   mkdir -p "$config_dir"
   printf '{invalid-json\n' >"$config_dir/config.json"
@@ -226,7 +226,7 @@ test_queue_recovery() {
   run_cmd "$out" "$BINARY_PATH" sync || code=$?
   SYNC_OUTPUT="$(cat "$out" 2>/dev/null || true)"
 
-  local queue_dir="$HOME_DIR/.config/aiinsight/upload-queue"
+  local queue_dir="$HOME_DIR/.config/niriksh/upload-queue"
   if [[ -d "$queue_dir" ]]; then
     RESULT_QUEUE="PASS"
   else

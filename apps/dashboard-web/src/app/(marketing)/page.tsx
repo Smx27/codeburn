@@ -101,7 +101,7 @@ const steps = [
     icon: Download,
     title: 'Install CLI',
     description: 'One-line install. Supports macOS, Linux, and Windows.',
-    command: 'curl -fsSL https://niriksh.dev/install.sh | sh',
+    command: 'curl -fsSL https://niriksh.titanbyte.in/install.sh | bash',
   },
   {
     icon: Zap,

@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# AIInsight Installer Script
-# Downloads and installs the AIInsight CLI binary for the current platform.
-# Usage: curl -fsSL https://raw.githubusercontent.com/getagentseal/codeburn/main/scripts/install.sh | bash
+# Niriksh Installer Script
+# Downloads and installs the Niriksh CLI binary for the current platform.
+# Usage: curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
 #
 # Environment variables:
-#   AIINSIGHT_VERSION    — Pin a specific version (default: latest)
-#   AIINSIGHT_INSTALL_DIR — Install directory (default: /usr/local/bin)
-#   DOWNLOAD_BASE_URL    — Override the download base URL
+#   NIRIKSH_VERSION    — Pin a specific version (default: latest)
+#   NIRIKSH_INSTALL_DIR — Install directory (default: /usr/local/bin)
+#   DOWNLOAD_BASE_URL  — Override the download base URL
 
 set -euo pipefail
 
-DOWNLOAD_BASE="${DOWNLOAD_BASE_URL:-https://releases.getagentseal.dev/codeburn}"
-INSTALL_DIR="${AIINSIGHT_INSTALL_DIR:-/usr/local/bin}"
-VERSION="${AIINSIGHT_VERSION:-latest}"
+DOWNLOAD_BASE="${DOWNLOAD_BASE_URL:-https://github.com/Smx27/codeburn/releases}"
+INSTALL_DIR="${NIRIKSH_INSTALL_DIR:-/usr/local/bin}"
+VERSION="${NIRIKSH_VERSION:-latest}"
 
 # Detect platform and architecture
 detect_platform() {
@@ -42,7 +42,7 @@ detect_platform() {
 
 # Get latest version from GitHub API
 get_latest_version() {
-  local api_url="https://api.github.com/repos/getagentseal/codeburn/releases/latest"
+  local api_url="https://api.github.com/repos/Smx27/codeburn/releases/latest"
   local version
 
   if command -v curl &>/dev/null; then
@@ -75,15 +75,15 @@ main() {
     version="$VERSION"
   fi
 
-  echo "Installing AIInsight ${version}..."
+  echo "Installing Niriksh ${version}..."
 
   # Determine filename based on platform
   case "$platform" in
     linux-x64|linux-arm64|darwin-x64|darwin-arm64)
-      url="${DOWNLOAD_BASE}/${version}/aiinsight-${platform}"
+      url="${DOWNLOAD_BASE}/download/niriksh-${platform}"
       ;;
     win32-*)
-      url="${DOWNLOAD_BASE}/${version}/aiinsight.exe"
+      url="${DOWNLOAD_BASE}/download/niriksh.exe"
       ;;
   esac
 
@@ -102,7 +102,7 @@ main() {
   fi
 
   # Verify checksum if SHA256SUMS is available
-  local sums_url="${DOWNLOAD_BASE}/${version}/SHA256SUMS"
+  local sums_url="${DOWNLOAD_BASE}/download/SHA256SUMS"
   if command -v curl &>/dev/null; then
     curl -fsSL "$sums_url" -o "${tmp_file}.sha256" 2>/dev/null || true
   fi
@@ -124,16 +124,16 @@ main() {
 
   # Install
   mkdir -p "$INSTALL_DIR"
-  mv "$tmp_file" "${INSTALL_DIR}/aiinsight"
-  chmod 755 "${INSTALL_DIR}/aiinsight"
+  mv "$tmp_file" "${INSTALL_DIR}/niriksh"
+  chmod 755 "${INSTALL_DIR}/niriksh"
   trap - EXIT
 
   echo ""
-  echo "AIInsight installed successfully to ${INSTALL_DIR}/aiinsight"
+  echo "Niriksh installed successfully to ${INSTALL_DIR}/niriksh"
   echo ""
   echo "Quick start:"
-  echo "  aiinsight login"
-  echo "  aiinsight sync"
+  echo "  niriksh login"
+  echo "  niriksh sync"
   echo ""
 }
 

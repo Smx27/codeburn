@@ -42,7 +42,7 @@ export function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-[400px]">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">AiInsight Dashboard</CardTitle>
+          <CardTitle className="text-2xl">Niriksh Dashboard</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>

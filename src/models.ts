@@ -505,7 +505,7 @@ const warnedUnknownModels: Record<string, boolean> = {}
 
 /// Heuristic for "this looks like a local model that will never be in LiteLLM's
 /// pricing JSON". We suppress the unknown-model warning for these because the
-/// "update aiinsight" advice can't help — local Ollama models, llama.cpp tags,
+/// "update niriksh" advice can't help — local Ollama models, llama.cpp tags,
 /// LM Studio loads, etc. are billed locally and don't have public pricing.
 /// Users still get $0 in cost reports for them (correct — local inference is
 /// effectively free); the warning was just noise.
@@ -520,15 +520,15 @@ function looksLikeLocalModel(name: string): boolean {
 function shouldWarnAboutUnknownModel(name: string): boolean {
   if (!name || name === '<synthetic>') return false
   if (warnedUnknownModels[name]) return false
-  // Suppress for local/quantized models — the "update aiinsight" hint is
+  // Suppress for local/quantized models — the "update niriksh" hint is
   // actively misleading there. Users who need cost visibility for local
-  // inference can still set an alias via `aiinsight model-alias`.
+  // inference can still set an alias via `niriksh model-alias`.
   if (looksLikeLocalModel(name)) return false
   // The warning fired on every CLI invocation (including the default
   // dashboard) which made first launches look broken — three "no pricing
   // data" lines greet a user before the dashboard even draws. Now opt-in
   // via --verbose. The unknown model still costs $0 in reports; users who
-  // suspect missing models run `aiinsight --verbose` to see the list.
+  // suspect missing models run `niriksh --verbose` to see the list.
   if (process.env['AIINSIGHT_VERBOSE'] !== '1') return false
   return true
 }
@@ -551,10 +551,10 @@ export function calculateCost(
       // payloads written by external tools, so a hostile or corrupt file
       // could embed terminal escape sequences here.
       const safeName = model.replace(/[\x00-\x1F\x7F-\x9F]/g, '?').slice(0, 200)
-      const aliasHint = `Map it with: aiinsight model-alias "${safeName}" <known-model>, or track local-model savings with: aiinsight model-savings "${safeName}" <baseline-model>`
+      const aliasHint = `Map it with: niriksh model-alias "${safeName}" <known-model>, or track local-model savings with: niriksh model-savings "${safeName}" <baseline-model>`
       process.stderr.write(
-        `aiinsight: no pricing data for model "${safeName}" — costs for this model will show $0. ` +
-        `${aliasHint}, or update with: npx aiinsight@latest.\n`
+        `niriksh: no pricing data for model "${safeName}" — costs for this model will show $0. ` +
+        `${aliasHint}, or update with: npx niriksh@latest.\n`
       )
     }
     return 0

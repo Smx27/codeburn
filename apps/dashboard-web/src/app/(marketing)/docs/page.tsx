@@ -104,7 +104,7 @@ export default function DocsPage() {
             Can&apos;t find what you&apos;re looking for?
           </p>
           <Button variant="outline" asChild>
-            <Link href="mailto:support@aiinsight.dev">
+            <Link href="mailto:support@niriksh.dev">
               Contact Support
               <ExternalLink className="ml-2 h-4 w-4" />
             </Link>

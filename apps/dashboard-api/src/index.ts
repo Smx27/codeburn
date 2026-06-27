@@ -63,7 +63,7 @@ app.use('/api/v1', healthRoutes);
 
 app.get('/', (req, res) => {
   res.json({
-    name: 'AiInsight Dashboard API',
+    name: 'Niriksh Dashboard API',
     version: process.env.npm_package_version ?? '0.1.0',
     docs: '/api/v1/health',
   });

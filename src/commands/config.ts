@@ -32,12 +32,12 @@ async function showConfig(): Promise<void> {
   const config = await readConfig()
 
   console.log('')
-  console.log(`  ${BOLD.cyan('AIInsight')} ${DIM('Configuration')}`)
+  console.log(`  ${BOLD.cyan('Niriksh')} ${DIM('Configuration')}`)
   console.log('')
 
   if (!syncConfig.organizationId) {
-    console.log(`  ${YELLOW('⚠')} Not connected to AIInsight Cloud.`)
-    console.log(`    Run ${BOLD.cyan('aiinsight login')} to connect.\n`)
+    console.log(`  ${YELLOW('⚠')} Not connected to Niriksh Cloud.`)
+    console.log(`    Run ${BOLD.cyan('niriksh login')} to connect.\n`)
     return
   }
 
@@ -86,7 +86,7 @@ async function openConfigInEditor(): Promise<void> {
 
 async function resetConfig(): Promise<void> {
   const confirmed = await confirmAction(
-    'This will clear all sync configuration and disconnect from AIInsight Cloud. Continue?'
+    'This will clear all sync configuration and disconnect from Niriksh Cloud. Continue?'
   )
 
   if (!confirmed) {
@@ -100,7 +100,7 @@ async function resetConfig(): Promise<void> {
 
   console.log(renderSuccess('Configuration Reset', {
     'Status': 'Sync configuration cleared',
-    'Next Step': 'Run aiinsight login to reconnect',
+    'Next Step': 'Run niriksh login to reconnect',
   }))
 }
 

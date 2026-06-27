@@ -1,15 +1,15 @@
-# AIInsight Installer Script for Windows (PowerShell)
-# Downloads and installs the AIInsight CLI binary for Windows.
-# Usage: irm https://raw.githubusercontent.com/getagentseal/codeburn/main/scripts/install.ps1 | iex
+# Niriksh Installer Script for Windows (PowerShell)
+# Downloads and installs the Niriksh CLI binary for Windows.
+# Usage: irm https://niriksh.titanbyte.in/install.ps1 | iex
 #
 # Environment variables:
-#   AIINSIGHT_VERSION     — Pin a specific version (default: latest)
-#   AIINSIGHT_INSTALL_DIR — Install directory (default: $env:LOCALAPPDATA\AIInsight\bin)
-#   DOWNLOAD_BASE_URL     — Override the download base URL
+#   NIRIKSH_VERSION     — Pin a specific version (default: latest)
+#   NIRIKSH_INSTALL_DIR — Install directory (default: $env:LOCALAPPDATA\Niriksh\bin)
+#   DOWNLOAD_BASE_URL   — Override the download base URL
 
 param(
-    [string]$Version = $env:AIINSIGHT_VERSION,
-    [string]$InstallDir = $env:AIINSIGHT_INSTALL_DIR,
+    [string]$Version = $env:NIRIKSH_VERSION,
+    [string]$InstallDir = $env:NIRIKSH_INSTALL_DIR,
     [string]$DownloadBase = $env:DOWNLOAD_BASE_URL
 )
 
@@ -17,16 +17,16 @@ $ErrorActionPreference = "Stop"
 
 # Defaults
 if (-not $Version) { $Version = "latest" }
-if (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA "AIInsight\bin" }
-if (-not $DownloadBase) { $DownloadBase = "https://releases.getagentseal.dev/codeburn" }
+if (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA "Niriksh\bin" }
+if (-not $DownloadBase) { $DownloadBase = "https://github.com/Smx27/codeburn/releases" }
 
 function Get-LatestVersion {
-    $apiUrl = "https://api.github.com/repos/getagentseal/codeburn/releases/latest"
+    $apiUrl = "https://api.github.com/repos/Smx27/codeburn/releases/latest"
     $response = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing
     return $response.tag_name
 }
 
-function Install-AIInsight {
+function Install-Niriksh {
     # Resolve version
     if ($Version -eq "latest") {
         $resolvedVersion = Get-LatestVersion
@@ -36,8 +36,8 @@ function Install-AIInsight {
     }
 
     # Build download URL
-    $url = "$DownloadBase/$resolvedVersion/aiinsight.exe"
-    Write-Host "Downloading AIInsight $resolvedVersion..."
+    $url = "$DownloadBase/download/niriksh.exe"
+    Write-Host "Downloading Niriksh $resolvedVersion..."
 
     # Create temp file
     $tmpFile = [System.IO.Path]::GetTempFileName()
@@ -47,7 +47,7 @@ function Install-AIInsight {
         Invoke-WebRequest -Uri $url -OutFile $tmpFile -UseBasicParsing
 
         # Verify checksum
-        $sumsUrl = "$DownloadBase/$resolvedVersion/SHA256SUMS"
+        $sumsUrl = "$DownloadBase/download/SHA256SUMS"
         try {
             $sumsContent = Invoke-WebRequest -Uri $sumsUrl -UseBasicParsing -ErrorAction Stop
             $expectedHash = ($sumsContent.Content -split '\s+')[0]
@@ -67,7 +67,7 @@ function Install-AIInsight {
             New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
         }
 
-        $destPath = Join-Path $InstallDir "aiinsight.exe"
+        $destPath = Join-Path $InstallDir "niriksh.exe"
         Move-Item -Path $tmpFile -Destination $destPath -Force
         Write-Host "Installed to: $destPath"
 
@@ -80,11 +80,11 @@ function Install-AIInsight {
         }
 
         Write-Host ""
-        Write-Host "AIInsight installed successfully!" -ForegroundColor Green
+        Write-Host "Niriksh installed successfully!" -ForegroundColor Green
         Write-Host ""
         Write-Host "Quick start:"
-        Write-Host "  aiinsight login"
-        Write-Host "  aiinsight sync"
+        Write-Host "  niriksh login"
+        Write-Host "  niriksh sync"
     } catch {
         if (Test-Path $tmpFile) { Remove-Item $tmpFile -Force }
         Write-Error "Installation failed: $_"
@@ -92,4 +92,4 @@ function Install-AIInsight {
     }
 }
 
-Install-AIInsight
+Install-Niriksh

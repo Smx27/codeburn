@@ -52,7 +52,7 @@ app.use('/api', openapiRoutes);
 
 app.get('/', (req, res) => {
   res.json({ 
-    name: 'AiInsight Ingestion API',
+    name: 'Niriksh Ingestion API',
     version: process.env.npm_package_version ?? '0.1.0',
     docs: '/api/docs',
     openapi: '/api/openapi.json'

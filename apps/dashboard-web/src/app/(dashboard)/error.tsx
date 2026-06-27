@@ -37,7 +37,7 @@ export default function DashboardError({
               Try Again
             </Button>
             <Button asChild variant="ghost" size="sm">
-              <a href="mailto:support@aiinsight.dev">
+              <a href="mailto:support@niriksh.dev">
                 <Mail className="mr-2 h-4 w-4" />
                 Contact Support
               </a>

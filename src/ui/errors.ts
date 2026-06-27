@@ -18,7 +18,7 @@ export function renderValidationError(field: string, message: string): string {
 }
 
 export function renderMissingConfig(key: string): string {
-  return renderError(`${key} is required. Set with --${key.toLowerCase().replace(/_/g, '-')} or configure via aiinsight config.`)
+  return renderError(`${key} is required. Set with --${key.toLowerCase().replace(/_/g, '-')} or configure via niriksh config.`)
 }
 
 export function renderSyncError(message: string): string {

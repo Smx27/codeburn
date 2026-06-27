@@ -22,7 +22,7 @@ function runCli(args: string[], home: string) {
 }
 
 function readConfig(home: string): Promise<Record<string, unknown>> {
-  return readFile(join(home, '.config', 'codeburn', 'config.json'), 'utf-8')
+  return readFile(join(home, '.config', 'niriksh', 'config.json'), 'utf-8')
     .then(raw => JSON.parse(raw) as Record<string, unknown>)
 }
 

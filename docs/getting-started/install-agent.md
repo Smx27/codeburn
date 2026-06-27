@@ -1,6 +1,6 @@
 # Install Agent
 
-Platform-specific installation instructions for the AIInsight CLI agent.
+Platform-specific installation instructions for the Niriksh CLI agent.
 
 ## Requirements
 
@@ -22,67 +22,39 @@ Platform-specific installation instructions for the AIInsight CLI agent.
 
 ## macOS
 
-### Homebrew (Recommended)
+### Curl Installer (Recommended)
 
 ```bash
-# Add the tap
-brew tap aiinsight/tap
-
-# Install AIInsight
-brew install aiinsight
-```
-
-### Curl Installer
-
-```bash
-curl -fsSL https://get.aiinsight.dev/install.sh | bash
-```
-
-### npm
-
-```bash
-npm install -g aiinsight
+curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
 ```
 
 ### Verify Installation
 
 ```bash
-aiinsight --version
-# Expected: aiinsight v1.0.0 (or later)
+niriksh --version
+# Expected: niriksh v1.0.0 (or later)
 ```
 
 ### Optional: macOS Menubar App
 
 ```bash
-aiinsight menubar
+niriksh menubar
 ```
 
 This downloads and installs the native SwiftUI menubar app.
 
 ## Windows
 
-### winget (Recommended)
-
-```bash
-winget install AIInsight.CLI
-```
-
-### PowerShell Installer
+### PowerShell Installer (Recommended)
 
 ```powershell
-irm https://get.aiinsight.dev/install.ps1 | iex
-```
-
-### npm
-
-```bash
-npm install -g aiinsight
+irm https://niriksh.titanbyte.in/install.ps1 | iex
 ```
 
 ### Verify Installation
 
 ```powershell
-aiinsight --version
+niriksh --version
 ```
 
 ## Linux
@@ -90,160 +62,85 @@ aiinsight --version
 ### Curl Installer (Recommended)
 
 ```bash
-curl -fsSL https://get.aiinsight.dev/install.sh | bash
-```
-
-### apt (Debian/Ubuntu)
-
-```bash
-# Add the repository
-curl -fsSL https://repo.aiinsight.dev/gpg | sudo gpg --dearmor -o /usr/share/keyrings/aiinsight.gpg
-echo "deb [signed-by=/usr/share/keyrings/aiinsight.gpg] https://repo.aiinsight.dev stable main" | sudo tee /etc/apt/sources.list.d/aiinsight.list
-
-# Install
-sudo apt update
-sudo apt install aiinsight
-```
-
-### yum (RHEL/CentOS/Fedora)
-
-```bash
-sudo tee /etc/yum.repos.d/aiinsight.repo <<EOF
-[aiinsight]
-name=AIInsight
-baseurl=https://repo.aiinsight.dev/rpm
-enabled=1
-gpgcheck=1
-gpgkey=https://repo.aiinsight.dev/gpg
-EOF
-
-sudo yum install aiinsight
-```
-
-### npm
-
-```bash
-npm install -g aiinsight
+curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
 ```
 
 ### Verify Installation
 
 ```bash
-aiinsight --version
+niriksh --version
 ```
 
 ## Node SEA (Single Executable Application)
 
-AIInsight supports Node.js Single Executable Applications for environments without Node.js installed.
+Niriksh supports Node.js Single Executable Applications for environments without Node.js installed.
 
 ### Download
 
-Download the latest SEA binary from [GitHub Releases](https://github.com/getagentseal/codeburn/releases).
+Download the latest SEA binary from [GitHub Releases](https://github.com/Smx27/codeburn/releases) or use the [Downloads Page](https://niriksh.titanbyte.in/downloads).
 
 ### Install
 
 ```bash
 # macOS/Linux
-chmod +x aiinsight-sea
-sudo mv aiinsight-sea /usr/local/bin/aiinsight
+chmod +x niriksh-sea
+sudo mv niriksh-sea /usr/local/bin/niriksh
 
 # Windows
-# Move aiinsight-sea.exe to a directory in your PATH
+# Move niriksh-sea.exe to a directory in your PATH
 ```
 
 ### Verify
 
 ```bash
-aiinsight --version
+niriksh --version
 ```
 
 ## Post-Installation: Connect Agent
 
-After installation, connect your agent to your AIInsight Cloud organization:
+After installation, connect your agent to your Niriksh Cloud organization:
 
 ```bash
-aiinsight login
+niriksh login
 ```
 
 Paste your API key when prompted. See [Getting Started](getting-started.md) for details.
 
 ## Updating
 
-### Homebrew
-
-```bash
-brew upgrade aiinsight
-```
-
-### npm
-
-```bash
-npm update -g aiinsight
-```
-
 ### Curl Installer
 
 Re-run the install script:
 
 ```bash
-curl -fsSL https://get.aiinsight.dev/install.sh | bash
+curl -fsSL https://niriksh.titanbyte.in/install.sh | bash
 ```
 
 ## Uninstalling
 
-### Homebrew
-
-```bash
-brew uninstall aiinsight
-# Optional: remove the tap
-brew untap aiinsight/tap
-```
-
-### npm
-
-```bash
-npm uninstall -g aiinsight
-```
-
 ### Curl Installer
 
 ```bash
-rm ~/.local/bin/aiinsight
-```
-
-### Windows
-
-```powershell
-winget uninstall AIInsight.CLI
+rm /usr/local/bin/niriksh
 ```
 
 ### Remove Local Data
 
 ```bash
 # Remove cache and config
-rm -rf ~/.cache/aiinsight
-rm -rf ~/.config/aiinsight
+rm -rf ~/.cache/niriksh
+rm -rf ~/.config/niriksh
 ```
 
 ## Troubleshooting
 
-### `aiinsight: command not found`
+### `niriksh: command not found`
 
 The install location is not in your `PATH`.
 
-**npm global bin:**
+**Add to PATH:**
 ```bash
-# Find the npm global bin directory
-npm config get prefix
-# Add the bin directory to your PATH
-export PATH="$(npm config get prefix)/bin:$PATH"
-```
-
-**Homebrew:**
-```bash
-# Ensure Homebrew bin is in PATH
-eval "$(/opt/homebrew/bin/brew shellenv)"  # Apple Silicon
-eval "$(/usr/local/bin/brew shellenv)"     # Intel
+export PATH="/usr/local/bin:$PATH"
 ```
 
 ### `Permission denied`
@@ -278,7 +175,7 @@ npm install -g windows-build-tools
 ### Agent won't register
 
 - Verify your API key is valid: **Settings → API Keys** in the dashboard
-- Check network connectivity to `api.aiinsight.dev`
+- Check network connectivity to `niriksh.titanbyte.in`
 - Ensure the key hasn't been revoked
 
 See [Troubleshooting](troubleshooting.md) for more solutions.

@@ -328,7 +328,7 @@ function createParser(source: SessionSource, seenKeys: Set<string>): SessionPars
       try {
         db = openDatabase(dbPath)
       } catch (err) {
-        process.stderr.write(`aiinsight: cannot open Warp database: ${err instanceof Error ? err.message : err}\n`)
+        process.stderr.write(`niriksh: cannot open Warp database: ${err instanceof Error ? err.message : err}\n`)
         return
       }
 

@@ -32,7 +32,7 @@ describe('codeburn plan command', () => {
       const setCodexResult = runCli(['plan', 'set', 'custom', '--monthly-usd', '200', '--provider', 'codex'], home)
       expect(setCodexResult.status).toBe(0)
 
-      const configPath = join(home, '.config', 'codeburn', 'config.json')
+      const configPath = join(home, '.config', 'niriksh', 'config.json')
       const configRaw = await readFile(configPath, 'utf-8')
       const config = JSON.parse(configRaw) as { plans?: { claude?: { id?: string; monthlyUsd?: number }; codex?: { id?: string; monthlyUsd?: number } } }
       expect(config.plans?.claude?.id).toBe('claude-max')
@@ -60,7 +60,7 @@ describe('codeburn plan command', () => {
       expect(runCli(['plan', 'set', 'custom', '--monthly-usd', '200', '--provider', 'codex'], home).status).toBe(0)
       expect(runCli(['plan', 'reset', '--provider', 'codex'], home).status).toBe(0)
 
-      const configPath = join(home, '.config', 'codeburn', 'config.json')
+      const configPath = join(home, '.config', 'niriksh', 'config.json')
       const configRaw = await readFile(configPath, 'utf-8')
       const config = JSON.parse(configRaw) as { plans?: { claude?: { id?: string }; codex?: unknown } }
       expect(config.plans?.claude?.id).toBe('claude-max')
@@ -77,7 +77,7 @@ describe('codeburn plan command', () => {
       expect(runCli(['plan', 'set', 'claude-max'], home).status).toBe(0)
       expect(runCli(['plan', 'reset', '--provider', 'all'], home).status).toBe(0)
 
-      const configPath = join(home, '.config', 'codeburn', 'config.json')
+      const configPath = join(home, '.config', 'niriksh', 'config.json')
       const configRaw = await readFile(configPath, 'utf-8')
       const config = JSON.parse(configRaw) as { plans?: { claude?: { id?: string }; all?: unknown } }
       expect(config.plans?.claude?.id).toBe('claude-max')

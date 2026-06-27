@@ -58,10 +58,10 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: aiinsight-${{ matrix.platform }}-${{ matrix.arch }}
+          name: niriksh-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
-            dist/aiinsight-*
-            dist/aiinsight.exe
+            dist/niriksh-*
+            dist/niriksh.exe
             dist/SHA256SUMS
 
   release:
@@ -79,7 +79,7 @@ jobs:
       - name: Generate SHA256SUMS
         run: |
           cd artifacts
-          sha256sum aiinsight-* aiinsight.exe 2>/dev/null > SHA256SUMS || sha256sum aiinsight-* > SHA256SUMS
+          sha256sum niriksh-* niriksh.exe 2>/dev/null > SHA256SUMS || sha256sum niriksh-* > SHA256SUMS
           cat SHA256SUMS
 
       - name: Create GitHub Release
@@ -87,6 +87,6 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            artifacts/aiinsight-*
-            artifacts/aiinsight.exe
+            artifacts/niriksh-*
+            artifacts/niriksh.exe
             artifacts/SHA256SUMS

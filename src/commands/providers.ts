@@ -20,7 +20,7 @@ export async function runProviders(): Promise<void> {
   const providers = detectProviders()
 
   console.log('')
-  console.log(`  ${BOLD.cyan('AIInsight')} ${DIM('Provider Discovery')}`)
+  console.log(`  ${BOLD.cyan('Niriksh')} ${DIM('Provider Discovery')}`)
   console.log('')
 
   const maxName = Math.max(...providers.map((p) => p.name.length))
