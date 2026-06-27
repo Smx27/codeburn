@@ -18,7 +18,7 @@ export class SmtpProvider implements IMailProvider {
       throw new Error('SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables are required');
     }
 
-    this.from = process.env.SMTP_FROM || `AIInsight <${user}>`;
+    this.from = process.env.SMTP_FROM || `Niriksh <${user}>`;
     this.transporter = nodemailer.createTransport({
       host,
       port,

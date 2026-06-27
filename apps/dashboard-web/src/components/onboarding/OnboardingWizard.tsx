@@ -123,8 +123,8 @@ export function OnboardingWizard() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-glow">
               <Flame className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              AIInsight
+            <span className="text-lg font-bold tracking-tight text-foreground font-sora">
+              NIRIKSH
             </span>
           </div>
           <Button variant="ghost" size="sm" onClick={skipToEnd}>
@@ -168,7 +168,7 @@ export function OnboardingWizard() {
                         <Building2 className="h-6 w-6 text-primary" />
                       </div>
                       <h2 className="text-xl font-semibold text-foreground">
-                        Welcome to AIInsight
+                        Welcome to Niriksh
                       </h2>
                       <p className="text-sm text-muted-foreground mt-1">
                         Let&apos;s set up your organization to get started.

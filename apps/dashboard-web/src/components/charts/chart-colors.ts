@@ -18,23 +18,23 @@ export const CHART_COLORS = {
   ],
 
   providers: {
-    claude: '#8B5CF6',
-    codex: '#3B82F6',
-    cursor: '#10B981',
-    gemini: '#F59E0B',
-    warp: '#06B6D4',
-    opencode: '#EF4444',
+    claude: '#77FF47',
+    codex: '#4ADE80',
+    cursor: '#22C55E',
+    gemini: '#86EFAC',
+    warp: '#BBF7D0',
+    opencode: '#34D399',
   },
 
   models: [
-    '#8B5CF6',
-    '#3B82F6',
+    '#77FF47',
+    '#4ADE80',
+    '#22C55E',
+    '#86EFAC',
+    '#BBF7D0',
+    '#34D399',
     '#10B981',
-    '#F59E0B',
-    '#06B6D4',
-    '#EF4444',
-    '#EC4899',
-    '#84CC16',
+    '#059669',
   ],
 
   status: {

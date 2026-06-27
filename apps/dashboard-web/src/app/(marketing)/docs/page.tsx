@@ -54,7 +54,7 @@ export default function DocsPage() {
             Documentation
           </h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to get started with AIInsight.
+            Everything you need to get started with Niriksh.
           </p>
         </div>
 

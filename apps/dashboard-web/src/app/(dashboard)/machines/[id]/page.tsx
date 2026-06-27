@@ -22,7 +22,7 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
@@ -35,7 +35,10 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div
+        className="flex items-center gap-4 animate-fade-up"
+        style={{ animationDelay: '0ms' }}
+      >
         <Button variant="ghost" size="icon" asChild>
           <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4" />
@@ -46,7 +49,12 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
             {data.machine.hostname}
           </h1>
           <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
-            <Badge variant={data.machine.status === 'ONLINE' ? 'success' : 'secondary'}>
+            <Badge
+              className={data.machine.status === 'ONLINE'
+                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                : 'bg-muted/50 text-muted-foreground border-transparent'
+              }
+            >
               {data.machine.status}
             </Badge>
             {data.machine.os} &middot; {data.machine.architecture}
@@ -54,26 +62,29 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up"
+        style={{ animationDelay: '80ms' }}
+      >
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Total Sessions</div>
             <div className="text-2xl font-bold text-foreground">{data.stats.totalSessions}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Total Tokens</div>
             <div className="text-2xl font-bold text-foreground">{formatTokens(data.stats.totalTokens)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Total Cost</div>
             <div className="text-2xl font-bold text-foreground">{formatCurrency(data.stats.totalCost)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Last Seen</div>
             <div className="text-sm font-medium text-foreground mt-1">{formatRelativeTime(data.machine.lastSeen)}</div>
@@ -83,14 +94,20 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
 
       {/* Provider breakdown */}
       {data.providerBreakdown.length > 0 && (
-        <Card>
+        <Card
+          className="animate-fade-up border-white/[0.06] bg-white/[0.02] backdrop-blur-sm"
+          style={{ animationDelay: '160ms' }}
+        >
           <CardHeader>
             <CardTitle className="text-sm">Provider Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {data.providerBreakdown.map((p) => (
-                <div key={p.provider} className="flex items-center justify-between">
+                <div
+                  key={p.provider}
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.04] transition-colors"
+                >
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">{p.provider}</Badge>
                     <span className="text-sm text-muted-foreground">{p.sessions} sessions</span>
@@ -108,7 +125,10 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
 
       {/* Recent sessions */}
       {data.recentSessions.length > 0 && (
-        <Card>
+        <Card
+          className="animate-fade-up border-white/[0.06] bg-white/[0.02] backdrop-blur-sm"
+          style={{ animationDelay: '240ms' }}
+        >
           <CardHeader>
             <CardTitle className="text-sm">Recent Sessions</CardTitle>
           </CardHeader>
@@ -118,7 +138,7 @@ export default function MachineDetailPage({ params }: { params: Promise<{ id: st
                 <Link
                   key={session.id}
                   href={`/sessions/${session.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-white/[0.04] transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <Badge variant="outline" className="text-xs">{session.provider}</Badge>

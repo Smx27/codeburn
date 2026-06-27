@@ -125,26 +125,26 @@ export function UsersPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="h-9 w-40 bg-muted rounded animate-pulse" />
-          <div className="h-10 w-[180px] bg-muted rounded animate-pulse" />
+        <div className="flex items-center justify-between animate-fade-up" style={{ animationDelay: '0ms' }}>
+          <div className="h-9 w-40 bg-white/[0.06] rounded animate-pulse" />
+          <div className="h-10 w-[180px] bg-white/[0.06] rounded animate-pulse" />
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-muted rounded-lg animate-pulse" />
+            <div key={i} className="h-28 bg-white/[0.06] rounded-xl animate-pulse" />
           ))}
         </div>
-        <div className="h-[400px] bg-muted rounded-lg animate-pulse" />
+        <div className="h-[400px] bg-white/[0.06] rounded-xl animate-pulse" />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-fade-up" style={{ animationDelay: '0ms' }}>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">User Analytics</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white">User Analytics</h1>
+          <p className="text-sm text-white/40 mt-1">
             {formatNumber(totalActiveUsers)} active user{totalActiveUsers !== 1 ? 's' : ''} in this period
           </p>
         </div>
@@ -152,32 +152,32 @@ export function UsersPage() {
       </div>
 
       {/* User Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 animate-fade-up" style={{ animationDelay: '100ms' }}>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Total Active Users</p>
-                <p className="text-2xl font-bold mt-1">{formatNumber(totalActiveUsers)}</p>
+                <p className="text-xs text-white/40 font-medium">Total Active Users</p>
+                <p className="text-2xl font-bold mt-1 text-white">{formatNumber(totalActiveUsers)}</p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <Users className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground font-medium">Most Active User</p>
+                <p className="text-xs text-white/40 font-medium">Most Active User</p>
                 {mostActiveUser ? (
                   <>
-                    <p className="text-sm font-semibold mt-1 truncate">
+                    <p className="text-sm font-semibold mt-1 truncate text-white">
                       {mostActiveUser.userName || mostActiveUser.userEmail.split('@')[0]}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs text-white/40 mt-0.5">
                       {formatNumber(mostActiveUser.sessionCount)} sessions
                     </p>
                   </>
@@ -185,24 +185,24 @@ export function UsersPage() {
                   <p className="text-sm text-muted-foreground mt-1">—</p>
                 )}
               </div>
-              <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                <Crown className="h-5 w-5 text-amber-500" />
+              <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                <Crown className="h-5 w-5 text-amber-400" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground font-medium">Highest Spender</p>
+                <p className="text-xs text-white/40 font-medium">Highest Spender</p>
                 {highestSpender ? (
                   <>
-                    <p className="text-sm font-semibold mt-1 truncate">
+                    <p className="text-sm font-semibold mt-1 truncate text-white">
                       {highestSpender.userName || highestSpender.userEmail.split('@')[0]}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs text-white/40 mt-0.5">
                       {formatCurrency(highestSpender.cost)}
                     </p>
                   </>
@@ -210,22 +210,22 @@ export function UsersPage() {
                   <p className="text-sm text-muted-foreground mt-1">—</p>
                 )}
               </div>
-              <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                <Trophy className="h-5 w-5 text-emerald-500" />
+              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                <Trophy className="h-5 w-5 text-emerald-400" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Avg Sessions/User</p>
-                <p className="text-2xl font-bold mt-1">{avgSessionsPerUser.toFixed(1)}</p>
+                <p className="text-xs text-white/40 font-medium">Avg Sessions/User</p>
+                <p className="text-2xl font-bold mt-1 text-white">{avgSessionsPerUser.toFixed(1)}</p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-blue-500" />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -233,9 +233,9 @@ export function UsersPage() {
       </div>
 
       {/* User Leaderboard Table */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm animate-fade-up" style={{ animationDelay: '200ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">User Leaderboard</CardTitle>
+          <CardTitle className="text-base text-white/80">User Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           {pagedUsers.length === 0 ? (
@@ -248,19 +248,19 @@ export function UsersPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-3 px-3 font-medium text-muted-foreground w-16">Rank</th>
-                      <th className="text-left py-3 px-3 font-medium text-muted-foreground">User</th>
-                      <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('sessionCount')}>
+                    <tr className="border-b border-white/[0.06]">
+                      <th className="text-left py-3 px-3 font-medium text-white/40 w-16">Rank</th>
+                      <th className="text-left py-3 px-3 font-medium text-white/40">User</th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('sessionCount')}>
                         Sessions <SortArrow active={sortKey === 'sessionCount'} dir={sortDir} />
                       </th>
-                      <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('tokenCount')}>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('tokenCount')}>
                         Tokens <SortArrow active={sortKey === 'tokenCount'} dir={sortDir} />
                       </th>
-                      <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('cost')}>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('cost')}>
                         Cost <SortArrow active={sortKey === 'cost'} dir={sortDir} />
                       </th>
-                      <th className="text-right py-3 px-3 font-medium text-muted-foreground">Avg Cost/Session</th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40">Avg Cost/Session</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -272,8 +272,8 @@ export function UsersPage() {
                         <tr
                           key={user.userId}
                           className={cn(
-                            'border-b border-border/50 transition-colors',
-                            top3Style ? `${top3Style.bg} hover:brightness-95` : 'hover:bg-muted/30'
+                            'border-b border-white/[0.06] transition-colors hover:bg-white/[0.04]',
+                            top3Style ? `${top3Style.bg} hover:brightness-95` : ''
                           )}
                         >
                           <td className="py-3 px-3">
@@ -291,11 +291,11 @@ export function UsersPage() {
                                 {getInitials(user.userName || user.userEmail)}
                               </div>
                               <div className="min-w-0">
-                                <p className="font-medium truncate">
-                                  {user.userName || user.userEmail.split('@')[0]}
-                                </p>
-                                {user.userName && (
-                                  <p className="text-xs text-muted-foreground truncate">{user.userEmail}</p>
+                                  <p className="font-medium truncate text-white/80">
+                                    {user.userName || user.userEmail.split('@')[0]}
+                                  </p>
+                                  {user.userName && (
+                                    <p className="text-xs text-white/30 truncate">{user.userEmail}</p>
                                 )}
                               </div>
                             </div>
@@ -312,15 +312,15 @@ export function UsersPage() {
               </div>
 
               {totalPages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-border/50 mt-2">
-                  <p className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-between pt-4 border-t border-white/[0.06] mt-2">
+                  <p className="text-xs text-white/40">
                     Showing {page * USERS_PER_PAGE + 1}–{Math.min((page + 1) * USERS_PER_PAGE, sortedUsers.length)} of {sortedUsers.length}
                   </p>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => setPage((p) => Math.max(0, p - 1))}
                       disabled={page === 0}
-                      className="h-8 w-8 rounded-md flex items-center justify-center border border-border text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      className="h-8 w-8 rounded-md flex items-center justify-center border border-white/[0.06] text-white/40 hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
@@ -338,8 +338,8 @@ export function UsersPage() {
                           className={cn(
                             'h-8 w-8 rounded-md flex items-center justify-center text-xs font-medium transition-colors',
                             page === pageNum
-                              ? 'bg-primary text-primary-foreground'
-                              : 'text-muted-foreground hover:bg-muted'
+                              ? 'bg-emerald-500 text-white'
+                              : 'text-white/40 hover:bg-white/[0.06]'
                           )}
                         >
                           {pageNum + 1}
@@ -349,7 +349,7 @@ export function UsersPage() {
                     <button
                       onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                       disabled={page >= totalPages - 1}
-                      className="h-8 w-8 rounded-md flex items-center justify-center border border-border text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      className="h-8 w-8 rounded-md flex items-center justify-center border border-white/[0.06] text-white/40 hover:bg-white/[0.06] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </button>
@@ -362,10 +362,10 @@ export function UsersPage() {
       </Card>
 
       {/* User Activity Chart */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm animate-fade-up" style={{ animationDelay: '300ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">User Activity Over Time</CardTitle>
-          <p className="text-xs text-muted-foreground">Active users per day</p>
+          <CardTitle className="text-base text-white/80">User Activity Over Time</CardTitle>
+          <p className="text-xs text-white/30">Active users per day</p>
         </CardHeader>
         <CardContent>
           {activityChartData.length > 0 ? (
@@ -385,10 +385,10 @@ export function UsersPage() {
       </Card>
 
       {/* Provider Preferences by User */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm animate-fade-up" style={{ animationDelay: '400ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Provider Preferences by User</CardTitle>
-          <p className="text-xs text-muted-foreground">Top 10 users by session count</p>
+          <CardTitle className="text-base text-white/80">Provider Preferences by User</CardTitle>
+          <p className="text-xs text-white/30">Top 10 users by session count</p>
         </CardHeader>
         <CardContent>
           {providerPreferenceData.length > 0 && providerPreferenceSeries.length > 0 ? (
@@ -410,10 +410,10 @@ export function UsersPage() {
       </Card>
 
       {/* Activity Heatmap */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm animate-fade-up" style={{ animationDelay: '500ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Organization Activity Heatmap</CardTitle>
-          <p className="text-xs text-muted-foreground">Daily activity intensity over the past year</p>
+          <CardTitle className="text-base text-white/80">Organization Activity Heatmap</CardTitle>
+          <p className="text-xs text-white/30">Daily activity intensity over the past year</p>
         </CardHeader>
         <CardContent>
           <HeatmapChart

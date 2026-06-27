@@ -19,16 +19,16 @@ const periods: { value: Period; label: string }[] = [
 
 export function PeriodSelector({ value, onChange, className }: PeriodSelectorProps) {
   return (
-    <div className={cn('flex items-center rounded-lg border border-border bg-card p-0.5', className)}>
+    <div className={cn('flex items-center rounded-lg border border-white/[0.06] bg-white/[0.02] p-0.5', className)}>
       {periods.map((period) => (
         <button
           key={period.value}
           onClick={() => onChange(period.value)}
           className={cn(
-            'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+            'px-3 py-1.5 text-xs font-medium rounded-md transition-all',
             value === period.value
-              ? 'bg-primary text-primary-foreground shadow-sm'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              ? 'bg-primary/15 text-primary border border-primary/30 shadow-glow-green'
+              : 'text-white/40 hover:text-white/70 hover:bg-white/[0.04] border border-transparent'
           )}
         >
           {period.label}

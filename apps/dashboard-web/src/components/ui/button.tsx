@@ -12,12 +12,15 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-white/[0.1] bg-transparent hover:bg-white/[0.04] text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-white/[0.04] hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         glow: "bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover hover:shadow-glow-lg",
+        navCta: "text-foreground bg-nav-button hover:bg-nav-button/80 active:scale-[0.97] transition-all",
+        hero: "bg-primary text-primary-foreground px-6 py-3 md:px-8 md:py-4 text-sm rounded-sm cursor-pointer hover:brightness-110 transition-all active:scale-[0.97]",
+        heroOutline: "bg-white text-background px-6 py-3 md:px-8 md:py-4 text-sm rounded-sm cursor-pointer hover:brightness-90 transition-all active:scale-[0.97]",
       },
       size: {
         default: "h-10 px-4 py-2",

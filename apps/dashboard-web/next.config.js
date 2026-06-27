@@ -19,8 +19,16 @@ if (!parsed.success) {
 }
 
 /** @type {import('next').NextConfig} */
+const path = require('path');
 const nextConfig = {
   reactStrictMode: true,
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@splinetool/react-spline': path.resolve(__dirname, '../../node_modules/@splinetool/react-spline/dist/react-spline.js'),
+    };
+    return config;
+  },
   async rewrites() {
     return [
       {

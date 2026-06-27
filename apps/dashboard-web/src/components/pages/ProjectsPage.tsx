@@ -149,8 +149,8 @@ export function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Projects</h1>
+          <p className="text-sm text-white/40">
             Cost analytics and usage breakdowns across your projects
           </p>
         </div>
@@ -180,23 +180,23 @@ export function ProjectsPage() {
             icon: Activity,
           },
         ].map((stat) => (
-          <Card key={stat.label}>
+          <Card key={stat.label} className="border-white/[0.06] bg-white/[0.02]">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <p className="text-xs font-medium text-white/40 uppercase tracking-wider">
                     {stat.label}
                   </p>
-                  <p className="text-2xl font-bold mt-1">
+                  <p className="text-2xl font-bold mt-1 text-white">
                     {isLoading ? (
-                      <span className="inline-block h-7 w-20 animate-pulse rounded bg-muted" />
+                      <span className="inline-block h-7 w-20 animate-pulse rounded bg-white/[0.05]" />
                     ) : (
                       stat.value
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg bg-muted p-2">
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-xl bg-white/[0.05] p-2">
+                  <stat.icon className="h-4 w-4 text-white/40" />
                 </div>
               </div>
             </CardContent>
@@ -213,7 +213,7 @@ export function ProjectsPage() {
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)
             : top5.map((project, i) => (
-                <Card key={project.projectName} className="relative overflow-hidden">
+                <Card key={project.projectName} className="relative overflow-hidden border-white/[0.06] bg-white/[0.02]">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -223,10 +223,10 @@ export function ProjectsPage() {
                           {i + 1}
                         </span>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate" title={project.projectName}>
+                          <p className="text-sm font-semibold truncate text-white/80" title={project.projectName}>
                             {project.projectName}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-white/40">
                             {formatCurrency(project.cost)}
                           </p>
                         </div>
@@ -234,20 +234,20 @@ export function ProjectsPage() {
                     </div>
                     <div className="space-y-1.5 text-xs text-muted-foreground">
                       <div className="flex justify-between">
-                        <span>Sessions</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-white/40">Sessions</span>
+                        <span className="font-medium text-white/80">
                           {formatNumber(project.sessionCount)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Tokens</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-white/40">Tokens</span>
+                        <span className="font-medium text-white/80">
                           {formatTokens(project.tokenCount)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Avg / Session</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-white/40">Avg / Session</span>
+                        <span className="font-medium text-white/80">
                           {formatCurrency(
                             project.sessionCount > 0
                               ? project.cost / project.sessionCount
@@ -266,9 +266,9 @@ export function ProjectsPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-base">Project Cost Trends</CardTitle>
+            <CardTitle className="text-base text-white/80">Project Cost Trends</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -291,9 +291,9 @@ export function ProjectsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-base">Token Usage by Project</CardTitle>
+            <CardTitle className="text-base text-white/80">Token Usage by Project</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -317,9 +317,9 @@ export function ProjectsPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02]">
         <CardHeader>
-          <CardTitle className="text-base">Project Activity</CardTitle>
+          <CardTitle className="text-base text-white/80">Project Activity</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -332,13 +332,13 @@ export function ProjectsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border/50">
-                    <th className="text-left py-3 px-2 font-medium text-muted-foreground">Project</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Sessions</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Tokens</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Cost</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Avg Session</th>
-                    <th className="text-center py-3 px-2 font-medium text-muted-foreground">Status</th>
+                    <tr className="border-b border-white/[0.06]">
+                      <th className="text-left py-3 px-2 font-medium text-white/40">Project</th>
+                      <th className="text-right py-3 px-2 font-medium text-white/40">Sessions</th>
+                      <th className="text-right py-3 px-2 font-medium text-white/40">Tokens</th>
+                      <th className="text-right py-3 px-2 font-medium text-white/40">Cost</th>
+                      <th className="text-right py-3 px-2 font-medium text-white/40">Avg Session</th>
+                      <th className="text-center py-3 px-2 font-medium text-white/40">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -347,7 +347,7 @@ export function ProjectsPage() {
                     return (
                       <tr
                         key={project.projectName}
-                        className="border-b border-border/30 hover:bg-muted/30 transition-colors"
+                        className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
                       >
                         <td className="py-3 px-2">
                           <div className="flex items-center gap-2">
@@ -398,9 +398,9 @@ export function ProjectsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02]">
         <CardHeader>
-          <CardTitle className="text-base">Project Comparison</CardTitle>
+          <CardTitle className="text-base text-white/80">Project Comparison</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (

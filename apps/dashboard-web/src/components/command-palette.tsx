@@ -20,12 +20,9 @@ import {
   TrendingUp,
   Settings,
   Key,
-  Sun,
-  Moon,
   Copy,
   Plus,
 } from 'lucide-react';
-import { useTheme } from '@/lib/theme-context';
 
 const navigationItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -41,7 +38,6 @@ const navigationItems = [
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { resolved, toggleTheme } = useTheme();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -100,14 +96,6 @@ export function CommandPalette() {
           <CommandItem onSelect={() => { handleCopyApiUrl(); }}>
             <Copy className="mr-2 h-4 w-4" />
             <span>Copy API URL</span>
-          </CommandItem>
-          <CommandItem onSelect={() => { toggleTheme(); setOpen(false); }}>
-            {resolved === 'dark' ? (
-              <Sun className="mr-2 h-4 w-4" />
-            ) : (
-              <Moon className="mr-2 h-4 w-4" />
-            )}
-            <span>Toggle Theme</span>
           </CommandItem>
           <CommandItem onSelect={() => { handleNavigate('/settings/api-keys'); }}>
             <Plus className="mr-2 h-4 w-4" />

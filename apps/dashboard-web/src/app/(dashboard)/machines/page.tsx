@@ -49,7 +49,7 @@ export default function MachinesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Machines</h1>
           <p className="text-muted-foreground">Manage your synced machines</p>
         </div>
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -70,12 +70,12 @@ export default function MachinesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="animate-fade-up" style={{ animationDelay: '0ms' }}>
         <h1 className="text-3xl font-bold tracking-tight">Machines</h1>
         <p className="text-muted-foreground">Manage your synced machines</p>
       </div>
 
-      <Card>
+      <Card className="animate-fade-up border-white/[0.06] bg-white/[0.02] backdrop-blur-sm" style={{ animationDelay: '80ms' }}>
         <CardHeader>
           <CardTitle>Connected Machines</CardTitle>
         </CardHeader>
@@ -89,68 +89,75 @@ export default function MachinesPage() {
               </p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Machine</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>OS</TableHead>
-                  <TableHead>Agent Version</TableHead>
-                  <TableHead>Last Seen</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {machines.map((machine) => (
-                  <TableRow key={machine.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <div className="flex-shrink-0">
-                          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-                            <Monitor className="h-5 w-5 text-muted-foreground" />
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/[0.06] hover:bg-transparent">
+                    <TableHead>Machine</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>OS</TableHead>
+                    <TableHead>Agent Version</TableHead>
+                    <TableHead>Last Seen</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {machines.map((machine) => (
+                    <TableRow key={machine.id} className="border-white/[0.06] hover:bg-white/[0.04] transition-colors">
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <div className="flex-shrink-0">
+                            <div className="h-10 w-10 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                              <Monitor className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="font-medium">{machine.hostname}</p>
+                            <p className="text-sm text-muted-foreground">{machine.id.slice(0, 8)}...</p>
                           </div>
                         </div>
-                        <div>
-                          <p className="font-medium">{machine.hostname}</p>
-                          <p className="text-sm text-muted-foreground">{machine.id.slice(0, 8)}...</p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={machine.status === 'ONLINE' ? 'default' : 'secondary'}>
-                        {machine.status === 'ONLINE' ? (
-                          <Wifi className="h-3 w-3 mr-1" />
-                        ) : (
-                          <WifiOff className="h-3 w-3 mr-1" />
-                        )}
-                        {machine.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm">
-                        {machine.os || 'Unknown'} {machine.architecture ? `(${machine.architecture})` : ''}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm">{machine.agent_version || 'Unknown'}</span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm text-muted-foreground">
-                        {formatDistanceToNow(new Date(machine.last_seen), { addSuffix: true })}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        href={`/machines/${machine.id}`}
-                        className="text-primary hover:text-primary/80"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={machine.status === 'ONLINE'
+                            ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                            : 'bg-muted/50 text-muted-foreground border-transparent'
+                          }
+                        >
+                          {machine.status === 'ONLINE' ? (
+                            <Wifi className="h-3 w-3 mr-1" />
+                          ) : (
+                            <WifiOff className="h-3 w-3 mr-1" />
+                          )}
+                          {machine.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm">
+                          {machine.os || 'Unknown'} {machine.architecture ? `(${machine.architecture})` : ''}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm">{machine.agent_version || 'Unknown'}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDistanceToNow(new Date(machine.last_seen), { addSuffix: true })}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          href={`/machines/${machine.id}`}
+                          className="text-primary hover:text-primary/80"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

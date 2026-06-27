@@ -18,7 +18,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: [
-          "Inter",
+          "Sora",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -27,6 +27,13 @@ module.exports = {
           "Roboto",
           "Helvetica Neue",
           "Arial",
+          "sans-serif",
+        ],
+        sora: [
+          "Sora",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
           "sans-serif",
         ],
         mono: [
@@ -118,6 +125,8 @@ module.exports = {
           active: "hsl(var(--sidebar-active))",
           border: "hsl(var(--sidebar-border))",
         },
+        "nav-button": "hsl(var(--nav-button))",
+        "hero-bg": "hsl(var(--hero-bg))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -137,6 +146,7 @@ module.exports = {
         "glow-success": "0 0 20px -5px hsl(var(--success) / 0.3)",
         "glow-warning": "0 0 20px -5px hsl(var(--warning) / 0.3)",
         "glow-destructive": "0 0 20px -5px hsl(var(--destructive) / 0.3)",
+        "glow-green": "0 0 30px rgba(119, 255, 71, 0.15)",
       },
       keyframes: {
         "accordion-down": {
@@ -183,6 +193,14 @@ module.exports = {
           from: { opacity: "0", transform: "scale(0.95)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)", filter: "blur(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
+        "fade-sentinel": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -196,6 +214,8 @@ module.exports = {
         shimmer: "shimmer 1.5s ease-in-out infinite",
         "spin-slow": "spin-slow 3s linear infinite",
         "scale-in": "scale-in 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "fade-up": "fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fade-sentinel": "fade-sentinel 0.5s ease-out forwards",
       },
       spacing: {
         "4.5": "1.125rem",

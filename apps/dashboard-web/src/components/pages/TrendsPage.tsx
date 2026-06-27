@@ -172,8 +172,8 @@ export function TrendsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Trends</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Trends</h1>
+          <p className="text-sm text-white/40">
             Track usage patterns, cost trajectories, and week-over-week changes
           </p>
         </div>
@@ -201,16 +201,16 @@ export function TrendsPage() {
         {metrics.map((metric) => {
           const { change, changePercent } = computeChange(metric.value, metric.prevValue);
           return (
-            <Card key={metric.label}>
+            <Card key={metric.label} className="border-white/[0.06] bg-white/[0.02]">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider">
                       {metric.label}
                     </p>
-                    <p className="text-2xl font-bold mt-1">
+                    <p className="text-2xl font-bold mt-1 text-white">
                       {isLoading ? (
-                        <span className="inline-block h-7 w-24 animate-pulse rounded bg-muted" />
+                        <span className="inline-block h-7 w-24 animate-pulse rounded bg-white/[0.05]" />
                       ) : (
                         metric.format(metric.value)
                       )}
@@ -254,10 +254,10 @@ export function TrendsPage() {
         })}
       </div>
 
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02]">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">All Metrics</CardTitle>
+            <CardTitle className="text-base text-white/80">All Metrics</CardTitle>
             <div className="flex items-center gap-2">
               {['Sessions', 'Tokens', 'Cost'].map((series) => (
                 <button
@@ -302,9 +302,9 @@ export function TrendsPage() {
       </Card>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-base">Sessions Trend</CardTitle>
+            <CardTitle className="text-base text-white/80">Sessions Trend</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -325,9 +325,9 @@ export function TrendsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-base">Token Usage Trend</CardTitle>
+            <CardTitle className="text-base text-white/80">Token Usage Trend</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -349,9 +349,9 @@ export function TrendsPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02]">
         <CardHeader>
-          <CardTitle className="text-base">Cost Trend</CardTitle>
+          <CardTitle className="text-base text-white/80">Cost Trend</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -373,9 +373,9 @@ export function TrendsPage() {
       </Card>
 
       {weekComparison && (
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-base">Week-over-Week Comparison</CardTitle>
+            <CardTitle className="text-base text-white/80">Week-over-Week Comparison</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
@@ -390,19 +390,19 @@ export function TrendsPage() {
                 return (
                   <div
                     key={metric.label}
-                    className="rounded-lg border border-border/50 p-4 space-y-3"
+                    className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3"
                   >
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider">
                       {metric.label}
                     </p>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">This Week</p>
-                        <p className="text-lg font-bold">{metric.format(curr)}</p>
+                        <p className="text-xs text-white/30 mb-1">This Week</p>
+                        <p className="text-lg font-bold text-white">{metric.format(curr)}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Last Week</p>
-                        <p className="text-lg font-bold text-muted-foreground">{metric.format(prev)}</p>
+                        <p className="text-xs text-white/30 mb-1">Last Week</p>
+                        <p className="text-lg font-bold text-white/40">{metric.format(prev)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">

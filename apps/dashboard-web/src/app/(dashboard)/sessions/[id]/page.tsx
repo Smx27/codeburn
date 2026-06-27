@@ -22,7 +22,7 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
@@ -36,7 +36,10 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div
+        className="flex items-center gap-4 animate-fade-up"
+        style={{ animationDelay: '0ms' }}
+      >
         <Button variant="ghost" size="icon" asChild>
           <Link href="/sessions">
             <ArrowLeft className="h-4 w-4" />
@@ -53,26 +56,29 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up"
+        style={{ animationDelay: '80ms' }}
+      >
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Total Tokens</div>
             <div className="text-2xl font-bold text-foreground">{formatTokens(session.totalTokens)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Estimated Cost</div>
             <div className="text-2xl font-bold text-foreground">{formatCurrency(session.estimatedCost)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Duration</div>
             <div className="text-2xl font-bold text-foreground">{Math.round(session.durationSeconds / 60)}m</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardContent className="p-4">
             <div className="text-xs text-muted-foreground mb-1">Events</div>
             <div className="text-2xl font-bold text-foreground">{session.eventCount}</div>
@@ -81,8 +87,11 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-up"
+        style={{ animationDelay: '160ms' }}
+      >
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-sm">Session Info</CardTitle>
           </CardHeader>
@@ -95,7 +104,7 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
             <div className="flex items-center gap-2 text-sm">
               <Cpu className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Provider:</span>
-              <Badge variant="secondary">{session.provider}</Badge>
+              <Badge variant="default">{session.provider}</Badge>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <User className="h-4 w-4 text-muted-foreground" />
@@ -110,7 +119,7 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-sm">Token Breakdown</CardTitle>
           </CardHeader>
@@ -133,7 +142,10 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
 
       {/* Events */}
       {session.events.length > 0 && (
-        <Card>
+        <Card
+          className="bg-white/[0.02] border-white/[0.06] animate-fade-up"
+          style={{ animationDelay: '240ms' }}
+        >
           <CardHeader>
             <CardTitle className="text-sm">Events ({session.events.length})</CardTitle>
           </CardHeader>
@@ -142,10 +154,10 @@ export default function SessionDetailPage({ params }: { params: Promise<{ id: st
               {session.events.map((event) => (
                 <div
                   key={event.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50"
+                  className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]"
                 >
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="text-xs">{event.eventType}</Badge>
+                    <Badge variant="default" className="text-xs">{event.eventType}</Badge>
                     <span className="text-sm text-foreground font-mono">{event.model}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">

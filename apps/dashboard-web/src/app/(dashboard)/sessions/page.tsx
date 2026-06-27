@@ -78,7 +78,10 @@ export default function SessionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div
+        className="flex items-center justify-between animate-fade-up"
+        style={{ animationDelay: '0ms' }}
+      >
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Sessions</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -88,7 +91,10 @@ export default function SessionsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div
+        className="flex flex-wrap items-center gap-3 animate-fade-up"
+        style={{ animationDelay: '80ms' }}
+      >
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -137,7 +143,7 @@ export default function SessionsPage() {
       {provider !== 'all' && (
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">Filters:</span>
-          <Badge variant="secondary" className="gap-1">
+          <Badge variant="default" className="gap-1">
             Provider: {provider}
             <button onClick={() => setProvider('all')} className="ml-1 hover:text-foreground">
               <X className="h-3 w-3" />
@@ -147,84 +153,89 @@ export default function SessionsPage() {
       )}
 
       {/* Table */}
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="p-6 space-y-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-4 w-16 ml-auto" />
-                </div>
-              ))}
-            </div>
-          ) : !data?.sessions.length ? (
-            <EmptyState
-              icon={Activity}
-              title="No sessions yet"
-              description="Start syncing your AI usage data to see sessions here."
-            />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Provider</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">User</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Machine</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Tokens</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Cost</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Duration</th>
-                    <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Time</th>
-                    <th scope="col" className="w-10 px-4 py-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.sessions.map((session) => (
-                    <tr
-                      key={session.id}
-                      className="border-b border-border/50 hover:bg-muted/30 transition-colors"
-                    >
-                      <td className="px-4 py-3">
-                        <Badge variant="secondary" className="text-xs">
-                          {session.provider}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground">
-                        {session.userEmail}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">
-                        {session.machineName}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground font-mono">
-                        {formatTokens(session.totalTokens)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground font-mono">
-                        {formatCurrency(session.estimatedCost)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">
-                        {Math.round(session.durationSeconds / 60)}m
-                      </td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">
-                        {formatRelativeTime(session.startedAt)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Link href={`/sessions/${session.id}`}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <ExternalLink className="h-4 w-4" />
-                          </Button>
-                        </Link>
-                      </td>
+      <div
+        className="animate-fade-up"
+        style={{ animationDelay: '160ms' }}
+      >
+        <Card className="bg-white/[0.02] border-white/[0.06]">
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="p-6 space-y-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                  </div>
+                ))}
+              </div>
+            ) : !data?.sessions.length ? (
+              <EmptyState
+                icon={Activity}
+                title="No sessions yet"
+                description="Start syncing your AI usage data to see sessions here."
+              />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/[0.06]">
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Provider</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">User</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Machine</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Tokens</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Cost</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Duration</th>
+                      <th scope="col" className="text-left text-xs font-medium text-muted-foreground px-4 py-3">Time</th>
+                      <th scope="col" className="w-10 px-4 py-3"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  </thead>
+                  <tbody>
+                    {data.sessions.map((session) => (
+                      <tr
+                        key={session.id}
+                        className="border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors"
+                      >
+                        <td className="px-4 py-3">
+                          <Badge variant="secondary" className="text-xs">
+                            {session.provider}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-foreground">
+                          {session.userEmail}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">
+                          {session.machineName}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-foreground font-mono">
+                          {formatTokens(session.totalTokens)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-foreground font-mono">
+                          {formatCurrency(session.estimatedCost)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">
+                          {Math.round(session.durationSeconds / 60)}m
+                        </td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">
+                          {formatRelativeTime(session.startedAt)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Link href={`/sessions/${session.id}`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Pagination */}
       {data && data.totalPages > 1 && (

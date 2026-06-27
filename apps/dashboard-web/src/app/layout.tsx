@@ -1,47 +1,50 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Sora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
 
-const inter = Inter({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sora",
   display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: "AIInsight - AI Usage Intelligence for Engineering Teams",
+  title: "Niriksh - AI Token Usage Intelligence",
   description:
-    "Track AI usage across Claude, Codex, Gemini, Cursor, OpenCode and more. Understand costs, measure adoption, and govern AI tooling across your entire organization.",
+    "Track AI token usage across every provider, every model, every engineer. Real-time cost intelligence for teams that take AI seriously.",
   keywords: [
-    "AI analytics",
-    "AI usage tracking",
-    "LLM monitoring",
-    "AI cost management",
-    "engineering analytics",
+    "AI token tracking",
+    "LLM cost monitoring",
+    "AI usage analytics",
+    "OpenAI costs",
+    "Anthropic costs",
+    "AI budget management",
+    "token usage dashboard",
   ],
   openGraph: {
-    title: "AIInsight - AI Usage Intelligence for Engineering Teams",
+    title: "Niriksh - AI Token Usage Intelligence",
     description:
-      "Track AI usage across Claude, Codex, Gemini, Cursor, OpenCode and more.",
+      "Track AI token usage across every provider, every model, every engineer. Real-time cost intelligence.",
     type: "website",
-    siteName: "AIInsight",
+    siteName: "Niriksh",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "AIInsight - AI Usage Intelligence",
+        alt: "Niriksh - AI Token Usage Intelligence",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AIInsight - AI Usage Intelligence for Engineering Teams",
+    title: "Niriksh - AI Token Usage Intelligence",
     description:
-      "Track AI usage across Claude, Codex, Gemini, Cursor, OpenCode and more.",
+      "Track AI token usage across every provider, every model, every engineer.",
     images: ["/og.png"],
   },
   icons: {
@@ -56,23 +59,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('aiinsight_theme');
-                  var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                  document.documentElement.classList.add(dark ? 'dark' : 'light');
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${sora.variable}`}>
+      <body className="font-sora antialiased">
         <Providers>
           {children}
           <Toaster richColors position="top-right" />

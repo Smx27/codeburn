@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,8 +11,6 @@ import { Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -29,7 +26,6 @@ export default function LoginRoute() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect to accept-invitation if invitation token is present
   useEffect(() => {
     const invitationToken = searchParams.get('invitation');
     if (invitationToken) {
@@ -75,95 +71,99 @@ export default function LoginRoute() {
   };
 
   return (
-    <Card className="border-border/50 shadow-lg">
-      <CardContent className="p-6">
-        <div className="space-y-1 mb-6">
-          <h2 className="text-lg font-semibold text-foreground">Welcome back</h2>
-          <p className="text-sm text-muted-foreground">
-            Sign in to your account to continue
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                {...register('email')}
-                type="email"
-                id="email"
-                autoComplete="email"
-                className="pl-10"
-                placeholder="you@example.com"
-              />
-            </div>
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-primary hover:text-primary/80 transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                {...register('password')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                className="pl-10"
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.password && (
-              <p className="text-xs text-destructive">{errors.password.message}</p>
-            )}
-          </div>
-
-          {error && (
-            <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
-              {error}
-            </div>
-          )}
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              <>
-                Sign in
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </form>
-
-        <div className="relative my-6">
-          <Separator />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-            or
-          </span>
-        </div>
-
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-primary hover:text-primary/80 font-medium transition-colors">
-            Create one
-          </Link>
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(119,255,46,0.1)]">
+      <div className="space-y-1 mb-6">
+        <h2 className="text-lg font-semibold text-white">Welcome back</h2>
+        <p className="text-sm text-white/40">
+          Sign in to your account to continue
         </p>
-      </CardContent>
-    </Card>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-white/60">Email</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              {...register('email')}
+              type="email"
+              id="email"
+              autoComplete="email"
+              className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20"
+              placeholder="you@example.com"
+            />
+          </div>
+          {errors.email && (
+            <p className="text-xs text-destructive">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-white/60">Password</Label>
+            <Link
+              href="/forgot-password"
+              className="text-xs text-primary hover:text-primary/80 transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              {...register('password')}
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20"
+              placeholder="••••••••"
+            />
+          </div>
+          {errors.password && (
+            <p className="text-xs text-destructive">{errors.password.message}</p>
+          )}
+        </div>
+
+        {error && (
+          <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(119,255,46,0.2)] hover:shadow-[0_0_30px_rgba(119,255,46,0.3)] transition-all"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Signing in...
+            </>
+          ) : (
+            <>
+              Sign in
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          )}
+        </Button>
+      </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white/[0.06]" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-transparent px-2 text-white/30">or</span>
+        </div>
+      </div>
+
+      <p className="text-center text-sm text-white/40">
+        Don&apos;t have an account?{' '}
+        <Link href="/register" className="text-primary hover:text-primary/80 font-medium transition-colors">
+          Create one
+        </Link>
+      </p>
+    </div>
   );
 }

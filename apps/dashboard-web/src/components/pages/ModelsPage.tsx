@@ -43,29 +43,29 @@ function getProviderInfo(modelName: string) {
     return PROVIDER_MAP.mistral;
   if (lower.includes('llama') || lower.includes('codellama'))
     return PROVIDER_MAP.meta;
-  return { label: 'Unknown', color: 'bg-muted text-muted-foreground border-border' };
+  return { label: 'Unknown', color: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/30' };
 }
 
 function SkeletonCard() {
   return (
-    <div className="rounded-lg border bg-card p-4 space-y-3 animate-pulse">
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-md p-4 space-y-3 animate-pulse">
       <div className="flex items-center gap-3">
-        <div className="h-8 w-8 rounded bg-muted" />
+        <div className="h-8 w-8 rounded-lg bg-emerald-500/10" />
         <div className="flex-1 space-y-2">
-          <div className="h-4 bg-muted rounded w-28" />
-          <div className="h-3 bg-muted rounded w-16" />
+          <div className="h-4 bg-emerald-500/10 rounded w-28" />
+          <div className="h-3 bg-emerald-500/10 rounded w-16" />
         </div>
       </div>
-      <div className="h-3 bg-muted rounded w-full" />
+      <div className="h-3 bg-emerald-500/10 rounded w-full" />
     </div>
   );
 }
 
 function SkeletonChart() {
   return (
-    <div className="rounded-lg border bg-card p-6 space-y-4 animate-pulse">
-      <div className="h-5 bg-muted rounded w-40" />
-      <div className="h-[300px] bg-muted/50 rounded" />
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-md p-6 space-y-4 animate-pulse">
+      <div className="h-5 bg-emerald-500/10 rounded w-40" />
+      <div className="h-[300px] bg-emerald-500/5 rounded-lg" />
     </div>
   );
 }
@@ -127,40 +127,40 @@ export function ModelsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-up">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Models</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Models</h1>
+          <p className="text-sm text-emerald-400/60">
             Model usage analytics, cost distribution, and provider breakdown
           </p>
         </div>
         <PeriodSelector value={period} onChange={setPeriod} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 animate-fade-up" style={{ animationDelay: '50ms' }}>
         {[
           { label: 'Total Models', value: formatNumber(models?.length ?? 0), icon: Cpu },
           { label: 'Total Cost', value: formatCurrency(totalCost), icon: Coins },
           { label: 'Total Tokens', value: formatTokens(totalTokens), icon: Activity },
           { label: 'Total Sessions', value: formatNumber(totalSessions), icon: Users },
         ].map((stat) => (
-          <Card key={stat.label}>
+          <Card key={stat.label} className="border-white/[0.08] bg-white/[0.03] backdrop-blur-md hover:bg-white/[0.05] transition-colors">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <p className="text-xs font-medium text-emerald-400/60 uppercase tracking-wider">
                     {stat.label}
                   </p>
-                  <p className="text-2xl font-bold mt-1">
+                  <p className="text-2xl font-bold mt-1 text-white">
                     {isLoading ? (
-                      <span className="inline-block h-7 w-20 animate-pulse rounded bg-muted" />
+                      <span className="inline-block h-7 w-20 animate-pulse rounded bg-emerald-500/10" />
                     ) : (
                       stat.value
                     )}
                   </p>
                 </div>
-                <div className="rounded-lg bg-muted p-2">
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                <div className="rounded-xl bg-emerald-500/10 p-2">
+                  <stat.icon className="h-4 w-4 text-emerald-400" />
                 </div>
               </div>
             </CardContent>
@@ -168,12 +168,12 @@ export function ModelsPage() {
         ))}
       </div>
 
-      <div>
+      <div className="animate-fade-up" style={{ animationDelay: '100ms' }}>
         <div className="mb-3 flex items-center gap-2">
-          <Crown className="h-4 w-4 text-amber-500" />
-          <h2 className="text-lg font-semibold">Top Models</h2>
+          <Crown className="h-4 w-4 text-emerald-400" />
+          <h2 className="text-lg font-semibold text-white/90">Top Models</h2>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
             : top6.map((model, i) => {
@@ -183,7 +183,7 @@ export function ModelsPage() {
                     ? Math.round(model.totalTokens / model.sessionCount)
                     : 0;
                 return (
-                  <Card key={model.model} className="relative overflow-hidden">
+                  <Card key={model.model} className="relative overflow-hidden border-white/[0.08] bg-white/[0.03] backdrop-blur-md hover:bg-white/[0.05] transition-colors">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2 min-w-0">
@@ -197,7 +197,7 @@ export function ModelsPage() {
                             {i + 1}
                           </span>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold truncate" title={model.model}>
+                            <p className="text-sm font-semibold truncate text-white/80" title={model.model}>
                               {model.model}
                             </p>
                             <span
@@ -208,35 +208,35 @@ export function ModelsPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-1.5 text-xs text-muted-foreground">
+                      <div className="space-y-1.5 text-xs">
                         <div className="flex justify-between">
-                          <span>Cost</span>
-                          <span className="font-medium text-foreground">
+                          <span className="text-emerald-400/60">Cost</span>
+                          <span className="font-medium text-white/80">
                             {formatCurrency(model.totalCost)}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Tokens</span>
-                          <span className="font-medium text-foreground">
+                          <span className="text-emerald-400/60">Tokens</span>
+                          <span className="font-medium text-white/80">
                             {formatTokens(model.totalTokens)}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Sessions</span>
-                          <span className="font-medium text-foreground">
+                          <span className="text-emerald-400/60">Sessions</span>
+                          <span className="font-medium text-white/80">
                             {formatNumber(model.sessionCount)}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Tokens / Session</span>
-                          <span className="font-medium text-foreground">
+                          <span className="text-emerald-400/60">Tokens / Session</span>
+                          <span className="font-medium text-white/80">
                             {formatTokens(avgTokensPerSession)}
                           </span>
                         </div>
                       </div>
                     </CardContent>
                     {i === 0 && (
-                      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-600" />
+                      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-emerald-400 to-emerald-600" />
                     )}
                   </Card>
                 );
@@ -244,10 +244,10 @@ export function ModelsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 animate-fade-up" style={{ animationDelay: '150ms' }}>
+        <Card className="border-white/[0.08] bg-white/[0.03] backdrop-blur-md">
           <CardHeader>
-            <CardTitle className="text-base">Cost Distribution</CardTitle>
+            <CardTitle className="text-base text-white/80">Cost Distribution</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -261,7 +261,7 @@ export function ModelsPage() {
                 height={320}
               />
             ) : (
-              <div className="h-[320px] flex flex-col items-center justify-center text-muted-foreground gap-2">
+              <div className="h-[320px] flex flex-col items-center justify-center text-emerald-400/60 gap-2">
                 <Coins className="h-8 w-8 opacity-40" />
                 <p>No model cost data available</p>
               </div>
@@ -269,9 +269,9 @@ export function ModelsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.08] bg-white/[0.03] backdrop-blur-md">
           <CardHeader>
-            <CardTitle className="text-base">Model Usage Over Time</CardTitle>
+            <CardTitle className="text-base text-white/80">Model Usage Over Time</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -285,7 +285,7 @@ export function ModelsPage() {
                 height={320}
               />
             ) : (
-              <div className="h-[320px] flex flex-col items-center justify-center text-muted-foreground gap-2">
+              <div className="h-[320px] flex flex-col items-center justify-center text-emerald-400/60 gap-2">
                 <TrendingUp className="h-8 w-8 opacity-40" />
                 <p>No usage trend data available</p>
               </div>
@@ -294,31 +294,31 @@ export function ModelsPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="border-white/[0.08] bg-white/[0.03] backdrop-blur-md animate-fade-up" style={{ animationDelay: '200ms' }}>
         <CardHeader>
-          <CardTitle className="text-base">Model Leaderboard</CardTitle>
+          <CardTitle className="text-base text-white/80">Model Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+                <div key={i} className="h-12 bg-emerald-500/5 rounded animate-pulse" />
               ))}
             </div>
           ) : models && models.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border/50">
-                    <th className="text-left py-3 px-2 font-medium text-muted-foreground">Rank</th>
-                    <th className="text-left py-3 px-2 font-medium text-muted-foreground">Model</th>
-                    <th className="text-left py-3 px-2 font-medium text-muted-foreground">Provider</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Sessions</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Tokens</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Cost</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">% Share</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Avg Tokens</th>
-                    <th className="text-right py-3 px-2 font-medium text-muted-foreground">Cost / Session</th>
+                    <tr className="border-b border-white/[0.06]">
+                      <th className="text-left py-3 px-2 font-medium text-emerald-400/60">Rank</th>
+                      <th className="text-left py-3 px-2 font-medium text-emerald-400/60">Model</th>
+                      <th className="text-left py-3 px-2 font-medium text-emerald-400/60">Provider</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">Sessions</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">Tokens</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">Cost</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">% Share</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">Avg Tokens</th>
+                      <th className="text-right py-3 px-2 font-medium text-emerald-400/60">Cost / Session</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -333,14 +333,14 @@ export function ModelsPage() {
                     return (
                       <tr
                         key={model.model}
-                        className="border-b border-border/30 hover:bg-muted/30 transition-colors"
+                        className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors"
                       >
                         <td className="py-3 px-2">
                           <span
                             className={`flex h-5 w-5 items-center justify-center rounded text-[10px] font-bold ${
                               i < 3
-                                ? 'bg-primary/15 text-primary'
-                                : 'bg-muted text-muted-foreground'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : 'bg-white/[0.05] text-white/50'
                             }`}
                           >
                             {i + 1}
@@ -369,21 +369,21 @@ export function ModelsPage() {
                         </td>
                         <td className="text-right py-3 px-2 tabular-nums">
                           <div className="flex items-center justify-end gap-2">
-                            <div className="h-1.5 w-12 rounded-full bg-muted overflow-hidden">
+                            <div className="h-1.5 w-12 rounded-full bg-emerald-500/10 overflow-hidden">
                               <div
-                                className="h-full rounded-full bg-primary"
+                                className="h-full rounded-full bg-emerald-500"
                                 style={{ width: `${model.percentageOfTotal}%` }}
                               />
                             </div>
-                            <span className="text-muted-foreground w-10 text-right">
+                            <span className="text-emerald-400/60 w-10 text-right">
                               {model.percentageOfTotal.toFixed(1)}%
                             </span>
                           </div>
                         </td>
-                        <td className="text-right py-3 px-2 tabular-nums text-muted-foreground">
+                        <td className="text-right py-3 px-2 tabular-nums text-emerald-400/60">
                           {formatTokens(avgTokensPerSession)}
                         </td>
-                        <td className="text-right py-3 px-2 tabular-nums text-muted-foreground">
+                        <td className="text-right py-3 px-2 tabular-nums text-emerald-400/60">
                           {formatCurrency(costPerSession)}
                         </td>
                       </tr>
@@ -393,7 +393,7 @@ export function ModelsPage() {
               </table>
             </div>
           ) : (
-            <div className="h-[200px] flex flex-col items-center justify-center text-muted-foreground gap-2">
+            <div className="h-[200px] flex flex-col items-center justify-center text-emerald-400/60 gap-2">
               <Cpu className="h-8 w-8 opacity-40" />
               <p>No model data available for this period</p>
             </div>

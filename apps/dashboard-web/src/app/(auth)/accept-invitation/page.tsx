@@ -10,7 +10,6 @@ import { Loader2, Lock, User, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
 import { AUTH_TOKEN_STORAGE_KEY, AUTH_USER_STORAGE_KEY } from '@/lib/storage-keys';
 
 const acceptSchema = z.object({
@@ -30,7 +29,6 @@ export default function AcceptInvitationPage() {
   const token = searchParams.get('token');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'loading' | 'form' | 'success' | 'error'>('loading');
-  const [invitationInfo, setInvitationInfo] = useState<{ email?: string; organization?: string; role?: string }>({});
 
   const {
     register,
@@ -45,8 +43,6 @@ export default function AcceptInvitationPage() {
       setStatus('error');
       return;
     }
-
-    // Token is valid, show the form
     setStatus('form');
   }, [token]);
 
@@ -59,8 +55,8 @@ export default function AcceptInvitationPage() {
       const response = await fetch(`${apiUrl}/api/v1/invitations/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          token, 
+        body: JSON.stringify({
+          token,
           password: data.password,
           name: data.name,
         }),
@@ -68,7 +64,6 @@ export default function AcceptInvitationPage() {
 
       if (response.ok) {
         const result = await response.json();
-        // Store the JWT token
         if (result.token) {
           localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, result.token);
           if (result.user) {
@@ -76,7 +71,6 @@ export default function AcceptInvitationPage() {
           }
         }
         setStatus('success');
-        // Redirect to dashboard after a short delay
         setTimeout(() => {
           router.push('/dashboard');
         }, 2000);
@@ -92,140 +86,142 @@ export default function AcceptInvitationPage() {
 
   if (status === 'loading') {
     return (
-      <Card className="border-border/50 shadow-lg">
-        <CardContent className="p-6 text-center space-y-4">
+      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(119,255,46,0.1)]">
+        <div className="text-center space-y-4">
           <Loader2 className="h-6 w-6 animate-spin text-primary mx-auto" />
-          <p className="text-sm text-muted-foreground">Loading invitation...</p>
-        </CardContent>
-      </Card>
+          <p className="text-sm text-white/40">Loading invitation...</p>
+        </div>
+      </div>
     );
   }
 
   if (status === 'error') {
     return (
-      <Card className="border-border/50 shadow-lg">
-        <CardContent className="p-6 text-center space-y-4">
+      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(119,255,46,0.1)]">
+        <div className="text-center space-y-4">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Invalid invitation</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-lg font-semibold text-white">Invalid invitation</h2>
+            <p className="text-sm text-white/40 mt-1">
               This invitation link is invalid or has expired.
             </p>
           </div>
-          <Button variant="outline" asChild className="w-full">
+          <Button variant="outline" asChild className="w-full border-white/[0.08] text-white/60 hover:bg-white/[0.05] hover:text-white">
             <Link href="/login">Back to login</Link>
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   if (status === 'success') {
     return (
-      <Card className="border-border/50 shadow-lg">
-        <CardContent className="p-6 text-center space-y-4">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/10">
-            <Check className="h-6 w-6 text-green-500" />
+      <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(119,255,46,0.1)]">
+        <div className="text-center space-y-4">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <Check className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Welcome to the team!</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-lg font-semibold text-white">Welcome to the team!</h2>
+            <p className="text-sm text-white/40 mt-1">
               Your account has been created. Redirecting to dashboard...
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="border-border/50 shadow-lg">
-      <CardContent className="p-6">
-        <div className="space-y-1 mb-6">
-          <h2 className="text-lg font-semibold text-foreground">Accept invitation</h2>
-          <p className="text-sm text-muted-foreground">
-            Set your name and password to join the team
-          </p>
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl p-6 shadow-[0_0_60px_-15px_rgba(119,255,46,0.1)]">
+      <div className="space-y-1 mb-6">
+        <h2 className="text-lg font-semibold text-white">Accept invitation</h2>
+        <p className="text-sm text-white/40">
+          Set your name and password to join the team
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="text-white/60">Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              {...register('name')}
+              type="text"
+              id="name"
+              autoComplete="name"
+              className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20"
+              placeholder="Your name"
+            />
+          </div>
+          {errors.name && (
+            <p className="text-xs text-destructive">{errors.name.message}</p>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                {...register('name')}
-                type="text"
-                id="name"
-                autoComplete="name"
-                className="pl-10"
-                placeholder="Your name"
-              />
-            </div>
-            {errors.name && (
-              <p className="text-xs text-destructive">{errors.name.message}</p>
-            )}
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-white/60">Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              {...register('password')}
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20"
+              placeholder="••••••••"
+            />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                {...register('password')}
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                className="pl-10"
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.password && (
-              <p className="text-xs text-destructive">{errors.password.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                {...register('confirmPassword')}
-                type="password"
-                id="confirmPassword"
-                autoComplete="new-password"
-                className="pl-10"
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>
-            )}
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating account...
-              </>
-            ) : (
-              <>
-                Join team
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <Link
-            href="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Already have an account? Sign in
-          </Link>
+          {errors.password && (
+            <p className="text-xs text-destructive">{errors.password.message}</p>
+          )}
         </div>
-      </CardContent>
-    </Card>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword" className="text-white/60">Confirm Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              {...register('confirmPassword')}
+              type="password"
+              id="confirmPassword"
+              autoComplete="new-password"
+              className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20"
+              placeholder="••••••••"
+            />
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(119,255,46,0.2)] hover:shadow-[0_0_30px_rgba(119,255,46,0.3)] transition-all"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating account...
+            </>
+          ) : (
+            <>
+              Join team
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          )}
+        </Button>
+      </form>
+
+      <div className="mt-6 text-center">
+        <Link
+          href="/login"
+          className="text-sm text-white/40 hover:text-white/70 transition-colors"
+        >
+          Already have an account? Sign in
+        </Link>
+      </div>
+    </div>
   );
 }

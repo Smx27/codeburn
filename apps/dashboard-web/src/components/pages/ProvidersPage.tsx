@@ -31,7 +31,7 @@ function getProviderColor(name: string): string {
 
 function getStatusFromData(p: ProviderAnalytics): { label: string; color: string } {
   if (p.percentageOfTotal > 30) return { label: 'Healthy', color: 'text-emerald-500' };
-  if (p.percentageOfTotal > 10) return { label: 'Stable', color: 'text-blue-500' };
+  if (p.percentageOfTotal > 10) return { label: 'Stable', color: 'text-primary' };
   return { label: 'Low', color: 'text-amber-500' };
 }
 
@@ -41,40 +41,40 @@ function ProviderHealthCard({ provider }: { provider: ProviderAnalytics; totalCo
   const costPerSession = provider.totalSessions > 0 ? provider.totalCost / provider.totalSessions : 0;
 
   return (
-    <Card className="relative overflow-hidden transition-all hover:shadow-md hover:border-border/80">
-      <div className="absolute inset-0 opacity-[0.03]" style={{ background: `linear-gradient(135deg, ${color}, transparent)` }} />
+    <Card className="relative overflow-hidden transition-all hover:shadow-md border-white/[0.06] bg-white/[0.02] backdrop-blur-xl hover:bg-white/[0.04] hover:border-white/[0.1]">
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ background: `linear-gradient(135deg, ${color}, transparent)` }} />
       <CardContent className="p-5 relative">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2.5">
             <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-            <span className="font-semibold text-sm">{provider.providerName}</span>
+            <span className="font-semibold text-sm text-white/80">{provider.providerName}</span>
           </div>
           <span className={cn('text-[11px] font-medium', status.color)}>{status.label}</span>
         </div>
 
         <div className="space-y-3">
           <div>
-            <p className="text-2xl font-bold tracking-tight">{formatCurrency(provider.totalCost)}</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <p className="text-2xl font-bold tracking-tight text-white">{formatCurrency(provider.totalCost)}</p>
+            <p className="text-[11px] text-white/40 mt-0.5">
               {provider.percentageOfTotal.toFixed(1)}% of total usage
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-[11px] text-muted-foreground">Tokens</p>
-              <p className="text-sm font-semibold">{formatTokens(provider.totalTokens)}</p>
+              <p className="text-[11px] text-white/40">Tokens</p>
+              <p className="text-sm font-semibold text-white/80">{formatTokens(provider.totalTokens)}</p>
             </div>
             <div>
-              <p className="text-[11px] text-muted-foreground">Sessions</p>
-              <p className="text-sm font-semibold">{formatNumber(provider.totalSessions)}</p>
+              <p className="text-[11px] text-white/40">Sessions</p>
+              <p className="text-sm font-semibold text-white/80">{formatNumber(provider.totalSessions)}</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
             <div className="flex items-center gap-1.5">
-              <Coins className="h-3 w-3 text-muted-foreground" />
-              <span className="text-[11px] text-muted-foreground">{formatCurrency(costPerSession)}/session</span>
+              <Coins className="h-3 w-3 text-white/30" />
+              <span className="text-[11px] text-white/30">{formatCurrency(costPerSession)}/session</span>
             </div>
             <SparkLine
               data={[provider.totalSessions * 0.6, provider.totalSessions * 0.75, provider.totalSessions * 0.7, provider.totalSessions * 0.85, provider.totalSessions]}
@@ -206,7 +206,7 @@ export function ProvidersPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Provider Analytics</h1>
+          <h1 className="text-3xl font-bold text-white">Provider Analytics</h1>
           <PeriodSelector value={period} onChange={setPeriod} />
         </div>
         <Card>
@@ -222,10 +222,10 @@ export function ProvidersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-fade-up" style={{ animationDelay: '0ms' }}>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Provider Analytics</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Provider Analytics</h1>
+          <p className="text-sm text-white/40 mt-1">
             {formatNumber(totalSessions)} sessions across {providers.length} provider{providers.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -233,15 +233,15 @@ export function ProvidersPage() {
       </div>
 
       {/* Provider Health Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 animate-fade-up" style={{ animationDelay: '80ms' }}>
         {providers.map((provider) => (
           <ProviderHealthCard key={provider.providerId} provider={provider} totalCost={totalCost} />
         ))}
       </div>
 
       {/* Usage Trends + Cost Breakdown */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+      <div className="grid gap-4 lg:grid-cols-3 animate-fade-up" style={{ animationDelay: '160ms' }}>
+        <Card className="lg:col-span-2 border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">Usage Trends</CardTitle>
@@ -281,9 +281,9 @@ export function ProvidersPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">Cost Distribution</CardTitle>
+            <CardTitle className="text-base text-white/80">Cost Distribution</CardTitle>
           </CardHeader>
           <CardContent>
             <DonutChart
@@ -300,10 +300,10 @@ export function ProvidersPage() {
       </div>
 
       {/* Model Distribution */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl animate-fade-up" style={{ animationDelay: '240ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Model Distribution by Provider</CardTitle>
-          <p className="text-xs text-muted-foreground">Session count per model, grouped by provider</p>
+          <CardTitle className="text-base text-white/80">Model Distribution by Provider</CardTitle>
+          <p className="text-xs text-white/30">Session count per model, grouped by provider</p>
         </CardHeader>
         <CardContent>
           {modelDistributionData.length > 0 && modelSeries.length > 0 ? (
@@ -323,30 +323,30 @@ export function ProvidersPage() {
       </Card>
 
       {/* Provider Comparison Table */}
-      <Card>
+      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl animate-fade-up" style={{ animationDelay: '320ms' }}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Provider Comparison</CardTitle>
+          <CardTitle className="text-base text-white/80">Provider Comparison</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-3 font-medium text-muted-foreground">Provider</th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('totalSessions')}>
-                    Sessions <SortIcon active={sortKey === 'totalSessions'} dir={sortDir} />
-                  </th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('totalTokens')}>
-                    Tokens <SortIcon active={sortKey === 'totalTokens'} dir={sortDir} />
-                  </th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('totalCost')}>
-                    Cost <SortIcon active={sortKey === 'totalCost'} dir={sortDir} />
-                  </th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground cursor-pointer select-none" onClick={() => handleSort('percentageOfTotal')}>
-                    % Share <SortIcon active={sortKey === 'percentageOfTotal'} dir={sortDir} />
-                  </th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground">Avg Cost/Session</th>
-                  <th className="text-right py-3 px-3 font-medium text-muted-foreground w-20">Trend</th>
+                    <tr className="border-b border-white/[0.06]">
+                      <th className="text-left py-3 px-3 font-medium text-white/40">Provider</th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('totalSessions')}>
+                        Sessions <SortIcon active={sortKey === 'totalSessions'} dir={sortDir} />
+                      </th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('totalTokens')}>
+                        Tokens <SortIcon active={sortKey === 'totalTokens'} dir={sortDir} />
+                      </th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('totalCost')}>
+                        Cost <SortIcon active={sortKey === 'totalCost'} dir={sortDir} />
+                      </th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 cursor-pointer select-none" onClick={() => handleSort('percentageOfTotal')}>
+                        % Share <SortIcon active={sortKey === 'percentageOfTotal'} dir={sortDir} />
+                      </th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40">Avg Cost/Session</th>
+                      <th className="text-right py-3 px-3 font-medium text-white/40 w-20">Trend</th>
                 </tr>
               </thead>
               <tbody>
@@ -356,12 +356,12 @@ export function ProvidersPage() {
                   return (
                     <tr
                       key={provider.providerId}
-                      className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
                     >
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2.5">
                           <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                          <span className="font-medium">{provider.providerName}</span>
+                          <span className="font-medium text-white/80">{provider.providerName}</span>
                         </div>
                       </td>
                       <td className="text-right py-3 px-3 tabular-nums">{formatNumber(provider.totalSessions)}</td>

@@ -13,7 +13,7 @@ export class ResendProvider implements IMailProvider {
     if (!apiKey) {
       throw new Error('RESEND_API_KEY environment variable is required');
     }
-    this.from = process.env.MAIL_FROM || 'AIInsight <noreply@aiinsight.dev>';
+    this.from = process.env.MAIL_FROM || 'Niriksh <noreply@niriksh.dev>';
     this.resend = new Resend(apiKey);
   }
 

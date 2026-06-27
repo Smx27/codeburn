@@ -412,7 +412,7 @@ export function AgentSetupPage() {
             <Download className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-base">Installation Commands</CardTitle>
           </div>
-          <CardDescription>Install the AIInsight agent on your machines</CardDescription>
+          <CardDescription>Install the Niriksh agent on your machines</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex rounded-lg border border-border bg-muted/50 p-0.5 mb-4 w-fit">

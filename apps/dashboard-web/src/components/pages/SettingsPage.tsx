@@ -62,15 +62,15 @@ function Toggle({
 
 function ComingSoonCard({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) {
   return (
-    <Card>
+    <Card className="border-white/[0.06] bg-white/[0.02]">
       <CardContent className="py-12">
         <div className="flex flex-col items-center text-center">
-          <div className="mb-4 rounded-full bg-muted p-3">
-            <Icon className="h-6 w-6 text-muted-foreground" />
+          <div className="mb-4 rounded-full bg-white/[0.05] p-3">
+            <Icon className="h-6 w-6 text-white/40" />
           </div>
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground max-w-sm">{description}</p>
-          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <p className="mt-1 text-sm text-white/40 max-w-sm">{description}</p>
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] px-3 py-1 text-xs font-medium text-white/40">
             <Clock className="h-3 w-3" />
             Coming Soon
           </span>
@@ -113,7 +113,6 @@ export function SettingsPage() {
       });
       if (!response.ok) throw new Error('Failed to fetch teams');
       const teams = await response.json();
-      // Extract members from teams
       const allMembers: Array<{ id: string; name: string | null; email: string; role: string }> = [];
       for (const team of teams) {
         if (team.members) {
@@ -292,462 +291,500 @@ export function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">
+      <div
+        className="space-y-1 animate-fade-up"
+        style={{ animationDelay: '0ms' }}
+      >
+        <h1 className="text-3xl font-bold tracking-tight text-white">Settings</h1>
+        <p className="text-sm text-white/40">
           Manage your dashboard preferences, API keys, and notifications
         </p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="profile" className="gap-2">
-            <Palette className="h-4 w-4" />
-            Profile
-          </TabsTrigger>
-          <TabsTrigger value="organization" className="gap-2">
-            <Building2 className="h-4 w-4" />
-            Organization
-          </TabsTrigger>
-          <TabsTrigger value="api-keys" className="gap-2">
-            <Key className="h-4 w-4" />
-            API Keys
-          </TabsTrigger>
-          <TabsTrigger value="members" className="gap-2">
-            <Users className="h-4 w-4" />
-            Members
-          </TabsTrigger>
-          <TabsTrigger value="billing" className="gap-2">
-            <CreditCard className="h-4 w-4" />
-            Billing
-          </TabsTrigger>
-        </TabsList>
+      <div
+        className="animate-fade-up overflow-x-auto scrollbar-thin"
+        style={{ animationDelay: '80ms' }}
+      >
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl">
+            <TabsTrigger value="profile" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Palette className="h-4 w-4" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="organization" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Building2 className="h-4 w-4" />
+              Organization
+            </TabsTrigger>
+            <TabsTrigger value="api-keys" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Key className="h-4 w-4" />
+              API Keys
+            </TabsTrigger>
+            <TabsTrigger value="members" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Users className="h-4 w-4" />
+              Members
+            </TabsTrigger>
+            <TabsTrigger value="billing" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <CreditCard className="h-4 w-4" />
+              Billing
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Palette className="h-4 w-4 text-muted-foreground" />
-                <CardTitle className="text-base">Appearance</CardTitle>
-              </div>
-              <CardDescription>Customize the look and feel of your dashboard</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-medium">Theme</p>
-                  <p className="text-xs text-muted-foreground">
-                    Switch between dark and light mode
-                  </p>
-                </div>
-                <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
-                  <button
-                    onClick={() => setTheme('dark')}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
-                      theme === 'dark'
-                        ? 'bg-background text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <Moon className="h-3.5 w-3.5" />
-                    Dark
-                  </button>
-                  <button
-                    onClick={() => setTheme('light')}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
-                      theme === 'light'
-                        ? 'bg-background text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <Sun className="h-3.5 w-3.5" />
-                    Light
-                  </button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Bell className="h-4 w-4 text-muted-foreground" />
-                <CardTitle className="text-base">Notifications</CardTitle>
-              </div>
-              <CardDescription>Configure what alerts and updates you receive</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  {
-                    key: 'emailAlerts' as const,
-                    label: 'Email Alerts',
-                    description: 'Receive email notifications for critical events',
-                  },
-                  {
-                    key: 'weeklyDigest' as const,
-                    label: 'Weekly Digest',
-                    description: 'Get a weekly summary of your usage and costs',
-                  },
-                  {
-                    key: 'costAlerts' as const,
-                    label: 'Cost Alerts',
-                    description: 'Alert when daily spending exceeds your threshold',
-                  },
-                  {
-                    key: 'usageWarnings' as const,
-                    label: 'Usage Warnings',
-                    description: 'Warnings when approaching rate limits or quotas',
-                  },
-                ].map((item, i) => (
-                  <div key={item.key}>
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <p className="text-sm font-medium">{item.label}</p>
-                        <p className="text-xs text-muted-foreground">{item.description}</p>
-                      </div>
-                      <Toggle
-                        checked={notifications[item.key]}
-                        onChange={(v) =>
-                          setNotifications((prev) => ({ ...prev, [item.key]: v }))
-                        }
-                      />
-                    </div>
-                    {i < 3 && <div className="h-px bg-border/50 mt-4" />}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="organization" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-muted-foreground" />
-                <CardTitle className="text-base">Organization</CardTitle>
-              </div>
-              <CardDescription>Your organization details</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">Plan</p>
-                    <p className="text-xs text-muted-foreground">Current subscription tier</p>
-                  </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-                    <Shield className="h-3 w-3" />
-                    Pro
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="api-keys" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
+          <TabsContent value="profile" className="space-y-6">
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '160ms' }}
+            >
+              <Card className="border-white/[0.06] bg-white/[0.02]">
+                <CardHeader>
                   <div className="flex items-center gap-2">
-                    <Key className="h-4 w-4 text-muted-foreground" />
-                    <CardTitle className="text-base">API Keys</CardTitle>
+                    <Palette className="h-4 w-4 text-white/40" />
+                    <CardTitle className="text-base text-white/80">Appearance</CardTitle>
                   </div>
-                  <CardDescription className="mt-1">
-                    Manage API keys for programmatic access to your data
-                  </CardDescription>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowNewKeyForm(!showNewKeyForm);
-                    setNewKeyResult(null);
-                  }}
-                  className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  New Key
-                </button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {showNewKeyForm && (
-                <div className="mb-4 rounded-lg border border-border/50 bg-muted/30 p-4 space-y-3">
-                  {newKeyResult ? (
-                    <div className="space-y-3">
-                      <p className="text-xs font-medium text-emerald-500">
-                        API key created successfully. Copy it now - it won&apos;t be shown again.
+                  <CardDescription>Customize the look and feel of your dashboard</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium text-white/80">Theme</p>
+                      <p className="text-xs text-white/40">
+                        Switch between dark and light mode
                       </p>
-                      <div className="flex items-center gap-2">
-                        <code className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono break-all">
-                          {newKeyResult}
-                        </code>
-                        <button
-                          onClick={handleCopyNewKey}
-                          className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-                        >
-                          {copiedKeyId === 'new' ? (
-                            <Check className="h-3.5 w-3.5 text-emerald-400" />
-                          ) : (
-                            <Copy className="h-3.5 w-3.5" />
-                          )}
-                        </button>
-                      </div>
+                    </div>
+                    <div className="flex rounded-lg border border-white/[0.06] bg-white/[0.05] p-0.5">
                       <button
-                        onClick={() => {
-                          setShowNewKeyForm(false);
-                          setNewKeyResult(null);
-                        }}
-                        className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                        onClick={() => setTheme('dark')}
+                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                          theme === 'dark'
+                            ? 'bg-primary text-primary-foreground shadow-sm'
+                            : 'text-white/40 hover:text-white/80'
+                        }`}
                       >
-                        Done
+                        <Moon className="h-3.5 w-3.5" />
+                        Dark
+                      </button>
+                      <button
+                        onClick={() => setTheme('light')}
+                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+                          theme === 'light'
+                            ? 'bg-primary text-primary-foreground shadow-sm'
+                            : 'text-white/40 hover:text-white/80'
+                        }`}
+                      >
+                        <Sun className="h-3.5 w-3.5" />
+                        Light
                       </button>
                     </div>
-                  ) : (
-                    <>
-                      <p className="text-xs font-medium text-muted-foreground">Create new API key</p>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          placeholder="Key name (e.g., Production)"
-                          value={newKeyName}
-                          onChange={(e) => setNewKeyName(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
-                          className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                        />
-                        <button
-                          onClick={handleCreateKey}
-                          disabled={!newKeyName.trim() || creating}
-                          className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                        >
-                          {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Create'}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setShowNewKeyForm(false);
-                            setNewKeyName('');
-                          }}
-                          className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-              {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : apiKeys.length === 0 ? (
-                <div className="text-center py-8 text-sm text-muted-foreground">
-                  No API keys yet. Create one to get started.
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {apiKeys.map((apiKey) => (
-                    <div
-                      key={apiKey.id}
-                      className="flex items-center justify-between rounded-lg border border-border/50 p-3 hover:bg-muted/30 transition-colors"
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '240ms' }}
+            >
+              <Card className="border-white/[0.06] bg-white/[0.02]">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-white/40" />
+                    <CardTitle className="text-base text-white/80">Notifications</CardTitle>
+                  </div>
+                  <CardDescription>Configure what alerts and updates you receive</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        key: 'emailAlerts' as const,
+                        label: 'Email Alerts',
+                        description: 'Receive email notifications for critical events',
+                      },
+                      {
+                        key: 'weeklyDigest' as const,
+                        label: 'Weekly Digest',
+                        description: 'Get a weekly summary of your usage and costs',
+                      },
+                      {
+                        key: 'costAlerts' as const,
+                        label: 'Cost Alerts',
+                        description: 'Alert when daily spending exceeds your threshold',
+                      },
+                      {
+                        key: 'usageWarnings' as const,
+                        label: 'Usage Warnings',
+                        description: 'Warnings when approaching rate limits or quotas',
+                      },
+                    ].map((item, i) => (
+                      <div key={item.key}>
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-medium text-white/80">{item.label}</p>
+                            <p className="text-xs text-white/40">{item.description}</p>
+                          </div>
+                          <Toggle
+                            checked={notifications[item.key]}
+                            onChange={(v) =>
+                              setNotifications((prev) => ({ ...prev, [item.key]: v }))
+                            }
+                          />
+                        </div>
+                        {i < 3 && <div className="h-px bg-white/[0.06] mt-4" />}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="organization" className="space-y-6">
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '160ms' }}
+            >
+              <Card className="border-white/[0.06] bg-white/[0.02]">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-white/40" />
+                    <CardTitle className="text-base text-white/80">Organization</CardTitle>
+                  </div>
+                  <CardDescription>Your organization details</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium text-white/80">Plan</p>
+                        <p className="text-xs text-white/40">Current subscription tier</p>
+                      </div>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                        <Shield className="h-3 w-3" />
+                        Pro
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="api-keys" className="space-y-6">
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '160ms' }}
+            >
+              <Card className="border-white/[0.06] bg-white/[0.02]">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Key className="h-4 w-4 text-white/40" />
+                        <CardTitle className="text-base text-white/80">API Keys</CardTitle>
+                      </div>
+                      <CardDescription className="mt-1">
+                        Manage API keys for programmatic access to your data
+                      </CardDescription>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShowNewKeyForm(!showNewKeyForm);
+                        setNewKeyResult(null);
+                      }}
+                      className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                     >
-                      <div className="flex items-center gap-3 min-w-0">
+                      <Plus className="h-3.5 w-3.5" />
+                      New Key
+                    </button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {showNewKeyForm && (
+                    <div className="mb-4 rounded-lg border border-white/[0.06] bg-white/[0.05] p-4 space-y-3">
+                      {newKeyResult ? (
+                        <div className="space-y-3">
+                          <p className="text-xs font-medium text-emerald-400">
+                            API key created successfully. Copy it now - it won&apos;t be shown again.
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <code className="flex-1 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-sm font-mono break-all text-white/70">
+                              {newKeyResult}
+                            </code>
+                            <button
+                              onClick={handleCopyNewKey}
+                              className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-white/40 hover:bg-white/[0.05] transition-colors"
+                            >
+                              {copiedKeyId === 'new' ? (
+                                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setShowNewKeyForm(false);
+                              setNewKeyResult(null);
+                            }}
+                            className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                          >
+                            Done
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-xs font-medium text-white/40">Create new API key</p>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              placeholder="Key name (e.g., Production)"
+                              value={newKeyName}
+                              onChange={(e) => setNewKeyName(e.target.value)}
+                              onKeyDown={(e) => e.key === 'Enter' && handleCreateKey()}
+                              className="flex-1 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            />
+                            <button
+                              onClick={handleCreateKey}
+                              disabled={!newKeyName.trim() || creating}
+                              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                            >
+                              {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Create'}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowNewKeyForm(false);
+                                setNewKeyName('');
+                              }}
+                              className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-white/40 hover:bg-white/[0.05] transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {loading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-5 w-5 animate-spin text-white/40" />
+                    </div>
+                  ) : apiKeys.length === 0 ? (
+                    <div className="text-center py-8 text-sm text-white/40">
+                      No API keys yet. Create one to get started.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {apiKeys.map((apiKey) => (
                         <div
-                          className={`h-2 w-2 rounded-full shrink-0 ${
-                            !apiKey.expires_at || new Date(apiKey.expires_at) > new Date()
-                              ? 'bg-emerald-500'
-                              : 'bg-muted-foreground'
-                          }`}
-                        />
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium">{apiKey.name}</p>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <code className="font-mono">{apiKey.prefix}••••••••</code>
-                            <span>&middot;</span>
-                            <span>{apiKey.role}</span>
-                            <span>&middot;</span>
-                            <span>Created {formatDate(apiKey.created_at)}</span>
-                            <span>&middot;</span>
-                            <span>Last used {formatLastUsed(apiKey.last_used_at)}</span>
+                          key={apiKey.id}
+                          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 hover:bg-white/[0.04] transition-colors w-full"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div
+                              className={`h-2 w-2 rounded-full shrink-0 ${
+                                !apiKey.expires_at || new Date(apiKey.expires_at) > new Date()
+                                  ? 'bg-emerald-400'
+                                  : 'bg-white/40'
+                              }`}
+                            />
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-white">{apiKey.name}</p>
+                              <div className="flex flex-wrap items-center gap-2 text-xs text-white/40">
+                                <code className="font-mono">{apiKey.prefix}••••••••</code>
+                                <span>&middot;</span>
+                                <span>{apiKey.role}</span>
+                                <span>&middot;</span>
+                                <span>Created {formatDate(apiKey.created_at)}</span>
+                                <span>&middot;</span>
+                                <span>Last used {formatLastUsed(apiKey.last_used_at)}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              onClick={() => handleCopyKey(apiKey.id)}
+                              className="rounded-md p-1.5 text-white/40 hover:bg-white/[0.05] hover:text-white/80 transition-colors"
+                              title="Copy key prefix"
+                            >
+                              {copiedKeyId === apiKey.id ? (
+                                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteKey(apiKey.id)}
+                              className="rounded-md p-1.5 text-white/40 hover:bg-destructive/10 hover:text-destructive transition-colors"
+                              title="Revoke key"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          onClick={() => handleCopyKey(apiKey.id)}
-                          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                          title="Copy key prefix"
-                        >
-                          {copiedKeyId === apiKey.id ? (
-                            <Check className="h-3.5 w-3.5 text-emerald-400" />
-                          ) : (
-                            <Copy className="h-3.5 w-3.5" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => handleDeleteKey(apiKey.id)}
-                          className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                          title="Revoke key"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="members" className="space-y-6">
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '160ms' }}
+            >
+              <Card className="border-white/[0.06] bg-white/[0.02]">
+                <CardHeader>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-white/80">Team Members</CardTitle>
+                      <p className="text-sm text-white/40 mt-1">
+                        Invite and manage team members for your organization
+                      </p>
+                    </div>
+                    <Button onClick={() => setIsInviteDialogOpen(true)}>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Invite Member
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {invitations && invitations.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-sm font-medium text-white/40 mb-3">Pending Invitations</h4>
+                      <div className="space-y-2">
+                        {invitations.map((invitation) => (
+                          <div
+                            key={invitation.id}
+                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 rounded-lg border border-white/[0.06] bg-white/[0.02]"
+                          >
+                            <div>
+                              <p className="font-medium text-white">{invitation.email}</p>
+                              <p className="text-sm text-white/40">
+                                {invitation.role} &middot; Expires {formatDistanceToNow(new Date(invitation.expires_at), { addSuffix: true })}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleResendInvitation(invitation.id)}
+                              >
+                                Resend
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRevokeInvitation(invitation.id)}
+                              >
+                                Revoke
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  )}
 
-        <TabsContent value="members" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Team Members</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Invite and manage team members for your organization
-                  </p>
-                </div>
-                <Button onClick={() => setIsInviteDialogOpen(true)}>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Invite Member
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {invitations && invitations.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Pending Invitations</h4>
-                  <div className="space-y-2">
-                    {invitations.map((invitation) => (
-                      <div
-                        key={invitation.id}
-                        className="flex items-center justify-between p-3 rounded-lg border"
-                      >
-                        <div>
-                          <p className="font-medium">{invitation.email}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {invitation.role} • Expires {formatDistanceToNow(new Date(invitation.expires_at), { addSuffix: true })}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleResendInvitation(invitation.id)}
+                  {members && members.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-white/40 mb-3">Members</h4>
+                      <div className="space-y-2">
+                        {members.map((member) => (
+                          <div
+                            key={member.id}
+                            className="flex items-center justify-between p-3 rounded-lg border border-white/[0.06] bg-white/[0.02]"
                           >
-                            Resend
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRevokeInvitation(invitation.id)}
-                          >
-                            Revoke
-                          </Button>
-                        </div>
+                            <div className="flex items-center gap-3">
+                              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="text-sm font-medium text-primary">
+                                  {member.name?.[0] || member.email[0].toUpperCase()}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-white">{member.name || member.email}</p>
+                                <p className="text-sm text-white/40">{member.role}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    </div>
+                  )}
 
-              {members && members.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Members</h4>
+                  {(!members || members.length === 0) && (!invitations || invitations.length === 0) && (
+                    <div className="text-center py-8">
+                      <Users className="h-12 w-12 text-white/20 mx-auto mb-4" />
+                      <p className="text-white/40">No team members yet</p>
+                      <p className="text-sm text-white/30 mt-1">
+                        Invite your first team member to get started
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
+              <DialogContent className="bg-card/80 backdrop-blur-xl border border-white/[0.1]">
+                <DialogHeader>
+                  <DialogTitle>Invite Team Member</DialogTitle>
+                  <DialogDescription>
+                    Send an invitation to join your organization
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleInvite} className="space-y-4">
                   <div className="space-y-2">
-                    {members.map((member) => (
-                      <div
-                        key={member.id}
-                        className="flex items-center justify-between p-3 rounded-lg border"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-sm font-medium text-primary">
-                              {member.name?.[0] || member.email[0].toUpperCase()}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium">{member.name || member.email}</p>
-                            <p className="text-sm text-muted-foreground">{member.role}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                    <Label htmlFor="invite-email">Email</Label>
+                    <Input
+                      id="invite-email"
+                      type="email"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      placeholder="colleague@company.com"
+                    />
                   </div>
-                </div>
-              )}
+                  <div className="space-y-2">
+                    <Label htmlFor="invite-role">Role</Label>
+                    <Select value={inviteRole} onValueChange={setInviteRole}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="member">Member</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsInviteDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={inviteLoading}>
+                      {inviteLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                      Send Invitation
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
 
-              {(!members || members.length === 0) && (!invitations || invitations.length === 0) && (
-                <div className="text-center py-8">
-                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No team members yet</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Invite your first team member to get started
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Invite Team Member</DialogTitle>
-                <DialogDescription>
-                  Send an invitation to join your organization
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleInvite} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="invite-email">Email</Label>
-                  <Input
-                    id="invite-email"
-                    type="email"
-                    value={inviteEmail}
-                    onChange={(e) => setInviteEmail(e.target.value)}
-                    placeholder="colleague@company.com"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="invite-role">Role</Label>
-                  <Select value={inviteRole} onValueChange={setInviteRole}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="member">Member</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsInviteDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={inviteLoading}>
-                    {inviteLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Send Invitation
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </TabsContent>
-
-        <TabsContent value="billing" className="space-y-6">
-          <ComingSoonCard
-            icon={CreditCard}
-            title="Billing & Subscription"
-            description="Manage your subscription plan, payment methods, and view invoices."
-          />
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="billing" className="space-y-6">
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: '160ms' }}
+            >
+              <ComingSoonCard
+                icon={CreditCard}
+                title="Billing & Subscription"
+                description="Manage your subscription plan, payment methods, and view invoices."
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
