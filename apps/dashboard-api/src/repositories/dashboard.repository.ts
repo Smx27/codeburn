@@ -3,9 +3,13 @@ import { query, queryOne } from '../database/pool.js';
 export interface DashboardOverview {
   totalSessions: number;
   totalUsers: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
   activeProviders: number;
+  activeMachines: number;
   periodStart: string;
   periodEnd: string;
 }
@@ -14,6 +18,9 @@ export interface ProviderAnalytics {
   providerId: number;
   providerName: string;
   totalSessions: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
   percentageOfTotal: number;
@@ -21,9 +28,12 @@ export interface ProviderAnalytics {
 
 export interface ModelAnalytics {
   model: string;
+  sessionCount: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
-  sessionCount: number;
   percentageOfTotal: number;
 }
 
@@ -32,6 +42,7 @@ export interface UserAnalytics {
   userEmail: string;
   userName: string | null;
   sessionCount: number;
+  promptCount: number;
   tokenCount: number;
   cost: number;
 }
@@ -39,6 +50,7 @@ export interface UserAnalytics {
 export interface ProjectAnalytics {
   projectName: string;
   sessionCount: number;
+  promptCount: number;
   tokenCount: number;
   cost: number;
 }
@@ -46,7 +58,9 @@ export interface ProjectAnalytics {
 export interface TrendPoint {
   date: string;
   sessions: number;
-  users: number;
+  prompts: number;
+  inputTokens: number;
+  outputTokens: number;
   tokens: number;
   cost: number;
 }
@@ -85,28 +99,41 @@ export async function getOverview(orgId: string, period: string): Promise<Dashbo
   const result = await queryOne<{
     total_sessions: string;
     total_users: string;
+    total_prompts: string;
+    total_input_tokens: string;
+    total_output_tokens: string;
     total_tokens: string;
     total_cost: string;
     active_providers: string;
+    active_machines: string;
   }>(
     `SELECT
-       COALESCE(SUM(total_sessions), 0) as total_sessions,
-       COALESCE(MAX(total_users), 0) as total_users,
-       COALESCE(SUM(total_tokens), 0) as total_tokens,
-       COALESCE(SUM(total_cost), 0) as total_cost,
-       (SELECT COUNT(DISTINCT provider_id) FROM daily_provider_usage
-        WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3) as active_providers
-     FROM daily_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3`,
+       COUNT(DISTINCT s.id) as total_sessions,
+       COUNT(DISTINCT s.user_id) as total_users,
+       COUNT(e.id) as total_prompts,
+       COALESCE(SUM(e.input_tokens), 0) as total_input_tokens,
+       COALESCE(SUM(e.output_tokens), 0) as total_output_tokens,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as total_tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as total_cost,
+       COUNT(DISTINCT s.provider_id) as active_providers,
+       COUNT(DISTINCT s.machine_id) as active_machines
+     FROM sessions s
+     LEFT JOIN events e ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')`,
     [orgId, startStr, endStr]
   );
 
   return {
     totalSessions: parseInt(result?.total_sessions ?? '0', 10),
     totalUsers: parseInt(result?.total_users ?? '0', 10),
+    totalPrompts: parseInt(result?.total_prompts ?? '0', 10),
+    totalInputTokens: parseInt(result?.total_input_tokens ?? '0', 10),
+    totalOutputTokens: parseInt(result?.total_output_tokens ?? '0', 10),
     totalTokens: parseInt(result?.total_tokens ?? '0', 10),
     totalCost: parseFloat(result?.total_cost ?? '0'),
     activeProviders: parseInt(result?.active_providers ?? '0', 10),
+    activeMachines: parseInt(result?.active_machines ?? '0', 10),
     periodStart: startStr,
     periodEnd: endStr,
   };
@@ -117,42 +144,47 @@ export async function getProviderAnalytics(orgId: string, period: string): Promi
   const startStr = start.toISOString().split('T')[0];
   const endStr = end.toISOString().split('T')[0];
 
-  const totalCostResult = await queryOne<{ total: string }>(
-    `SELECT COALESCE(SUM(total_cost), 0) as total
-     FROM daily_provider_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3`,
-    [orgId, startStr, endStr]
-  );
-  const totalCost = parseFloat(totalCostResult?.total ?? '0');
-
   const rows = await query<{
     provider_id: number;
     provider_name: string;
-    total_sessions: string;
+    sessions: string;
+    prompts: string;
+    input_tokens: string;
+    output_tokens: string;
     total_tokens: string;
-    total_cost: string;
+    cost: string;
   }>(
     `SELECT
-       dpu.provider_id,
+       s.provider_id,
        p.name as provider_name,
-       COALESCE(SUM(dpu.total_sessions), 0) as total_sessions,
-       COALESCE(SUM(dpu.total_tokens), 0) as total_tokens,
-       COALESCE(SUM(dpu.total_cost), 0) as total_cost
-     FROM daily_provider_usage dpu
-     JOIN providers p ON dpu.provider_id = p.id
-     WHERE dpu.organization_id = $1 AND dpu.usage_date >= $2 AND dpu.usage_date <= $3
-     GROUP BY dpu.provider_id, p.name
-     ORDER BY total_cost DESC`,
+       COUNT(DISTINCT s.id) as sessions,
+       COUNT(e.id) as prompts,
+       COALESCE(SUM(e.input_tokens), 0) as input_tokens,
+       COALESCE(SUM(e.output_tokens), 0) as output_tokens,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as total_tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as cost
+     FROM sessions s
+     JOIN providers p ON s.provider_id = p.id
+     LEFT JOIN events e ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')
+     GROUP BY s.provider_id, p.name
+     ORDER BY cost DESC`,
     [orgId, startStr, endStr]
   );
+
+  const totalCost = rows.reduce((sum, r) => sum + parseFloat(r.cost), 0);
 
   return rows.map((row) => ({
     providerId: row.provider_id,
     providerName: row.provider_name,
-    totalSessions: parseInt(row.total_sessions, 10),
+    totalSessions: parseInt(row.sessions, 10),
+    totalPrompts: parseInt(row.prompts, 10),
+    totalInputTokens: parseInt(row.input_tokens, 10),
+    totalOutputTokens: parseInt(row.output_tokens, 10),
     totalTokens: parseInt(row.total_tokens, 10),
-    totalCost: parseFloat(row.total_cost),
-    percentageOfTotal: totalCost > 0 ? (parseFloat(row.total_cost) / totalCost) * 100 : 0,
+    totalCost: parseFloat(row.cost),
+    percentageOfTotal: totalCost > 0 ? (parseFloat(row.cost) / totalCost) * 100 : 0,
   }));
 }
 
@@ -162,9 +194,11 @@ export async function getModelAnalytics(orgId: string, period: string, limit: nu
   const endStr = end.toISOString().split('T')[0];
 
   const totalCostResult = await queryOne<{ total: string }>(
-    `SELECT COALESCE(SUM(total_cost), 0) as total
-     FROM daily_model_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3`,
+    `SELECT COALESCE(SUM(e.estimated_cost), 0) as total
+     FROM events e
+     JOIN sessions s ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')`,
     [orgId, startStr, endStr]
   );
   const totalCost = parseFloat(totalCostResult?.total ?? '0');
@@ -174,15 +208,23 @@ export async function getModelAnalytics(orgId: string, period: string, limit: nu
     total_tokens: string;
     total_cost: string;
     session_count: string;
+    prompts: string;
+    input_tokens: string;
+    output_tokens: string;
   }>(
     `SELECT
-       model,
-       COALESCE(SUM(total_tokens), 0) as total_tokens,
-       COALESCE(SUM(total_cost), 0) as total_cost,
-       COALESCE(SUM(session_count), 0) as session_count
-     FROM daily_model_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3
-     GROUP BY model
+       e.model,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as total_tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as total_cost,
+       COUNT(DISTINCT e.session_id) as session_count,
+       COUNT(e.id) as prompts,
+       COALESCE(SUM(e.input_tokens), 0) as input_tokens,
+       COALESCE(SUM(e.output_tokens), 0) as output_tokens
+     FROM events e
+     JOIN sessions s ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')
+     GROUP BY e.model
      ORDER BY total_cost DESC
      LIMIT $4`,
     [orgId, startStr, endStr, limit]
@@ -190,9 +232,12 @@ export async function getModelAnalytics(orgId: string, period: string, limit: nu
 
   return rows.map((row) => ({
     model: row.model,
+    sessionCount: parseInt(row.session_count, 10),
+    totalPrompts: parseInt(row.prompts, 10),
+    totalInputTokens: parseInt(row.input_tokens, 10),
+    totalOutputTokens: parseInt(row.output_tokens, 10),
     totalTokens: parseInt(row.total_tokens, 10),
     totalCost: parseFloat(row.total_cost),
-    sessionCount: parseInt(row.session_count, 10),
     percentageOfTotal: totalCost > 0 ? (parseFloat(row.total_cost) / totalCost) * 100 : 0,
   }));
 }
@@ -206,21 +251,25 @@ export async function getUserAnalytics(orgId: string, period: string, limit: num
     user_id: string;
     user_email: string;
     user_name: string | null;
-    session_count: string;
-    token_count: string;
+    sessions: string;
+    prompts: string;
+    tokens: string;
     cost: string;
   }>(
     `SELECT
-       du.user_id,
+       s.user_id,
        u.email as user_email,
        u.name as user_name,
-       COALESCE(SUM(du.session_count), 0) as session_count,
-       COALESCE(SUM(du.token_count), 0) as token_count,
-       COALESCE(SUM(du.cost), 0) as cost
-     FROM daily_user_usage du
-     JOIN users u ON du.user_id = u.id
-     WHERE du.organization_id = $1 AND du.usage_date >= $2 AND du.usage_date <= $3
-     GROUP BY du.user_id, u.email, u.name
+       COUNT(DISTINCT s.id) as sessions,
+       COUNT(e.id) as prompts,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as cost
+     FROM sessions s
+     JOIN users u ON s.user_id = u.id
+     LEFT JOIN events e ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')
+     GROUP BY s.user_id, u.email, u.name
      ORDER BY cost DESC
      LIMIT $4`,
     [orgId, startStr, endStr, limit]
@@ -230,8 +279,9 @@ export async function getUserAnalytics(orgId: string, period: string, limit: num
     userId: row.user_id,
     userEmail: row.user_email,
     userName: row.user_name,
-    sessionCount: parseInt(row.session_count, 10),
-    tokenCount: parseInt(row.token_count, 10),
+    sessionCount: parseInt(row.sessions, 10),
+    promptCount: parseInt(row.prompts, 10),
+    tokenCount: parseInt(row.tokens, 10),
     cost: parseFloat(row.cost),
   }));
 }
@@ -243,18 +293,23 @@ export async function getProjectAnalytics(orgId: string, period: string, limit: 
 
   const rows = await query<{
     project_name: string;
-    session_count: string;
-    token_count: string;
+    sessions: string;
+    prompts: string;
+    tokens: string;
     cost: string;
   }>(
     `SELECT
-       project_name,
-       COALESCE(SUM(session_count), 0) as session_count,
-       COALESCE(SUM(token_count), 0) as token_count,
-       COALESCE(SUM(cost), 0) as cost
-     FROM daily_project_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3
-     GROUP BY project_name
+       s.project_name,
+       COUNT(DISTINCT s.id) as sessions,
+       COUNT(e.id) as prompts,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as cost
+     FROM sessions s
+     LEFT JOIN events e ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')
+       AND s.project_name IS NOT NULL
+     GROUP BY s.project_name
      ORDER BY cost DESC
      LIMIT $4`,
     [orgId, startStr, endStr, limit]
@@ -262,8 +317,9 @@ export async function getProjectAnalytics(orgId: string, period: string, limit: 
 
   return rows.map((row) => ({
     projectName: row.project_name,
-    sessionCount: parseInt(row.session_count, 10),
-    tokenCount: parseInt(row.token_count, 10),
+    sessionCount: parseInt(row.sessions, 10),
+    promptCount: parseInt(row.prompts, 10),
+    tokenCount: parseInt(row.tokens, 10),
     cost: parseFloat(row.cost),
   }));
 }
@@ -277,38 +333,44 @@ export async function getTrends(
   const startStr = start.toISOString().split('T')[0];
   const endStr = end.toISOString().split('T')[0];
 
-  let dateFormat: string;
-  let groupBy: string;
+  let dateExpr: string;
+  let groupByExpr: string;
   switch (granularity) {
     case 'weekly':
-      dateFormat = "DATE_TRUNC('week', usage_date)";
-      groupBy = "DATE_TRUNC('week', usage_date)";
+      dateExpr = "DATE_TRUNC('week', s.started_at)::text";
+      groupByExpr = "DATE_TRUNC('week', s.started_at)";
       break;
     case 'monthly':
-      dateFormat = "DATE_TRUNC('month', usage_date)";
-      groupBy = "DATE_TRUNC('month', usage_date)";
+      dateExpr = "DATE_TRUNC('month', s.started_at)::text";
+      groupByExpr = "DATE_TRUNC('month', s.started_at)";
       break;
     default:
-      dateFormat = 'usage_date';
-      groupBy = 'usage_date';
+      dateExpr = "DATE(s.started_at)::text";
+      groupByExpr = "DATE(s.started_at)";
   }
 
   const rows = await query<{
     date: string;
     sessions: string;
-    users: string;
+    prompts: string;
+    input_tokens: string;
+    output_tokens: string;
     tokens: string;
     cost: string;
   }>(
     `SELECT
-       ${dateFormat} as date,
-       COALESCE(SUM(total_sessions), 0) as sessions,
-       COALESCE(MAX(total_users), 0) as users,
-       COALESCE(SUM(total_tokens), 0) as tokens,
-       COALESCE(SUM(total_cost), 0) as cost
-     FROM daily_usage
-     WHERE organization_id = $1 AND usage_date >= $2 AND usage_date <= $3
-     GROUP BY ${groupBy}
+       ${dateExpr} as date,
+       COUNT(DISTINCT s.id) as sessions,
+       COUNT(e.id) as prompts,
+       COALESCE(SUM(e.input_tokens), 0) as input_tokens,
+       COALESCE(SUM(e.output_tokens), 0) as output_tokens,
+       COALESCE(SUM(e.input_tokens + e.output_tokens), 0) as tokens,
+       COALESCE(SUM(e.estimated_cost), 0) as cost
+     FROM sessions s
+     LEFT JOIN events e ON e.session_id = s.id
+     WHERE s.organization_id = $1
+       AND s.started_at >= $2 AND s.started_at < ($3::date + INTERVAL '1 day')
+     GROUP BY ${groupByExpr}
      ORDER BY date ASC`,
     [orgId, startStr, endStr]
   );
@@ -316,7 +378,9 @@ export async function getTrends(
   return rows.map((row) => ({
     date: row.date,
     sessions: parseInt(row.sessions, 10),
-    users: parseInt(row.users, 10),
+    prompts: parseInt(row.prompts, 10),
+    inputTokens: parseInt(row.input_tokens, 10),
+    outputTokens: parseInt(row.output_tokens, 10),
     tokens: parseInt(row.tokens, 10),
     cost: parseFloat(row.cost),
   }));

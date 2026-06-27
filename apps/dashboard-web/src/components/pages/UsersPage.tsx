@@ -76,7 +76,7 @@ export function UsersPage() {
 
   const activityChartData = useMemo(() => {
     if (!trends?.data) return [];
-    return trends.data.map((point: TrendPoint) => ({ date: point.date, users: point.users }));
+    return trends.data.map((point: TrendPoint) => ({ date: point.date, sessions: point.sessions }));
   }, [trends]);
 
   const providerPreferenceData = useMemo(() => {
@@ -371,7 +371,7 @@ export function UsersPage() {
           {activityChartData.length > 0 ? (
             <AreaChart
               data={activityChartData}
-              series={[{ key: 'users', name: 'Active Users', color: CHART_COLORS.primary }]}
+              series={[{ key: 'sessions', name: 'Active Sessions', color: CHART_COLORS.primary }]}
               xKey="date"
               formatYAxis={(v) => formatNumber(v)}
               height={280}

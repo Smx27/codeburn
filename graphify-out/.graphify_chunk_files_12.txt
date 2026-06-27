@@ -1,0 +1,14 @@
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/agent-lifecycle.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/api-design.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/authentication-flow.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/configuration.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/dashboard-pages.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/database.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/deployment.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/organization-flow.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/overview.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/provider-model.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/repository-structure.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/security.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/session-model.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/architecture/sync-engine.md

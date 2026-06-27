@@ -1,0 +1,3 @@
+/home/priya/Documents/Github/Ai/aiinsight/docs/cli/command-reference.md
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/public/favicon.svg
+/home/priya/Documents/Github/Ai/aiinsight/gnome/icons/aiinsight-symbolic.svg

@@ -1,0 +1,16 @@
+/home/priya/Documents/Github/Ai/aiinsight/insomnia-collection.json
+/home/priya/Documents/Github/Ai/aiinsight/package.json
+/home/priya/Documents/Github/Ai/aiinsight/sea-config.json
+/home/priya/Documents/Github/Ai/aiinsight/tsconfig.json
+/home/priya/Documents/Github/Ai/aiinsight/tsup.config.ts
+/home/priya/Documents/Github/Ai/aiinsight/tsup.sea.config.ts
+/home/priya/Documents/Github/Ai/aiinsight/AGENTS.md
+/home/priya/Documents/Github/Ai/aiinsight/BINARY-VALIDATION-REPORT.md
+/home/priya/Documents/Github/Ai/aiinsight/CHANGELOG.md
+/home/priya/Documents/Github/Ai/aiinsight/CONTRIBUTING.md
+/home/priya/Documents/Github/Ai/aiinsight/README.md
+/home/priya/Documents/Github/Ai/aiinsight/RELEASING.md
+/home/priya/Documents/Github/Ai/aiinsight/SEA-ARTIFACT-AUDIT.md
+/home/priya/Documents/Github/Ai/aiinsight/SEA-VALIDATION-REPORT.md
+/home/priya/Documents/Github/Ai/aiinsight/SECURITY.md
+/home/priya/Documents/Github/Ai/aiinsight/docker-compose.yml

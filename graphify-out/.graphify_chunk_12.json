@@ -1,0 +1,683 @@
+
+{
+  "nodes": [
+    {
+      "id": "architecture_agent-lifecycle_enrollment-key",
+      "label": "Enrollment Key",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_machine",
+      "label": "Machine",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_jwt",
+      "label": "JWT",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_authenticated-agent",
+      "label": "Authenticated Agent",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_heartbeat",
+      "label": "Heartbeat",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_offline",
+      "label": "Offline",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_agent-token",
+      "label": "Agent Token",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_agent-lifecycle_api-key",
+      "label": "API Key",
+      "file_type": "document",
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_api-design_dashboard-api",
+      "label": "Dashboard API",
+      "file_type": "document",
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_api-design_ingestion-api",
+      "label": "Ingestion API",
+      "file_type": "document",
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_api-design_authentication",
+      "label": "Authentication",
+      "file_type": "document",
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_api-design_rbac-roles",
+      "label": "RBAC Roles",
+      "file_type": "document",
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_authentication-flow_registration",
+      "label": "Registration",
+      "file_type": "document",
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_authentication-flow_login",
+      "label": "Login",
+      "file_type": "document",
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_authentication-flow_refresh-token",
+      "label": "Refresh Token",
+      "file_type": "document",
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_authentication-flow_password-reset",
+      "label": "Password Reset",
+      "file_type": "document",
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_configuration_database-url",
+      "label": "DATABASE_URL",
+      "file_type": "document",
+      "source_file": "docs/architecture/configuration.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_configuration_jwt-secret",
+      "label": "JWT_SECRET",
+      "file_type": "document",
+      "source_file": "docs/architecture/configuration.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_dashboard-pages_overview",
+      "label": "Overview",
+      "file_type": "document",
+      "source_file": "docs/architecture/dashboard-pages.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_dashboard-pages_sessions",
+      "label": "Sessions",
+      "file_type": "document",
+      "source_file": "docs/architecture/dashboard-pages.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_dashboard-pages_users",
+      "label": "Users",
+      "file_type": "document",
+      "source_file": "docs/architecture/dashboard-pages.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_dashboard-pages_models",
+      "label": "Models",
+      "file_type": "document",
+      "source_file": "docs/architecture/dashboard-pages.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_database_organizations",
+      "label": "organizations",
+      "file_type": "document",
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_database_users",
+      "label": "users",
+      "file_type": "document",
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_database_machines",
+      "label": "machines",
+      "file_type": "document",
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_database_sessions",
+      "label": "sessions",
+      "file_type": "document",
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_database_events",
+      "label": "events",
+      "file_type": "document",
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_deployment_docker-compose",
+      "label": "Docker Compose",
+      "file_type": "document",
+      "source_file": "docs/architecture/deployment.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_sync-engine_sync-engine",
+      "label": "Sync Engine",
+      "file_type": "document",
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_sync-engine_provider-adapters",
+      "label": "Provider Adapters",
+      "file_type": "document",
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_sync-engine_batch-uploader",
+      "label": "Batch Uploader",
+      "file_type": "document",
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "architecture_agent-lifecycle_enrollment-key",
+      "target": "architecture_agent-lifecycle_machine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_machine",
+      "target": "architecture_agent-lifecycle_jwt",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_jwt",
+      "target": "architecture_agent-lifecycle_authenticated-agent",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_authenticated-agent",
+      "target": "architecture_agent-lifecycle_heartbeat",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_heartbeat",
+      "target": "architecture_agent-lifecycle_offline",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_api-design_dashboard-api",
+      "target": "architecture_api-design_authentication",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_api-design_dashboard-api",
+      "target": "architecture_api-design_rbac-roles",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_authentication-flow_registration",
+      "target": "architecture_authentication-flow_login",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_authentication-flow_login",
+      "target": "architecture_authentication-flow_refresh-token",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/authentication-flow.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_organizations",
+      "target": "architecture_database_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_organizations",
+      "target": "architecture_database_machines",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_machines",
+      "target": "architecture_database_sessions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_sessions",
+      "target": "architecture_database_events",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_sync-engine_sync-engine",
+      "target": "architecture_sync-engine_provider-adapters",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_sync-engine_sync-engine",
+      "target": "architecture_sync-engine_batch-uploader",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_enrollment-key",
+      "target": "architecture_api-design_enrollment-key-routes",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_machine",
+      "target": "architecture_database_machines",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_agent-lifecycle_jwt",
+      "target": "architecture_configuration_jwt-secret",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/architecture/agent-lifecycle.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_api-design_dashboard-api",
+      "target": "architecture_database_organizations",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_api-design_ingestion-api",
+      "target": "architecture_database_events",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/architecture/api-design.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_sync-engine_sync-engine",
+      "target": "architecture_api-design_ingestion-api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_sync-engine_sync-engine",
+      "target": "architecture_agent-lifecycle_machine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_deployment_docker-compose",
+      "target": "architecture_api-design_dashboard-api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/deployment.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_deployment_docker-compose",
+      "target": "architecture_api-design_ingestion-api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/deployment.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_sessions",
+      "target": "architecture_database_providers",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_daily-usage",
+      "target": "architecture_database_organizations",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_daily-provider-usage",
+      "target": "architecture_database_providers",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_database_daily-user-usage",
+      "target": "architecture_database_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_sync-engine_sync-engine",
+      "target": "architecture_database_sync-state",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/sync-engine.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "architecture_agent-lifecycle_agent-registration",
+      "label": "Agent Registration Process",
+      "nodes": [
+        "architecture_agent-lifecycle_enrollment-key",
+        "architecture_agent-lifecycle_machine",
+        "architecture_agent-lifecycle_jwt"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/agent-lifecycle.md"
+    },
+    {
+      "id": "architecture_authentication-flow_user-auth",
+      "label": "User Authentication Flow",
+      "nodes": [
+        "architecture_authentication-flow_registration",
+        "architecture_authentication-flow_login",
+        "architecture_authentication-flow_refresh-token"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/authentication-flow.md"
+    },
+    {
+      "id": "architecture_database_core-tables",
+      "label": "Core Data Tables",
+      "nodes": [
+        "architecture_database_organizations",
+        "architecture_database_users",
+        "architecture_database_machines",
+        "architecture_database_sessions",
+        "architecture_database_events"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture/database.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

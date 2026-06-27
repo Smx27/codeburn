@@ -1,0 +1,386 @@
+{
+  "nodes": [
+    {
+      "id": "hooks_gsd-check-update-worker",
+      "label": "GSD Check Update Worker",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-check-update-worker.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-check-update",
+      "label": "GSD Check Update",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-check-update.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-config-reload",
+      "label": "GSD Config Reload",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-config-reload.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-context-monitor",
+      "label": "GSD Context Monitor",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-context-monitor.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-cursor-post-tool",
+      "label": "GSD Cursor Post Tool",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-cursor-post-tool.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-cursor-session-start",
+      "label": "GSD Cursor Session Start",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-cursor-session-start.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-graphify-update",
+      "label": "GSD Graphify Update",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-graphify-update.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-phase-boundary",
+      "label": "GSD Phase Boundary",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-phase-boundary.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-prompt-guard",
+      "label": "GSD Prompt Guard",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-prompt-guard.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-read-guard",
+      "label": "GSD Read Guard",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-read-guard.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-read-injection-scanner",
+      "label": "GSD Read Injection Scanner",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-read-injection-scanner.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-session-state",
+      "label": "GSD Session State",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-session-state.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-statusline",
+      "label": "GSD Statusline",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-statusline.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-update-banner",
+      "label": "GSD Update Banner",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-update-banner.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-validate-commit",
+      "label": "GSD Validate Commit",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-validate-commit.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-workflow-guard",
+      "label": "GSD Workflow Guard",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-workflow-guard.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hooks_gsd-worktree-path-guard",
+      "label": "GSD Worktree Path Guard",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/gsd-worktree-path-guard.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lib_git-cmd",
+      "label": "Git Command Classifier",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/lib/git-cmd.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lib_gsd-graphify-rebuild",
+      "label": "GSD Graphify Rebuild",
+      "file_type": "code",
+      "source_file": ".opencode/hooks/lib/gsd-graphify-rebuild.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "hooks_gsd-check-update",
+      "target": "hooks_gsd-check-update-worker",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-check-update.js",
+      "source_location": "line 53",
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-check-update-worker",
+      "target": "hooks_gsd-check-update",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": ".opencode/hooks/gsd-check-update-worker.js",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "hooks_gsd-statusline",
+      "target": "hooks_gsd-context-monitor",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-statusline.js",
+      "source_location": "line 330",
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-graphify-update",
+      "target": "lib_gsd-graphify-rebuild",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-graphify-update.sh",
+      "source_location": "line 147",
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-validate-commit",
+      "target": "lib_git-cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-validate-commit.sh",
+      "source_location": "line 29",
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-workflow-guard",
+      "target": "lib_git-cmd",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-workflow-guard.js",
+      "source_location": "line 17",
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-prompt-guard",
+      "target": "hooks_gsd-read-injection-scanner",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": ".opencode/hooks/gsd-prompt-guard.js",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-read-guard",
+      "target": "hooks_gsd-read-injection-scanner",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": ".opencode/hooks/gsd-read-guard.js",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "hooks_gsd-cursor-post-tool",
+      "target": "hooks_gsd-cursor-session-start",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": ".opencode/hooks/gsd-cursor-post-tool.js",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-session-state",
+      "target": "hooks_gsd-cursor-session-start",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": ".opencode/hooks/gsd-session-state.sh",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hooks_gsd-check-update-worker",
+      "target": "hooks_gsd-update-banner",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": ".opencode/hooks/gsd-check-update-worker.js",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "hooks_gsd-check-update-worker",
+      "target": "hooks_gsd-statusline",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": ".opencode/hooks/gsd-check-update-worker.js",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "hooks_gsd-config-reload",
+      "target": "hooks_gsd-context-monitor",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": ".opencode/hooks/gsd-config-reload.js",
+      "source_location": null,
+      "weight": 0.7
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyper_injection_defense",
+      "label": "Prompt Injection Defense System",
+      "nodes": [
+        "hooks_gsd-prompt-guard",
+        "hooks_gsd-read-injection-scanner"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": ".opencode/hooks/gsd-prompt-guard.js"
+    },
+    {
+      "id": "hyper_cursor_hooks",
+      "label": "Cursor Integration Hooks",
+      "nodes": [
+        "hooks_gsd-cursor-post-tool",
+        "hooks_gsd-cursor-session-start"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".opencode/hooks/gsd-cursor-post-tool.js"
+    },
+    {
+      "id": "hyper_session_start_hooks",
+      "label": "Session Start Hooks",
+      "nodes": [
+        "hooks_gsd-check-update",
+        "hooks_gsd-session-state",
+        "hooks_gsd-update-banner"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": ".opencode/hooks/gsd-check-update.js"
+    }
+  ],
+  "input_tokens": 15000,
+  "output_tokens": 3500
+}

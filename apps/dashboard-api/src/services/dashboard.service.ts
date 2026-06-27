@@ -187,26 +187,6 @@ async function generateRefreshToken(userId: string): Promise<string> {
   return token;
 }
 
-export async function runBackfill(organizationId: string) {
-  const { createAnalyticsService } = await import('@aiinsight/analytics-engine');
-  const service = createAnalyticsService({ databaseUrl: process.env.DATABASE_URL! });
-  try {
-    return await service.runHistoricalBackfill(organizationId);
-  } finally {
-    await service.shutdown();
-  }
-}
-
-export async function runDailyAggregation(organizationId: string, date: Date) {
-  const { createAnalyticsService } = await import('@aiinsight/analytics-engine');
-  const service = createAnalyticsService({ databaseUrl: process.env.DATABASE_URL! });
-  try {
-    return await service.runDailyAggregation(organizationId, date);
-  } finally {
-    await service.shutdown();
-  }
-}
-
 export async function createOrganization(name: string, userId: string) {
   const org = await dashboardRepo.createOrganization(name);
   await dashboardRepo.createOrganizationSettings(org.id);

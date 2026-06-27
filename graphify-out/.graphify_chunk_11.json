@@ -1,0 +1,43 @@
+{
+  "nodes": [
+    {"id": "providers_antigravity", "label": "Antigravity Provider", "file_type": "document", "source_file": "docs/providers/antigravity.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_claude", "label": "Claude Provider", "file_type": "document", "source_file": "docs/providers/claude.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_cline", "label": "Cline Provider", "file_type": "document", "source_file": "docs/providers/cline.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_codex", "label": "Codex Provider", "file_type": "document", "source_file": "docs/providers/codex.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_crush", "label": "Crush Provider", "file_type": "document", "source_file": "docs/providers/crush.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_cursor", "label": "Cursor Provider", "file_type": "document", "source_file": "docs/providers/cursor.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_devin", "label": "Devin Provider", "file_type": "document", "source_file": "docs/providers/devin.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_forge", "label": "Forge Provider", "file_type": "document", "source_file": "docs/providers/forge.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_gemini", "label": "Gemini Provider", "file_type": "document", "source_file": "docs/providers/gemini.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_goose", "label": "Goose Provider", "file_type": "document", "source_file": "docs/providers/goose.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_kimi", "label": "Kimi Provider", "file_type": "document", "source_file": "docs/providers/kimi.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_kiro", "label": "Kiro Provider", "file_type": "document", "source_file": "docs/providers/kiro.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_opencode", "label": "OpenCode Provider", "file_type": "document", "source_file": "docs/providers/opencode.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_qwen", "label": "Qwen Provider", "file_type": "document", "source_file": "docs/providers/qwen.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "providers_warp", "label": "Warp Provider", "file_type": "document", "source_file": "docs/providers/warp.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}
+  ],
+  "edges": [
+    {"source": "providers_cline", "target": "providers_claude", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/providers/cline.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_antigravity", "target": "providers_gemini", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.95, "source_file": "docs/providers/antigravity.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_codex", "target": "providers_claude", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/providers/codex.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_gemini", "target": "providers_antigravity", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.95, "source_file": "docs/providers/gemini.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_claude", "target": "providers_cline", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/providers/claude.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_cline", "target": "providers_crush", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/cline.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_cursor", "target": "providers_kiro", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/providers/cursor.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_kiro", "target": "providers_cursor", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/providers/kiro.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_kimi", "target": "providers_codex", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/kimi.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_opencode", "target": "providers_codex", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/opencode.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_warp", "target": "providers_crush", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/warp.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_devin", "target": "providers_claude", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/providers/devin.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_forge", "target": "providers_codex", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/forge.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_goose", "target": "providers_codex", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/goose.md", "source_location": null, "weight": 1.0},
+    {"source": "providers_qwen", "target": "providers_gemini", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.65, "source_file": "docs/providers/qwen.md", "source_location": null, "weight": 1.0}
+  ],
+  "hyperedges": [
+    {"id": "providers_sqlite_group", "label": "SQLite-backed providers", "nodes": ["providers_crush", "providers_cursor", "providers_devin", "providers_forge", "providers_goose", "providers_opencode", "providers_warp"], "relation": "form", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "docs/providers/crush.md"},
+    {"id": "providers_jsonl_group", "label": "JSONL-backed providers", "nodes": ["providers_claude", "providers_codex", "providers_kimi", "providers_qwen"], "relation": "form", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "docs/providers/claude.md"},
+    {"id": "providers_vsc_family", "label": "VS Code extension family", "nodes": ["providers_cline", "providers_kiro", "providers_cursor"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 0.75, "source_file": "docs/providers/cline.md"}
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

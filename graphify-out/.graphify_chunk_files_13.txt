@@ -1,0 +1,13 @@
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/001_initial_schema.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/002_sessions_events.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/003_sync_tracking.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/004_aggregation_runs.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/005_daily_usage.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/006_daily_provider_usage.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/007_daily_model_usage.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/008_daily_user_usage.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/009_daily_project_usage.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/010_auth.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/011_phase3_schema.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/012_phase3.5_auth.sql
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/database/migrations/014_sessions_indexes.sql

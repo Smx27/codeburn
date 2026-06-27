@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {"id":"lib_api","label":"api.ts - API client with auth token management","file_type":"code","source_file":"apps/dashboard-web/src/lib/api.ts","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"lib_auth_context","label":"auth-context.tsx - React auth context provider with login/logout","file_type":"code","source_file":"apps/dashboard-web/src/lib/auth-context.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"lib_env","label":"env.ts - Environment variable validation with zod","file_type":"code","source_file":"apps/dashboard-web/src/lib/env.ts","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"lib_storage_keys","label":"storage-keys.ts - localStorage key constants for auth tokens","file_type":"code","source_file":"apps/dashboard-web/src/lib/storage-keys.ts","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"lib_theme_context","label":"theme-context.tsx - React theme context provider","file_type":"code","source_file":"apps/dashboard-web/src/lib/theme-context.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"lib_utils","label":"utils.ts - Formatting and utility functions (currency, tokens, dates, classNames)","file_type":"code","source_file":"apps/dashboard-web/src/lib/utils.ts","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"dashboard_page","label":"dashboard/page.tsx - Dashboard route rendering OverviewPage","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/dashboard/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"dashboard_layout","label":"layout.tsx - Dashboard layout with sidebar, topbar, mobile sidebar, auth gate","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/layout.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"machine_detail_page","label":"machines/[id]/page.tsx - Machine detail page with stats, provider breakdown, recent sessions","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/machines/[id]/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"machines_page","label":"machines/page.tsx - Machines list page with table view","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/machines/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"models_page","label":"models/page.tsx - Models route rendering ModelsPage","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/models/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"sessions_page","label":"sessions/page.tsx - Sessions list page with filters, sorting, pagination","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/sessions/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"settings_page","label":"settings/page.tsx - Settings route rendering SettingsPage","file_type":"code","source_file":"apps/dashboard-web/src/app/(dashboard)/settings/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"login_page","label":"login/page.tsx - Login page with email/password form and zod validation","file_type":"code","source_file":"apps/dashboard-web/src/app/(auth)/login/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null},
+    {"id":"verify_email_page","label":"verify-email/page.tsx - Email verification page with token-based verify and resend","file_type":"code","source_file":"apps/dashboard-web/src/app/(auth)/verify-email/page.tsx","source_location":null,"source_url":null,"captured_at":null,"author":null,"contributor":null}
+  ],
+  "edges": [
+    {"source":"lib_api","target":"lib_storage_keys","relation":"references","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/lib/api.ts","source_location":null,"weight":1.0},
+    {"source":"lib_auth_context","target":"lib_api","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/lib/auth-context.tsx","source_location":null,"weight":1.0},
+    {"source":"lib_auth_context","target":"lib_storage_keys","relation":"references","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/lib/auth-context.tsx","source_location":null,"weight":1.0},
+    {"source":"dashboard_layout","target":"lib_auth_context","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/layout.tsx","source_location":null,"weight":1.0},
+    {"source":"machine_detail_page","target":"lib_api","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/machines/[id]/page.tsx","source_location":null,"weight":1.0},
+    {"source":"machine_detail_page","target":"lib_utils","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/machines/[id]/page.tsx","source_location":null,"weight":1.0},
+    {"source":"machines_page","target":"lib_storage_keys","relation":"references","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/machines/page.tsx","source_location":null,"weight":1.0},
+    {"source":"sessions_page","target":"lib_api","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/sessions/page.tsx","source_location":null,"weight":1.0},
+    {"source":"sessions_page","target":"lib_utils","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(dashboard)/sessions/page.tsx","source_location":null,"weight":1.0},
+    {"source":"login_page","target":"lib_auth_context","relation":"calls","confidence":"EXTRACTED","confidence_score":1.0,"source_file":"apps/dashboard-web/src/app/(auth)/login/page.tsx","source_location":null,"weight":1.0},
+    {"source":"dashboard_page","target":"lib_utils","relation":"conceptually_related_to","confidence":"INFERRED","confidence_score":0.75,"source_file":"apps/dashboard-web/src/app/(dashboard)/dashboard/page.tsx","source_location":null,"weight":1.0},
+    {"source":"lib_api","target":"lib_auth_context","relation":"shares_data_with","confidence":"INFERRED","confidence_score":0.85,"source_file":"apps/dashboard-web/src/lib/api.ts","source_location":null,"weight":1.0},
+    {"source":"lib_theme_context","target":"lib_auth_context","relation":"semantically_similar_to","confidence":"INFERRED","confidence_score":0.75,"source_file":"apps/dashboard-web/src/lib/theme-context.tsx","source_location":null,"weight":1.0}
+  ],
+  "hyperedges": [
+    {"id":"he_auth_flow","label":"Authentication flow across lib and pages","nodes":["lib_api","lib_auth_context","lib_storage_keys","login_page","dashboard_layout"],"relation":"participate_in","confidence":"EXTRACTED","confidence_score":0.95,"source_file":"apps/dashboard-web/src/lib/auth-context.tsx"},
+    {"id":"he_dashboard_layout_group","label":"Dashboard layout composition","nodes":["dashboard_layout","dashboard_page","machines_page","sessions_page","models_page","settings_page"],"relation":"implement","confidence":"EXTRACTED","confidence_score":0.95,"source_file":"apps/dashboard-web/src/app/(dashboard)/layout.tsx"},
+    {"id":"he_util_shared_lib","label":"Shared utility and context libraries","nodes":["lib_utils","lib_storage_keys","lib_env","lib_theme_context"],"relation":"form","confidence":"INFERRED","confidence_score":0.75,"source_file":"apps/dashboard-web/src/lib/utils.ts"}
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

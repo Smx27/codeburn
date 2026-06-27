@@ -2,28 +2,74 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const Spline = dynamic(
   () => import('@splinetool/react-spline').then((mod) => mod.default),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => null,
+  }
 );
 
-export function HeroSection() {
+function SplineLoader() {
   return (
-    <section className="relative min-h-screen flex items-end bg-hero-bg overflow-hidden">
+    <div className="absolute inset-0 bg-hero-bg">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/3" />
+      <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] animate-pulse" />
+    </div>
+  );
+}
+
+export function HeroSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative min-h-screen flex items-end bg-hero-bg overflow-hidden">
+      {/* 3D Scene — lazy loaded when near viewport */}
       <div className="absolute inset-0">
-        <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
-          <Spline
-            scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
-            className="w-full h-full"
-          />
-        </Suspense>
+        {shouldLoad ? (
+          <Suspense fallback={<SplineLoader />}>
+            <Spline
+              scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
+              className="w-full h-full"
+              onLoad={() => setIsLoaded(true)}
+            />
+          </Suspense>
+        ) : (
+          <SplineLoader />
+        )}
       </div>
 
-      <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
+      {/* Gradient overlay — fades in after Spline loads */}
+      <div
+        className={`absolute inset-0 z-[1] pointer-events-none transition-opacity duration-1000 ${
+          isLoaded ? 'bg-black/30' : 'bg-black/50'
+        }`}
+      />
 
+      {/* Content */}
       <div className="relative z-10 pointer-events-none w-full max-w-[90%] sm:max-w-md lg:max-w-2xl px-6 md:px-10 pb-10 md:pb-10 pt-32">
         <h1
           className="text-[clamp(3rem,8vw,6rem)] font-bold leading-[1.05] tracking-[-0.05em] text-foreground mb-2 md:mb-4 uppercase opacity-0 animate-fade-up"

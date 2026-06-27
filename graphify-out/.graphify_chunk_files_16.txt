@@ -1,0 +1,12 @@
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/ActivitySection.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/AgentTabStrip.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/FindingsSection.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/HeatmapSection.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/HeroSection.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/MenuBarContent.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/ModelsSection.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/PeriodSegmentedControl.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/SectionCaption.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/SettingsView.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/SparklineView.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Views/ToolingSection.swift

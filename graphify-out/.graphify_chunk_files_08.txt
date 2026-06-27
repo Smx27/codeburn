@@ -1,0 +1,17 @@
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-check-update-worker.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-check-update.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-config-reload.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-context-monitor.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-cursor-post-tool.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-cursor-session-start.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-graphify-update.sh
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-phase-boundary.sh
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-prompt-guard.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-read-guard.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-read-injection-scanner.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-session-state.sh
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-statusline.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-update-banner.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-validate-commit.sh
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-workflow-guard.js
+/home/priya/Documents/Github/Ai/aiinsight/.opencode/hooks/gsd-worktree-path-guard.js

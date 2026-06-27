@@ -1,0 +1,17 @@
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/.eslintrc.json
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/components.json
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/next-env.d.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/next.config.js
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/package.json
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/postcss.config.js
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/tailwind.config.js
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/tsconfig.json
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/PENDING_WORK.md
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/event.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/machine.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/organization.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/provider.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/session.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/syncSource.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/syncState.repository.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/ingestion-api/src/repositories/user.repository.ts

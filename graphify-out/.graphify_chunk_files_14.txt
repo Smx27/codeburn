@@ -1,0 +1,12 @@
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/agent.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/apiKey.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/auth.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/dashboard.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/enrollment.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/health.route.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/invitation.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/machine.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/onboarding.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/organization.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/session.routes.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-api/src/routes/team.routes.ts

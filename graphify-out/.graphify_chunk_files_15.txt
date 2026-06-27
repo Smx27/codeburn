@@ -1,0 +1,12 @@
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/AreaChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/BarChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/ChartTooltip.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/DonutChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/HeatmapChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/LineChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/ProviderChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/SparkLine.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/StackedBarChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/TrendChart.tsx
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/chart-colors.ts
+/home/priya/Documents/Github/Ai/aiinsight/apps/dashboard-web/src/components/charts/index.ts

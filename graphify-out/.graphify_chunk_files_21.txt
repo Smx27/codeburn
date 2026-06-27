@@ -1,0 +1,16 @@
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/claude.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/codex.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/cursor.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/gemini.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/index.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/opencode.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/oss-types.ts
+/home/priya/Documents/Github/Ai/aiinsight/packages/sync-engine/src/providers/warp.sync.ts
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/build.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/environment.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/migrations.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/release-process.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/repository-structure.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/setup.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/shared-packages.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/developer/testing.md

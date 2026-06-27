@@ -1,0 +1,12 @@
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/001-normalized-events.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/002-batch-uploads.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/003-no-prompt-storage.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/004-api-key-hashing.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/005-tenant-isolation.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/006-local-sync-state.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-001-separate-analytics-bounded-context.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-002-precomputed-aggregate-tables.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-003-jwt-api-key-dual-authentication.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-004-nextjs-15-tanstack-query.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-005-idempotent-aggregation-jobs.md
+/home/priya/Documents/Github/Ai/aiinsight/docs/adr/ADR-006-hourly-incremental-historical-backfill.md

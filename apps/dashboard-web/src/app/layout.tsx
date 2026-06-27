@@ -60,6 +60,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${sora.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://prod.spline.design" />
+        <link rel="dns-prefetch" href="https://prod.spline.design" />
+      </head>
       <body className="font-sora antialiased">
         <Providers>
           {children}

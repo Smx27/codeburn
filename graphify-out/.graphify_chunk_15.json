@@ -1,0 +1,285 @@
+{
+  "nodes": [
+    {
+      "id": "charts_area_chart",
+      "label": "AreaChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_bar_chart",
+      "label": "BarChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/BarChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_chart_tooltip",
+      "label": "ChartTooltip",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/ChartTooltip.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_donut_chart",
+      "label": "DonutChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/DonutChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_heatmap_chart",
+      "label": "HeatmapChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/HeatmapChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_line_chart",
+      "label": "LineChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/LineChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_stacked_bar_chart",
+      "label": "StackedBarChart",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/StackedBarChart.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "charts_chart_colors",
+      "label": "CHART_COLORS",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/charts/chart-colors.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "layout_sidebar",
+      "label": "Sidebar",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/layout/Sidebar.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "layout_topbar",
+      "label": "TopBar",
+      "file_type": "code",
+      "source_file": "apps/dashboard-web/src/components/layout/TopBar.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "charts_area_chart",
+      "target": "charts_chart_tooltip",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_bar_chart",
+      "target": "charts_chart_tooltip",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/BarChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_line_chart",
+      "target": "charts_chart_tooltip",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/LineChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_stacked_bar_chart",
+      "target": "charts_chart_tooltip",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/StackedBarChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_area_chart",
+      "target": "charts_chart_colors",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_bar_chart",
+      "target": "charts_chart_colors",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/BarChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_line_chart",
+      "target": "charts_chart_colors",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/LineChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_stacked_bar_chart",
+      "target": "charts_chart_colors",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/dashboard-web/src/components/charts/StackedBarChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_area_chart",
+      "target": "charts_line_chart",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "charts_bar_chart",
+      "target": "charts_stacked_bar_chart",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "apps/dashboard-web/src/components/charts/BarChart.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "layout_sidebar",
+      "target": "layout_topbar",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "apps/dashboard-web/src/components/layout/Sidebar.tsx",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "layout_sidebar",
+      "target": "charts_area_chart",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.55,
+      "source_file": "apps/dashboard-web/src/components/layout/Sidebar.tsx",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyper_chart_component_system",
+      "label": "Chart component system",
+      "nodes": [
+        "charts_area_chart",
+        "charts_bar_chart",
+        "charts_chart_tooltip",
+        "charts_donut_chart",
+        "charts_heatmap_chart",
+        "charts_line_chart",
+        "charts_stacked_bar_chart",
+        "charts_chart_colors"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx"
+    },
+    {
+      "id": "hyper_recharts_charts",
+      "label": "Recharts-based chart components",
+      "nodes": [
+        "charts_area_chart",
+        "charts_bar_chart",
+        "charts_line_chart",
+        "charts_stacked_bar_chart",
+        "charts_donut_chart"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "apps/dashboard-web/src/components/charts/AreaChart.tsx"
+    },
+    {
+      "id": "hyper_layout_shell",
+      "label": "Layout shell components",
+      "nodes": [
+        "layout_sidebar",
+        "layout_topbar"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "apps/dashboard-web/src/components/layout/Sidebar.tsx"
+    }
+  ],
+  "input_tokens": 8000,
+  "output_tokens": 2000
+}

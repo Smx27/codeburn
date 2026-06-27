@@ -1,9 +1,13 @@
 export interface DashboardOverview {
   totalSessions: number;
   totalUsers: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
   activeProviders: number;
+  activeMachines: number;
   periodStart: string;
   periodEnd: string;
 }
@@ -12,6 +16,9 @@ export interface ProviderAnalytics {
   providerId: number;
   providerName: string;
   totalSessions: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
   percentageOfTotal: number;
@@ -19,9 +26,12 @@ export interface ProviderAnalytics {
 
 export interface ModelAnalytics {
   model: string;
+  sessionCount: number;
+  totalPrompts: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
   totalTokens: number;
   totalCost: number;
-  sessionCount: number;
   percentageOfTotal: number;
 }
 
@@ -30,6 +40,7 @@ export interface UserAnalytics {
   userEmail: string;
   userName: string | null;
   sessionCount: number;
+  promptCount: number;
   tokenCount: number;
   cost: number;
 }
@@ -37,6 +48,7 @@ export interface UserAnalytics {
 export interface ProjectAnalytics {
   projectName: string;
   sessionCount: number;
+  promptCount: number;
   tokenCount: number;
   cost: number;
 }
@@ -44,7 +56,9 @@ export interface ProjectAnalytics {
 export interface TrendPoint {
   date: string;
   sessions: number;
-  users: number;
+  prompts: number;
+  inputTokens: number;
+  outputTokens: number;
   tokens: number;
   cost: number;
 }

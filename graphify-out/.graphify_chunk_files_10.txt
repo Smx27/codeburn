@@ -1,0 +1,15 @@
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/CLIClaudeConfig.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/CapacityEstimator.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/ClaudeCredentialStore.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/ClaudeSubscriptionService.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/CodexCredentialStore.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/CodexSubscriptionService.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/CodexUsage.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/DataClient.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/MenubarPayload.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/MenubarStatusCache.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/QuotaSummary.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/SubscriptionRefreshCadence.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/SubscriptionSnapshotStore.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/SubscriptionUsage.swift
+/home/priya/Documents/Github/Ai/aiinsight/mac/Sources/AiInsightMenubar/Data/UpdateChecker.swift

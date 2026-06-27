@@ -106,22 +106,6 @@ export async function refreshToken(req: Request, res: Response): Promise<void> {
   res.json(result);
 }
 
-export async function triggerBackfill(req: Request, res: Response): Promise<void> {
-  const orgId = req.user?.organizationId;
-  if (!orgId) {
-    res.status(401).json({ error: 'Organization not found' });
-    return;
-  }
-
-  if (req.user?.role !== 'org_admin') {
-    res.status(403).json({ error: 'Org admin access required' });
-    return;
-  }
-
-  const result = await dashboardService.runBackfill(orgId);
-  res.json({ message: 'Backfill started', result });
-}
-
 export async function getOrganizationOverview(req: Request, res: Response): Promise<void> {
   const orgId = req.user?.organizationId;
   if (!orgId) {

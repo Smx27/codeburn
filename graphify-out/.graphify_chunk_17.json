@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {"id": "docs_adr_001_normalized_events", "label": "ADR-001: Normalized Events Instead of Provider Tables", "file_type": "document", "source_file": "docs/adr/001-normalized-events.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "docs_adr_002_batch_uploads", "label": "ADR-002: Batch Uploads Instead of Per-Event Uploads", "file_type": "document", "source_file": "docs/adr/002-batch-uploads.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "docs_adr_003_no_prompt_storage", "label": "ADR-003: No Prompt Storage in Beta", "file_type": "document", "source_file": "docs/adr/003-no-prompt-storage.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "docs_adr_004_api_key_hashing", "label": "ADR-004: API Key Hashing", "file_type": "document", "source_file": "docs/adr/004-api-key-hashing.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null},
+    {"id": "docs_adr_005_tenant_isolation", "label": "ADR-005: Tenant Isolation Strategy", "file_type": "document", "source_file": "docs/adr/005-tenant-isolation.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}
+  ],
+  "edges": [
+    {"source": "docs_adr_001_normalized_events", "target": "docs_adr_002_batch_uploads", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/adr/001-normalized-events.md", "source_location": null, "weight": 1.0},
+    {"source": "docs_adr_001_normalized_events", "target": "docs_adr_003_no_prompt_storage", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/adr/001-normalized-events.md", "source_location": null, "weight": 1.0},
+    {"source": "docs_adr_003_no_prompt_storage", "target": "docs_adr_005_tenant_isolation", "relation": "rationale_for", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/adr/003-no-prompt-storage.md", "source_location": null, "weight": 1.0},
+    {"source": "docs_adr_004_api_key_hashing", "target": "docs_adr_005_tenant_isolation", "relation": "references", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/adr/004-api-key-hashing.md", "source_location": null, "weight": 1.0},
+    {"source": "docs_adr_001_normalized_events", "target": "docs_adr_003_no_prompt_storage", "relation": "references", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "docs/adr/003-no-prompt-storage.md", "source_location": null, "weight": 1.0},
+    {"source": "docs_adr_002_batch_uploads", "target": "docs_adr_001_normalized_events", "relation": "conceptually_related_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/adr/002-batch-uploads.md", "source_location": null, "weight": 1.0}
+  ],
+  "hyperedges": [
+    {"id": "adr_privacy_cluster", "label": "Privacy and Security Architecture", "nodes": ["docs_adr_003_no_prompt_storage", "docs_adr_004_api_key_hashing", "docs_adr_005_tenant_isolation"], "relation": "participate_in", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/adr/"},
+    {"id": "adr_data_pipeline", "label": "Data Ingestion Pipeline", "nodes": ["docs_adr_001_normalized_events", "docs_adr_002_batch_uploads"], "relation": "participate_in", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "docs/adr/"},
+    {"id": "adr_security_stack", "label": "Security and Compliance Stack", "nodes": ["docs_adr_004_api_key_hashing", "docs_adr_005_tenant_isolation", "docs_adr_003_no_prompt_storage"], "relation": "form", "confidence": "INFERRED", "confidence_score": 0.75, "source_file": "docs/adr/"}
+  ],
+  "input_tokens": 2400,
+  "output_tokens": 800
+}
