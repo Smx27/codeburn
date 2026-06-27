@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function createOrganization(req: Request, res: Response): Promise<void> {
   try {
@@ -23,6 +26,7 @@ export async function createOrganization(req: Request, res: Response): Promise<v
 
     res.status(201).json(org);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'createOrganization' }, 'Organization error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -43,6 +47,7 @@ export async function getCurrentOrganization(req: Request, res: Response): Promi
 
     res.json(org);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getCurrentOrganization' }, 'Organization error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -60,6 +65,7 @@ export async function updateCurrentOrganization(req: Request, res: Response): Pr
 
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'updateCurrentOrganization' }, 'Organization error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import argon2 from 'argon2';
+import pino from 'pino';
 import { isApiKey, extractApiKeyPrefix } from '@aiinsight/auth-shared';
 import { getUserById, getApiKeyByPrefix, updateApiKeyLastUsed } from '../repositories/dashboard.repository.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -100,6 +103,7 @@ async function handleApiKeyAuth(apiKey: string, req: Request, res: Response, nex
 
     next();
   } catch (error) {
+    logger.error({ err: error }, 'API key auth error');
     res.status(500).json({ error: 'Authentication error' });
   }
 }
@@ -137,6 +141,7 @@ async function handleJwtAuth(token: string, req: Request, res: Response, next: N
     } else if (error instanceof jwt.JsonWebTokenError) {
       res.status(401).json({ error: 'Invalid token' });
     } else {
+      logger.error({ err: error }, 'JWT auth error');
       res.status(500).json({ error: 'Authentication error' });
     }
   }

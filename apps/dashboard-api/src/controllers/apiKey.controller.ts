@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 import { CreateApiKeySchema, ApiKeyParamsSchema, validateBody } from '../validators/apiKey.validator.js';
 
 export async function listApiKeys(req: Request, res: Response): Promise<void> {
@@ -13,6 +16,7 @@ export async function listApiKeys(req: Request, res: Response): Promise<void> {
     const keys = await dashboardService.listApiKeys(orgId);
     res.json(keys);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listApiKeys' }, 'ApiKey error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -38,6 +42,7 @@ export async function createApiKey(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: error.message });
       return;
     }
+    logger.error({ err: error, endpoint: 'createApiKey' }, 'ApiKey error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -58,6 +63,7 @@ export async function deleteApiKey(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: error.message });
       return;
     }
+    logger.error({ err: error, endpoint: 'deleteApiKey' }, 'ApiKey error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

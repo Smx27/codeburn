@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as machineService from '../services/machine.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 import { validateParams, MachineDetailParamsSchema } from '../validators/session.validator.js';
 
 export async function listMachines(req: Request, res: Response): Promise<void> {
@@ -13,6 +16,7 @@ export async function listMachines(req: Request, res: Response): Promise<void> {
     const machines = await machineService.listMachines(orgId);
     res.json(machines);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listMachines' }, 'Machine error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -38,6 +42,7 @@ export async function getMachine(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: error.message });
       return;
     }
+    logger.error({ err: error, endpoint: 'getMachine' }, 'Machine error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

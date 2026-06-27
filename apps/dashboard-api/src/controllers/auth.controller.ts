@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
@@ -23,6 +26,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     res.status(201).json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'register' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -44,6 +48,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'login' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -65,6 +70,7 @@ export async function refreshToken(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'refreshToken' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -80,6 +86,7 @@ export async function logout(req: Request, res: Response): Promise<void> {
     await dashboardService.logout(userId);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'logout' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -100,6 +107,7 @@ export async function verifyEmail(req: Request, res: Response): Promise<void> {
 
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'verifyEmail' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -115,6 +123,7 @@ export async function resendVerification(req: Request, res: Response): Promise<v
     await dashboardService.resendVerification(email);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'resendVerification' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -130,6 +139,7 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
     await dashboardService.generatePasswordReset(email);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'forgotPassword' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -150,6 +160,7 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
 
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'resetPassword' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -176,6 +187,7 @@ export async function changePassword(req: Request, res: Response): Promise<void>
 
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'changePassword' }, 'Auth error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

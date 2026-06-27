@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
 import { OverviewQuerySchema, AnalyticsQuerySchema, TrendQuerySchema, validateQuery } from '../validators/query.validator.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function getOverview(req: Request, res: Response): Promise<void> {
   try {
@@ -14,6 +17,7 @@ export async function getOverview(req: Request, res: Response): Promise<void> {
     const overview = await dashboardService.getOverview(orgId, period);
     res.json(overview);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getOverview' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -30,6 +34,7 @@ export async function getProviders(req: Request, res: Response): Promise<void> {
     const providers = await dashboardService.getProviderAnalytics(orgId, period);
     res.json(providers);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getProviders' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -46,6 +51,7 @@ export async function getModels(req: Request, res: Response): Promise<void> {
     const models = await dashboardService.getModelAnalytics(orgId, period, limit);
     res.json(models);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getModels' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -62,6 +68,7 @@ export async function getUsers(req: Request, res: Response): Promise<void> {
     const users = await dashboardService.getUserAnalytics(orgId, period, limit);
     res.json(users);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getUsers' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -78,6 +85,7 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
     const projects = await dashboardService.getProjectAnalytics(orgId, period, limit);
     res.json(projects);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getProjects' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -94,6 +102,7 @@ export async function getTrends(req: Request, res: Response): Promise<void> {
     const trends = await dashboardService.getTrends(orgId, period, granularity);
     res.json({ granularity, data: trends });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getTrends' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -114,6 +123,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'login' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -134,6 +144,7 @@ export async function refreshToken(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'refreshToken' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -154,6 +165,7 @@ export async function triggerBackfill(req: Request, res: Response): Promise<void
     const result = await dashboardService.runBackfill(orgId);
     res.json({ message: 'Backfill started', result });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'triggerBackfill' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -187,6 +199,7 @@ export async function getOrganizationOverview(req: Request, res: Response): Prom
       events: parseInt(overview[0]?.events ?? '0', 10),
     });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getOrganizationOverview' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -202,6 +215,7 @@ export async function getAgents(req: Request, res: Response): Promise<void> {
     const agents = await dashboardService.listAgents(orgId);
     res.json(agents);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getAgents' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -226,6 +240,7 @@ export async function getSyncJobs(req: Request, res: Response): Promise<void> {
     );
     res.json(jobs);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getSyncJobs' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -274,6 +289,7 @@ export async function getOnboardingStatus(req: Request, res: Response): Promise<
       hasSessions: parseInt(hasSessions?.count ?? '0', 10) > 0,
     });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getOnboardingStatus' }, 'Dashboard error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

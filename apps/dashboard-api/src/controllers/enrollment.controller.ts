@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function generateKey(req: Request, res: Response): Promise<void> {
   try {
@@ -23,6 +26,7 @@ export async function generateKey(req: Request, res: Response): Promise<void> {
 
     res.status(201).json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'generateKey' }, 'Enrollment error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -38,6 +42,7 @@ export async function listKeys(req: Request, res: Response): Promise<void> {
     const keys = await dashboardService.listEnrollmentKeys(orgId);
     res.json(keys);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listKeys' }, 'Enrollment error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -55,6 +60,7 @@ export async function revokeKey(req: Request, res: Response): Promise<void> {
     await dashboardService.revokeEnrollmentKey(orgId, id);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'revokeKey' }, 'Enrollment error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -77,6 +83,7 @@ export async function rotateKey(req: Request, res: Response): Promise<void> {
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'rotateKey' }, 'Enrollment error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

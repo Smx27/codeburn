@@ -109,7 +109,7 @@ export class IncrementalSyncService {
         logChecksumCalculated(sourceLogger, source.path, stats.checksum);
 
         if (state && isSourceUnchanged(state, stats)) {
-          sourceLogger.debug({ event: 'source_unchanged' }, 'Source unchanged, skipping');
+          sourceLogger.info({ event: 'source_unchanged' }, 'Source unchanged since last sync');
           continue;
         }
 
@@ -127,7 +127,7 @@ export class IncrementalSyncService {
         }
 
         if (calls.length === 0) {
-          sourceLogger.debug({ event: 'no_new_calls' }, 'No new calls found');
+          sourceLogger.info({ event: 'no_new_calls' }, 'Source parsed but yielded 0 events');
           await markSynced(
             this.config.organizationId,
             this.config.machineId,
@@ -141,7 +141,7 @@ export class IncrementalSyncService {
         const newCalls = this.filterNewCalls(calls, state?.lastCallTimestamp);
         
         if (newCalls.length === 0) {
-          sourceLogger.debug({ event: 'no_new_calls_after_filter' }, 'No new calls after filtering');
+          sourceLogger.info({ event: 'no_new_calls_after_filter' }, 'All calls already synced, skipping');
           await markSynced(
             this.config.organizationId,
             this.config.machineId,

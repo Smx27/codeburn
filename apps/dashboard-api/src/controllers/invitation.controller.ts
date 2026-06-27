@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function createInvitation(req: Request, res: Response): Promise<void> {
   try {
@@ -24,6 +27,7 @@ export async function createInvitation(req: Request, res: Response): Promise<voi
 
     res.status(201).json(invitation);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'createInvitation' }, 'Invitation error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -39,6 +43,7 @@ export async function listInvitations(req: Request, res: Response): Promise<void
     const invitations = await dashboardService.listInvitations(orgId);
     res.json(invitations);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listInvitations' }, 'Invitation error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -64,6 +69,7 @@ export async function acceptInvitation(req: Request, res: Response): Promise<voi
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'acceptInvitation' }, 'Invitation error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -81,6 +87,7 @@ export async function revokeInvitation(req: Request, res: Response): Promise<voi
     await dashboardService.revokeInvitation(orgId, id);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'revokeInvitation' }, 'Invitation error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -103,6 +110,7 @@ export async function resendInvitation(req: Request, res: Response): Promise<voi
 
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'resendInvitation' }, 'Invitation error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

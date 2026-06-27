@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as sessionService from '../services/session.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 import { SessionListQuerySchema, validateQuery, validateParams, SessionDetailParamsSchema } from '../validators/session.validator.js';
 
 export async function listSessions(req: Request, res: Response): Promise<void> {
@@ -14,6 +17,7 @@ export async function listSessions(req: Request, res: Response): Promise<void> {
     const result = await sessionService.listSessions(orgId, filters);
     res.json(result);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listSessions' }, 'Session error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -39,6 +43,7 @@ export async function getSession(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: error.message });
       return;
     }
+    logger.error({ err: error, endpoint: 'getSession' }, 'Session error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

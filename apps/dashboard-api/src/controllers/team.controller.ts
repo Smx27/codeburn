@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardService from '../services/dashboard.service.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 export async function listTeams(req: Request, res: Response): Promise<void> {
   try {
@@ -12,6 +15,7 @@ export async function listTeams(req: Request, res: Response): Promise<void> {
     const teams = await dashboardService.listTeams(orgId);
     res.json(teams);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'listTeams' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -33,6 +37,7 @@ export async function createTeam(req: Request, res: Response): Promise<void> {
     const team = await dashboardService.createTeam(orgId, name, description);
     res.status(201).json(team);
   } catch (error) {
+    logger.error({ err: error, endpoint: 'createTeam' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -51,6 +56,7 @@ export async function updateTeam(req: Request, res: Response): Promise<void> {
     await dashboardService.updateTeam(orgId, id, name, description);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'updateTeam' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -68,6 +74,7 @@ export async function deleteTeam(req: Request, res: Response): Promise<void> {
     await dashboardService.deleteTeam(orgId, id);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'deleteTeam' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -91,6 +98,7 @@ export async function addTeamMember(req: Request, res: Response): Promise<void> 
     await dashboardService.addTeamMember(orgId, id, userId, role || 'member');
     res.status(201).json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'addTeamMember' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -109,6 +117,7 @@ export async function removeTeamMember(req: Request, res: Response): Promise<voi
     await dashboardService.removeTeamMember(orgId, id, userId);
     res.json({ success: true });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'removeTeamMember' }, 'Team error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

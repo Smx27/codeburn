@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import pino from 'pino';
 import * as dashboardRepo from '../repositories/dashboard.repository.js';
+
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 const ONBOARDING_STEPS = [
   'organizationCreated',
@@ -25,6 +28,7 @@ export async function getOnboardingProgress(req: Request, res: Response): Promis
 
     res.json({ steps, completionPercentage });
   } catch (error) {
+    logger.error({ err: error, endpoint: 'getOnboardingProgress' }, 'Onboarding error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }

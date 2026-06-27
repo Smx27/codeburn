@@ -1,0 +1,390 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-27T00:00:00.000Z",
+  "__export_source": "aiinsight-insomnia",
+  "resources": [
+    {
+      "_type": "workspace",
+      "_id": "wrk_aiinsight",
+      "name": "AIInsight E2E Test Flow",
+      "parentId": null,
+      "description": "Full flow: Register → API Key → Agent Login → Batch Ingest → Dashboard"
+    },
+    {
+      "_type": "environment",
+      "_id": "env_base",
+      "name": "Base Environment",
+      "parentId": "wrk_aiinsight",
+      "data": {
+        "dashboard_api": "https://dapi.titanbyte.in",
+        "ingestion_api": "https://ingestion.titanbyte.in",
+        "jwt_token": "",
+        "organization_id": "",
+        "machine_id": "",
+        "api_key": "",
+        "agent_token": ""
+      },
+      "dataPropertyOrder": {}
+    },
+    {
+      "_type": "request_group",
+      "_id": "fldr_setup",
+      "name": "1. Setup (Register + API Key)",
+      "parentId": "wrk_aiinsight"
+    },
+    {
+      "_type": "request_group",
+      "_id": "fldr_agent",
+      "name": "2. Agent Login + Ingest",
+      "parentId": "wrk_aiinsight"
+    },
+    {
+      "_type": "request_group",
+      "_id": "fldr_dashboard",
+      "name": "3. Dashboard Queries",
+      "parentId": "wrk_aiinsight"
+    },
+    {
+      "_type": "request",
+      "_id": "req_01_register",
+      "parentId": "fldr_setup",
+      "name": "1.1 Register User + Org",
+      "method": "POST",
+      "url": "{{ _.dashboard_api }}/api/v1/auth/register",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"testpassword123\",\n  \"name\": \"Test User\",\n  \"organizationName\": \"Test Org\"\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "const body = JSON.parse(res.getBody());",
+          "if (body.token) {",
+          "  insomnia.environment.set('jwt_token', body.token);",
+          "  if (body.organization) insomnia.environment.set('organization_id', body.organization.id);",
+          "  if (body.user && body.user.organizationId) insomnia.environment.set('organization_id', body.user.organizationId);",
+          "}",
+          "console.log('Register:', JSON.stringify(body, null, 2));"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_02_login",
+      "parentId": "fldr_setup",
+      "name": "1.2 Login (get JWT)",
+      "method": "POST",
+      "url": "{{ _.dashboard_api }}/api/v1/auth/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"testpassword123\"\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "const body = JSON.parse(res.getBody());",
+          "if (body.token) {",
+          "  insomnia.environment.set('jwt_token', body.token);",
+          "  if (body.user && body.user.organizationId) insomnia.environment.set('organization_id', body.user.organizationId);",
+          "}",
+          "console.log('Login:', JSON.stringify(body, null, 2));"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_03_create_api_key",
+      "parentId": "fldr_setup",
+      "name": "1.3 Create API Key",
+      "method": "POST",
+      "url": "{{ _.dashboard_api }}/api/v1/api-keys",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"sync-agent-key\",\n  \"role\": \"write\"\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "const body = JSON.parse(res.getBody());",
+          "if (body.key) insomnia.environment.set('api_key', body.key);",
+          "console.log('API Key created:', JSON.stringify(body, null, 2));"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_04_list_keys",
+      "parentId": "fldr_setup",
+      "name": "1.4 List API Keys",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/api-keys",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('API Keys:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_05_agent_login",
+      "parentId": "fldr_agent",
+      "name": "2.1 Agent Login (get ingestion URL)",
+      "method": "POST",
+      "url": "{{ _.dashboard_api }}/api/v1/agents/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"apiKey\": \"{{ _.api_key }}\",\n  \"hostname\": \"test-machine\",\n  \"os\": \"linux\",\n  \"architecture\": \"x64\",\n  \"agentVersion\": \"1.0.0\"\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "const body = JSON.parse(res.getBody());",
+          "if (body.machineId) insomnia.environment.set('machine_id', body.machineId);",
+          "if (body.agentToken) insomnia.environment.set('agent_token', body.agentToken);",
+          "if (body.apiUrl) insomnia.environment.set('ingestion_api', body.apiUrl);",
+          "console.log('Agent Login:', JSON.stringify(body, null, 2));"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_06_health_ingestion",
+      "parentId": "fldr_agent",
+      "name": "2.2 Ingestion API Health",
+      "method": "GET",
+      "url": "{{ _.ingestion_api }}/api/v1/health",
+      "scripts": {
+        "afterResponse": [
+          "console.log('Ingestion Health:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_07_health_dashboard",
+      "parentId": "fldr_agent",
+      "name": "2.3 Dashboard API Health",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/health",
+      "scripts": {
+        "afterResponse": [
+          "console.log('Dashboard Health:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_08_batch_ingest",
+      "parentId": "fldr_agent",
+      "name": "2.4 Batch Ingest (main test)",
+      "method": "POST",
+      "url": "{{ _.ingestion_api }}/api/v1/ingest/batch",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.api_key }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"organizationId\": \"{{ _.organization_id }}\",\n  \"machineId\": \"{{ _.machine_id }}\",\n  \"provider\": \"claude\",\n  \"sessions\": [\n    {\n      \"externalSessionId\": \"test-session-001\",\n      \"projectName\": \"test-project\",\n      \"startedAt\": \"2026-06-27T10:00:00.000Z\",\n      \"endedAt\": \"2026-06-27T10:30:00.000Z\",\n      \"rawMetadata\": { \"source\": \"insomnia-test\" }\n    }\n  ],\n  \"events\": [\n    {\n      \"sessionId\": \"test-session-001\",\n      \"eventTime\": \"2026-06-27T10:05:00.000Z\",\n      \"eventType\": \"completion\",\n      \"model\": \"claude-sonnet-4-20250514\",\n      \"inputTokens\": 1500,\n      \"outputTokens\": 800,\n      \"cacheReadTokens\": 200,\n      \"cacheWriteTokens\": 100,\n      \"estimatedCost\": 0.035,\n      \"payload\": { \"tool\": \"Bash\", \"message\": \"test completion\" }\n    },\n    {\n      \"sessionId\": \"test-session-001\",\n      \"eventTime\": \"2026-06-27T10:10:00.000Z\",\n      \"eventType\": \"completion\",\n      \"model\": \"claude-sonnet-4-20250514\",\n      \"inputTokens\": 2000,\n      \"outputTokens\": 1200,\n      \"cacheReadTokens\": 500,\n      \"cacheWriteTokens\": 0,\n      \"estimatedCost\": 0.052,\n      \"payload\": { \"tool\": \"Read\", \"message\": \"file analysis\" }\n    }\n  ]\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "const body = JSON.parse(res.getBody());",
+          "const status = res.getStatusCode();",
+          "console.log('Batch Ingest [' + status + ']:', JSON.stringify(body, null, 2));",
+          "if (status !== 200 && status !== 201) {",
+          "  console.error('FAILED:', body);",
+          "}"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_09_sessions_ingest",
+      "parentId": "fldr_agent",
+      "name": "2.5 Sessions Ingest",
+      "method": "POST",
+      "url": "{{ _.ingestion_api }}/api/v1/ingest/sessions",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.api_key }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"organizationId\": \"{{ _.organization_id }}\",\n  \"machineId\": \"{{ _.machine_id }}\",\n  \"provider\": \"codex\",\n  \"sessions\": [\n    {\n      \"externalSessionId\": \"test-session-002\",\n      \"projectName\": \"test-project-codex\",\n      \"startedAt\": \"2026-06-27T11:00:00.000Z\",\n      \"endedAt\": \"2026-06-27T11:45:00.000Z\",\n      \"rawMetadata\": { \"source\": \"insomnia-test\" }\n    }\n  ]\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "console.log('Sessions:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_10_events_ingest",
+      "parentId": "fldr_agent",
+      "name": "2.6 Events Ingest",
+      "method": "POST",
+      "url": "{{ _.ingestion_api }}/api/v1/ingest/events",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.api_key }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"organizationId\": \"{{ _.organization_id }}\",\n  \"machineId\": \"{{ _.machine_id }}\",\n  \"provider\": \"codex\",\n  \"events\": [\n    {\n      \"sessionId\": \"test-session-002\",\n      \"eventTime\": \"2026-06-27T11:05:00.000Z\",\n      \"eventType\": \"completion\",\n      \"model\": \"o4-mini\",\n      \"inputTokens\": 3000,\n      \"outputTokens\": 1500,\n      \"cacheReadTokens\": 0,\n      \"cacheWriteTokens\": 0,\n      \"estimatedCost\": 0.08,\n      \"payload\": { \"tool\": \"Bash\", \"message\": \"codex test\" }\n    }\n  ]\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "console.log('Events:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_11_heartbeat",
+      "parentId": "fldr_agent",
+      "name": "2.7 Heartbeat",
+      "method": "POST",
+      "url": "{{ _.ingestion_api }}/api/v1/heartbeat",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.api_key }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"machineId\": \"{{ _.machine_id }}\"\n}"
+      },
+      "scripts": {
+        "afterResponse": [
+          "console.log('Heartbeat:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_12_overview",
+      "parentId": "fldr_dashboard",
+      "name": "3.1 Dashboard Overview",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/overview",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Overview:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_13_providers",
+      "parentId": "fldr_dashboard",
+      "name": "3.2 Dashboard Providers",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/providers",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Providers:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_14_models",
+      "parentId": "fldr_dashboard",
+      "name": "3.3 Dashboard Models",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/models",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Models:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_15_trends",
+      "parentId": "fldr_dashboard",
+      "name": "3.4 Dashboard Trends",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/trends",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Trends:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_16_agents",
+      "parentId": "fldr_dashboard",
+      "name": "3.5 Dashboard Agents",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/agents",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Agents:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_17_sessions",
+      "parentId": "fldr_dashboard",
+      "name": "3.6 Dashboard Sessions",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/sessions",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Sessions:', res.getBody());"
+        ]
+      }
+    },
+    {
+      "_type": "request",
+      "_id": "req_18_org",
+      "parentId": "fldr_dashboard",
+      "name": "3.7 Dashboard Organization",
+      "method": "GET",
+      "url": "{{ _.dashboard_api }}/api/v1/dashboard/organization",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.jwt_token }}" }
+      ],
+      "scripts": {
+        "afterResponse": [
+          "console.log('Organization:', res.getBody());"
+        ]
+      }
+    }
+  ]
+}

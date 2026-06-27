@@ -43,7 +43,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(pinoHttp({
   logger,
   autoLogging: {
-    ignore: (req) => req.url === '/api/v1/health' || req.url === '/api/v1/version',
+    ignore: () => true,
   },
 }));
 
