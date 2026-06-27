@@ -40,7 +40,7 @@ export function ProviderChart({ data, metric }: ProviderChartProps) {
   }));
 
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-[300px] overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

@@ -93,7 +93,7 @@ export function DonutChart({
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className={cn('flex flex-col items-center', className)} style={{ height }}>
+    <div className={cn('flex flex-col items-center overflow-hidden', className)} style={{ height }}>
       <div className="relative w-full" style={{ height: height - 70 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

@@ -217,3 +217,73 @@
     @apply py-20 sm:py-28;
   }
 }
+
+.prose-docs {
+  @apply text-muted-foreground leading-relaxed;
+}
+.prose-docs h1 {
+  @apply text-3xl sm:text-4xl font-bold text-foreground mb-6 tracking-tight;
+}
+.prose-docs h2 {
+  @apply text-2xl font-semibold text-foreground mt-12 mb-4 pb-2 border-b border-white/[0.08];
+}
+.prose-docs h3 {
+  @apply text-xl font-semibold text-foreground mt-8 mb-3;
+}
+.prose-docs h4 {
+  @apply text-lg font-semibold text-foreground mt-6 mb-2;
+}
+.prose-docs p {
+  @apply mb-4;
+}
+.prose-docs a {
+  @apply text-primary hover:text-primary/80 underline underline-offset-4 transition-colors;
+}
+.prose-docs strong {
+  @apply text-foreground font-semibold;
+}
+.prose-docs code {
+  @apply bg-white/[0.06] text-primary px-1.5 py-0.5 rounded text-sm font-mono;
+}
+.prose-docs pre {
+  @apply bg-white/[0.03] border border-white/[0.08] rounded-xl p-4 overflow-x-auto mb-6;
+}
+.prose-docs pre code {
+  @apply bg-transparent p-0 text-foreground;
+}
+.prose-docs table {
+  @apply w-full border-collapse mb-6 text-sm;
+}
+.prose-docs thead {
+  @apply border-b border-white/[0.08];
+}
+.prose-docs th {
+  @apply text-left font-medium text-muted-foreground pb-2 pr-4;
+}
+.prose-docs td {
+  @apply py-2 pr-4 border-b border-white/[0.04];
+}
+.prose-docs blockquote {
+  @apply border-l-2 border-primary/40 pl-4 italic text-muted-foreground/80 mb-4;
+}
+.prose-docs ul {
+  @apply list-disc list-inside mb-4;
+}
+.prose-docs ol {
+  @apply list-decimal list-inside mb-4;
+}
+.prose-docs li {
+  @apply mb-1;
+}
+.prose-docs hr {
+  @apply border-white/[0.08] my-8;
+}
+.prose-docs img {
+  @apply rounded-xl border border-white/[0.08] mb-6 max-w-full;
+}
+.prose-docs > :first-child {
+  @apply mt-0;
+}
+.prose-docs > :last-child {
+  @apply mb-0;
+}

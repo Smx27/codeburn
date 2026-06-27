@@ -63,7 +63,7 @@ export function BarChart({
   const isHorizontal = horizontal;
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn('w-full overflow-hidden', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart
           data={data}

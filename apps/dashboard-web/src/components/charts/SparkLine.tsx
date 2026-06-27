@@ -36,7 +36,7 @@ export function SparkLine({
   const strokeColor = trend >= 0 ? color : 'hsl(var(--destructive))';
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn('w-full overflow-hidden', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 2, right: 0, left: 0, bottom: 2 }}>
           {gradient && (

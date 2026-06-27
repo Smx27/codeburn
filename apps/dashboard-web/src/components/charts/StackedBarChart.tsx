@@ -88,7 +88,7 @@ export function StackedBarChart({
   });
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
+    <div className={cn('w-full overflow-hidden', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart data={enrichedData} margin={margin}>
           {showGrid && (

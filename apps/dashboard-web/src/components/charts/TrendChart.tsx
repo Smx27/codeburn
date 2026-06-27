@@ -45,7 +45,7 @@ export function TrendChart({ data, metric, title }: TrendChartProps) {
   };
 
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-[300px] overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
