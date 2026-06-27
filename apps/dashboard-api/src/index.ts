@@ -21,6 +21,7 @@ import healthRoutes from './routes/health.route.js';
 import { closePool } from './database/pool.js';
 import { authRateLimit, generalRateLimit } from './middlewares/rateLimit.middleware.js';
 import { startOfflineDetection } from './jobs/offlineDetection.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
   transport: {
@@ -68,10 +69,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  logger.error({ err }, 'Unhandled error');
-  res.status(500).json({ error: 'Internal server error' });
-});
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3002;
 
