@@ -48,7 +48,7 @@ export default function DownloadsPage() {
       const res = await fetch('https://api.github.com/repos/Smx27/codeburn/releases/latest');
       if (res.ok) {
         const data = await res.json();
-        const assets = data.assets.map((a: any) => {
+        const assets = data.assets.map((a: { name: string; browser_download_url: string; size: number }) => {
           const platform = a.name.includes('linux') ? 'Linux' : a.name.includes('darwin') ? 'macOS' : 'Windows';
           const arch = a.name.includes('arm64') ? 'ARM64' : a.name.includes('x64') ? 'x86_64' : 'x86_64';
           return {
